@@ -1,5 +1,4 @@
 <?php get_header(); ?>
-<?php get_template_part('partials/nav/nav', 'nav') ?>
 <?php get_template_part('partials/blog/single/single-belog-title-section', 'single-belog-title-section') ?>
 <?php get_template_part('partials/blog/single/single-belog-content-section', 'single-belog-content-section') ?>
 <?php get_template_part('partials/blog/single/accordion-fag-section', 'accordion-fag-section') ?>

@@ -1,5 +1,4 @@
 <?php get_header(); ?>
-<?php get_template_part('partials/nav/nav', 'nav') ?>
 <?php get_template_part('partials/index/header-information-section', 'header-information-section') ?>
 <?php get_template_part('partials/index/about-us-section', 'about-us-section') ?>
 <?php get_template_part('partials/index/meeting-section', 'meeting-section') ?>

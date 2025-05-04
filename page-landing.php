@@ -3,7 +3,6 @@
 Template Name: landing
 */
 get_header();
-get_template_part('partials/nav/nav', 'nav');
 get_template_part('partials/landing/webdesing-section', 'webdesing-section');
 get_template_part('partials/landing/video-landing-section', 'video-landing-section');
 get_template_part('partials/landing/contact-banner-section', 'contact-banner-section');
