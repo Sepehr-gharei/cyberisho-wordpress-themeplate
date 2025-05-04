@@ -6,7 +6,7 @@
             <div class="wrapper">
               <a href="">
                 <div class="image-section">
-                  <img src="<?php get_template_directory_uri() . '/assets/img/blog-item-2.png'?>" alt="" />
+                  <img src="<?php echo get_template_directory_uri() . '/assets/img/blog-item-2.png'?>" alt="" />
                 </div>
                 <div class="text-field">
                   <div class="header">
@@ -27,7 +27,7 @@
             <div class="wrapper">
               <a href="">
                 <div class="image-section">
-                  <img src="<?php get_template_directory_uri() . '/assets/img/blog-item-1.png'?>" alt="" />
+                  <img src="<?php echo get_template_directory_uri() . '/assets/img/blog-item-1.png'?>" alt="" />
                 </div>
                 <div class="text-field">
                   <div class="header">
@@ -48,7 +48,7 @@
             <div class="wrapper">
               <a href="">
                 <div class="image-section">
-                  <img src="<?php get_template_directory_uri() . '/assets/img/blog-item-2.png'?>" alt="" />
+                  <img src="<?php echo get_template_directory_uri() . '/assets/img/blog-item-2.png'?>" alt="" />
                 </div>
                 <div class="text-field">
                   <div class="header">
@@ -69,7 +69,7 @@
             <div class="wrapper">
               <a href="">
                 <div class="image-section">
-                  <img src="<?php get_template_directory_uri() . '/assets/img/blog-item-3.png'?>" alt="" />
+                  <img src="<?php echo get_template_directory_uri() . '/assets/img/blog-item-3.png'?>" alt="" />
                 </div>
                 <div class="text-field">
                   <div class="header">
@@ -90,7 +90,7 @@
             <div class="wrapper">
               <a href="">
                 <div class="image-section">
-                  <img src="<?php get_template_directory_uri() . '/assets/img/blog-item-1.png'?>" alt="" />
+                  <img src="<?php echo get_template_directory_uri() . '/assets/img/blog-item-1.png'?>" alt="" />
                 </div>
                 <div class="text-field">
                   <div class="header">
@@ -111,7 +111,7 @@
             <div class="wrapper">
               <a href="">
                 <div class="image-section">
-                  <img src="<?php get_template_directory_uri() . '/assets/img/blog-item-2.png'?>" alt="" />
+                  <img src="<?php echo get_template_directory_uri() . '/assets/img/blog-item-2.png'?>" alt="" />
                 </div>
                 <div class="text-field">
                   <div class="header">
@@ -132,7 +132,7 @@
             <div class="wrapper">
               <a href="">
                 <div class="image-section">
-                  <img src="<?php get_template_directory_uri() . '/assets/img/blog-item-3.png'?>" alt="" />
+                  <img src="<?php echo get_template_directory_uri() . '/assets/img/blog-item-3.png'?>" alt="" />
                 </div>
                 <div class="text-field">
                   <div class="header">
@@ -153,7 +153,7 @@
             <div class="wrapper">
               <a href="">
                 <div class="image-section">
-                  <img src="<?php get_template_directory_uri() . '/assets/img/blog-item-1.png'?>" alt="" />
+                  <img src="<?php echo get_template_directory_uri() . '/assets/img/blog-item-1.png'?>" alt="" />
                 </div>
                 <div class="text-field">
                   <div class="header">
@@ -174,7 +174,7 @@
             <div class="wrapper">
               <a href="">
                 <div class="image-section">
-                  <img src="<?php get_template_directory_uri() . '/assets/img/blog-item-2.png'?>" alt="" />
+                  <img src="<?php echo get_template_directory_uri() . '/assets/img/blog-item-2.png'?>" alt="" />
                 </div>
                 <div class="text-field">
                   <div class="header">

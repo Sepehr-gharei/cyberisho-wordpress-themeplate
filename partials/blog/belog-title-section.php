@@ -35,7 +35,7 @@
                   <!-- تصویر و توضیحات پیش‌فرض برای اولین آیتم -->
                   <div class="image-container active-content">
                     <img
-                      src="./assets/img/blog-item-1.png"
+                      src="<?php echo get_template_directory_uri() . '/assets/img/blog-item-1.png' ?>"
                       alt="تصویر مربوط به آیتم ۱"
                     />
 
@@ -67,7 +67,7 @@
                         <!-- هر آیتم دارای data-image و data-description -->
                         <div
                           class="item active"
-                          data-image="./assets/img/blog-item-2.png"
+                          data-image="<?php echo get_template_directory_uri() . '/assets/img/blog-item-3.png'      ?>"
                           data-title="وردپرس"
                           data-subtitle="وظایف وردپرس"
                           data-description="لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگر..."
@@ -78,7 +78,7 @@
                         </div>
                         <div
                           class="item"
-                          data-image="./assets/img/blog-item-2.png"
+                          data-image="<?php echo get_template_directory_uri() .'/assets/img/blog-item-2.png'  ?>"
                           data-title="برنامه نویسی"
                           data-subtitle="وظایف برنامه نویسی"
                           data-description="این متن مربوط به برنامه نویسی است و می‌تواند توضیحات کامل‌تری را شامل شود"
@@ -89,7 +89,7 @@
                         </div>
                         <div
                           class="item"
-                          data-image="./assets/img/blog-item-1.png"
+                          data-image="<?php echo get_template_directory_uri() . '/assets/img/blog-item-1.png' ?>"
                           data-title="برنامه نویسی"
                           data-subtitle="وظایف برنامه نویسی"
                           data-description="این متن مربوط به برنامه نویسی است و می‌تواند توضیحات کامل‌تری را شامل شود"
@@ -100,7 +100,7 @@
                         </div>
                         <div
                           class="item"
-                          data-image="./assets/img/blog-item-2.png"
+                          data-image="<?php echo get_template_directory_uri() . '/assets/img/blog-item-2.png' ?>"
                           data-title="برنامه نویسی"
                           data-subtitle="وظایف برنامه نویسی"
                           data-description="این متن مربوط به برنامه نویسی است و می‌تواند توضیحات کامل‌تری را شامل شود"
@@ -111,7 +111,7 @@
                         </div>
                         <div
                           class="item"
-                          data-image="./assets/img/blog-item-1.png"
+                          data-image="<?php echo get_template_directory_uri() . '/assets/img/blog-item-1.png'?>"
                           data-title="برنامه نویسی"
                           data-subtitle="وظایف برنامه نویسی"
                           data-description="این متن مربوط به برنامه نویسی است و می‌تواند توضیحات کامل‌تری را شامل شود"
@@ -122,7 +122,7 @@
                         </div>
                         <div
                           class="item"
-                          data-image="./assets/img/blog-item-3.png"
+                          data-image="<?php echo get_template_directory_uri() . '/assets/img/blog-item-3.png'?>"
                           data-title="برنامه نویسی"
                           data-subtitle="وظایف برنامه نویسی"
                           data-description="این متن مربوط به برنامه نویسی است و می‌تواند توضیحات کامل‌تری را شامل شود"
@@ -133,7 +133,7 @@
                         </div>
                         <div
                           class="item"
-                          data-image="./assets/img/blog-item-2.png"
+                          data-image="<?php echo get_template_directory_uri() . '/assets/img/blog-item-2.png'?>"
                           data-title="برنامه نویسی"
                           data-subtitle="وظایف برنامه نویسی"
                           data-description="این متن مربوط به برنامه نویسی است و می‌تواند توضیحات کامل‌تری را شامل شود"
@@ -144,7 +144,7 @@
                         </div>
                         <div
                           class="item"
-                          data-image="./assets/img/blog-item-3.png"
+                          data-image="<?php echo get_template_directory_uri() . '/assets/img/blog-item-3.png' ?>"
                           data-title="برنامه نویسی"
                           data-subtitle="وظایف برنامه نویسی"
                           data-description="این متن مربوط به برنامه نویسی است و می‌تواند توضیحات کامل‌تری را شامل شود"

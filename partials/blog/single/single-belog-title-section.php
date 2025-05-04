@@ -26,7 +26,7 @@
         </div>
         <div class="content-section">
           <div class="image-wrapper">
-            <img src="<?php get_template_directory_uri() .'/assets/img/single-blog-title-img.png'?>" alt="" />
+            <img src="<?php echo get_template_directory_uri() .'/assets/img/single-blog-title-img.png'?>" alt="" />
           </div>
           <div class="text-field">
             <div class="header">

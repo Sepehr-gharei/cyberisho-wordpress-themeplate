@@ -10,7 +10,7 @@
               <div class="comment-item">
                 <div class="user-comment-details">
                   <div class="profile-image">
-                    <img src="<?php get_template_directory_uri() . '/assets/img/user-profile.png' ?>" alt="" />
+                    <img src="<?php echo get_template_directory_uri() . '/assets/img/user-profile.png' ?>" alt="" />
                   </div>
                   <div class="user-detail">
                     <p class="user-name">حمیدرضا علیبخشی</p>
@@ -56,7 +56,7 @@
               <div class="comment-item">
                 <div class="user-comment-details">
                   <div class="profile-image">
-                    <img src="<?php get_template_directory_uri() . '/assets/img/user-profile.png' ?>" alt="" />
+                    <img src="<?php echo get_template_directory_uri() . '/assets/img/user-profile.png' ?>" alt="" />
                   </div>
                   <div class="user-detail">
                     <p class="user-name">حمیدرضا علیبخشی</p>
