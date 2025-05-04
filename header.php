@@ -1,12 +1,21 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="<?php language_attributes(); ?>">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>single blog page</title>
     <?php wp_head() ?>
 
-
+    <title>
+    <?php
+        if ( is_front_page() ) {
+            bloginfo('name'); // فقط نام سایت برای صفحه اصلی
+        } else {
+            wp_title('-', true, 'right'); // استفاده از - به عنوان جداکننده
+          
+            bloginfo('name');
+        }
+    ?>
+</title>
   </head>
   <body dir="rtl">
     <svg style="display: none">

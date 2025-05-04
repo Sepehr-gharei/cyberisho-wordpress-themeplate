@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name: about-us
+Template Name: about us
 */
 get_header();
 get_template_part('partials/nav/nav', 'nav');
