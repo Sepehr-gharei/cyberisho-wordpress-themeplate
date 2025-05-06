@@ -6,12 +6,18 @@
             id="videoContainer"
             class="video-container animated-section-right"
           >
+          <?Php 
+          $about_page = get_page_by_path('about-us');
+          $video_url = get_post_meta($about_page->ID, '_aboutus_video_url', true);
+          $thumbnail_id = get_post_meta($about_page->ID, '_aboutus_video_thumbnail_id', true);
+          $thumbnail_url = $thumbnail_id ? wp_get_attachment_url($thumbnail_id) : '';
+          ?>
             <!-- ویدیو -->
             <video
               id="myVideo"
               class="video"
-              src="<?php echo get_template_directory_uri() . '/assets/video/115_1.mp4'?>"
-              poster="<?php echo get_template_directory_uri() . '/assets/img/bryan-cranston-aaron-paul-breaking-bad_11zon-min.jpg'?>"
+              src="<?php echo  $video_url ?>"
+              poster="<?php echo $thumbnail_url ?>"
             >
               <source src="mov_bbb.mp4" type="video/mp4" />
               <source src="mov_bbb.ogg" type="video/ogg" />

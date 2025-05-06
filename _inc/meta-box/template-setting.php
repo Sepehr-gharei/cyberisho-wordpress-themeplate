@@ -155,12 +155,24 @@ function theme_settings_home_page()
     if (isset($_POST['submit'])) {
         update_option('home_meeting_title', sanitize_text_field($_POST['home_meeting_title']));
         update_option('home_meeting_content', sanitize_textarea_field($_POST['home_meeting_content']));
-        update_option('home_service_1_icon', sanitize_textarea_field($_POST['home_service_1_icon']));
         update_option('home_service_1_title', sanitize_text_field($_POST['home_service_1_title']));
         update_option('home_service_1_content', sanitize_textarea_field($_POST['home_service_1_content']));
-        update_option('home_service_2_icon', sanitize_textarea_field($_POST['home_service_2_icon']));
         update_option('home_service_2_title', sanitize_text_field($_POST['home_service_2_title']));
         update_option('home_service_2_content', sanitize_textarea_field($_POST['home_service_2_content']));
+        for ($i = 1; $i <= 4; $i++) {
+            update_option('home_cyberwhy_' . $i, sanitize_text_field($_POST['home_cyberwhy_' . $i]));
+        }
+        // Save FAQs
+        $faq_data = [];
+        if (isset($_POST['home_faq_title_0'])) {
+            for ($i = 0; isset($_POST['home_faq_title_' . $i]); $i++) {
+                $faq_data[] = [
+                    'title' => sanitize_text_field($_POST['home_faq_title_' . $i]),
+                    'content' => sanitize_textarea_field($_POST['home_faq_content_' . $i]),
+                ];
+            }
+        }
+        update_option('home_faq_items', $faq_data);
         ?>
         <div class="updated">
             <p>تنظیمات ذخیره شد.</p>
@@ -168,7 +180,7 @@ function theme_settings_home_page()
         <?php
     }
     ?>
-    <div class="tab-content">
+    <div class="tab-content main-page">
         <h2>صفحه اصلی</h2>
         <form method="post" action="">
             <h3>متن ملاقات</h3>
@@ -185,16 +197,9 @@ function theme_settings_home_page()
                     </td>
                 </tr>
             </table>
-
             <h3>خدمات ما</h3>
             <h4>خدمت اول</h4>
             <table class="form-table">
-                <tr>
-                    <th><label for="home_service_1_icon">آیکون SVG</label></th>
-                    <td><textarea name="home_service_1_icon" id="home_service_1_icon" rows="5"
-                            class="large-text"><?php echo esc_textarea(get_option('home_service_1_icon')); ?></textarea>
-                    </td>
-                </tr>
                 <tr>
                     <th><label for="home_service_1_title">عنوان</label></th>
                     <td><input type="text" name="home_service_1_title" id="home_service_1_title"
@@ -207,15 +212,8 @@ function theme_settings_home_page()
                     </td>
                 </tr>
             </table>
-
             <h4>خدمت دوم</h4>
             <table class="form-table">
-                <tr>
-                    <th><label for="home_service_2_icon">آیکون SVG</label></th>
-                    <td><textarea name="home_service_2_icon" id="home_service_2_icon" rows="5"
-                            class="large-text"><?php echo esc_textarea(get_option('home_service_2_icon')); ?></textarea>
-                    </td>
-                </tr>
                 <tr>
                     <th><label for="home_service_2_title">عنوان</label></th>
                     <td><input type="text" name="home_service_2_title" id="home_service_2_title"
@@ -228,7 +226,77 @@ function theme_settings_home_page()
                     </td>
                 </tr>
             </table>
-
+            <h3>چرا سایبری شو را انتخاب کنیم؟</h3>
+            <table class="form-table">
+                <?php for ($i = 1; $i <= 4; $i++): ?>
+                    <tr>
+                        <th><label for="home_cyberwhy_<?php echo $i; ?>">عنوان آیتم <?php echo $i; ?></label></th>
+                        <td>
+                            <input type="text" name="home_cyberwhy_<?php echo $i; ?>" id="home_cyberwhy_<?php echo $i; ?>"
+                                value="<?php echo esc_attr(get_option('home_cyberwhy_' . $i)); ?>" class="regular-text">
+                        </td>
+                    </tr>
+                <?php endfor; ?>
+            </table>
+            <h3>سوالات متداوم</h3>
+            <div id="faq-container">
+                <?php
+                $faqs = get_option('home_faq_items', []);
+                if (!empty($faqs)) {
+                    foreach ($faqs as $index => $faq) {
+                        ?>
+                        <div class="faq-item" data-index="<?php echo $index; ?>">
+                            <h4>سوال <?php echo $index + 1; ?>
+                                <button type="button" class="button remove-faq">حذف</button>
+                            </h4>
+                            <table class="form-table">
+                                <tr>
+                                    <th><label for="home_faq_title_<?php echo $index; ?>">عنوان سوال</label></th>
+                                    <td>
+                                        <input type="text" name="home_faq_title_<?php echo $index; ?>"
+                                            value="<?php echo esc_attr($faq['title']); ?>" class="regular-text">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><label for="home_faq_content_<?php echo $index; ?>">متن پاسخ</label></th>
+                                    <td>
+                                        <textarea name="home_faq_content_<?php echo $index; ?>" rows="5"
+                                            class="large-text"><?php echo esc_textarea($faq['content']); ?></textarea>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <?php
+                    }
+                } else {
+                    // Default one empty item
+                    ?>
+                    <div class="faq-item" data-index="0">
+                        <h4>سوال 1
+                            <button type="button" class="button remove-faq">حذف</button>
+                        </h4>
+                        <table class="form-table">
+                            <tr>
+                                <th><label for="home_faq_title_0">عنوان سوال</label></th>
+                                <td>
+                                    <input type="text" name="home_faq_title_0" class="regular-text">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="home_faq_content_0">متن پاسخ</label></th>
+                                <td>
+                                    <textarea name="home_faq_content_0" rows="5" class="large-text"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <?php
+                }
+                ?>
+            </div>
+            <p>
+                <button type="button" class="button button-primary add-faq">افزودن سوال جدید</button>
+            </p>
             <?php submit_button(); ?>
         </form>
     </div>
@@ -352,8 +420,7 @@ function theme_settings_portfolio_page()
                                         data-target="main">
                                     <div class="image-preview main-image-preview">
                                         <?php if (!empty($portfolio['main_image'])): ?>
-                                            <img src="<?php echo esc_url($portfolio['main_image']); ?>"
-                                                style="max-width: 200px;">
+                                            <img src="<?php echo esc_url($portfolio['main_image']); ?>" style="max-width: 200px;">
                                         <?php endif; ?>
                                     </div>
                                 </td>
@@ -382,8 +449,7 @@ function theme_settings_portfolio_page()
                                         data-target="mobile">
                                     <div class="image-preview mobile-image-preview">
                                         <?php if ($portfolio['mobile_image']): ?>
-                                            <img src="<?php echo esc_url($portfolio['mobile_image']); ?>"
-                                                style="max-width: 200px;">
+                                            <img src="<?php echo esc_url($portfolio['mobile_image']); ?>" style="max-width: 200px;">
                                         <?php endif; ?>
                                     </div>
                                 </td>
@@ -519,12 +585,12 @@ function theme_settings_enqueue_scripts($hook)
     if ($hook !== 'toplevel_page_theme-settings') {
         return;
     }
-
     // بارگذاری استایل
     wp_enqueue_style('theme-settings', get_template_directory_uri() . '/_inc/meta-box/css/style.css', [], '1.0');
-
     // بارگذاری اسکریپت‌های مورد نیاز برای آپلود رسانه
     wp_enqueue_media();
     wp_enqueue_script('jquery');
+    wp_enqueue_script('theme-admin-js', get_template_directory_uri() . '/_inc/meta-box/js/admin.js', ['jquery'], null, true);
 }
+
 ?>

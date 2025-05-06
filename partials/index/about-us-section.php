@@ -4,8 +4,13 @@
         <div class="row">
             <div id="videoContainer " class="video-container animated-section-right">
                 <!-- ویدیو -->
-                <video id="myVideo" class="video" src="<?php echo get_template_directory_uri() . '/assets/video/115_1.mp4' ?>"
-                    poster="<?php echo get_template_directory_uri() . '/assets/img/bryan-cranston-aaron-paul-breaking-bad_11zon-min.jpg' ?>">
+                <?Php
+                $about_page = get_page_by_path('about-us');
+                $video_url = get_post_meta($about_page->ID, '_aboutus_video_url', true);
+                $thumbnail_id = get_post_meta($about_page->ID, '_aboutus_video_thumbnail_id', true);
+                $thumbnail_url = $thumbnail_id ? wp_get_attachment_url($thumbnail_id) : '';
+                ?>
+                <video id="myVideo" class="video" src="<?php echo $video_url ?>" poster="<?php echo $thumbnail_url ?>">
                     <source src="mov_bbb.mp4" type="video/mp4" />
                     <source src="mov_bbb.ogg" type="video/ogg" />
                     Your browser does not support HTML video.
@@ -24,13 +29,14 @@
             <div class="about-us-text-field animated-section-left">
                 <h2>درباره ما</h2>
                 <p>
-                    حقیقتاً نه اولینیم و نه بهترین! اما نزدیک به 2 دهه با خوش قولی،
-                    تخصص و تعهدمان، خدمات دیجیتال مارکتینگ (طراحی سایت وسئو) را برای
-                    برندهای بسیاری از داخل و خارج کشور به نحو شایسته‌ای ارائه
-                    کرده‌ایم. بسیاری از مشتریان ما کسانی هستند که قبلاً به شخص یا
-                    شرکتـی خدمات موردنیاز را سفارش داده بودند و به دلایل مختلفـی که
-                    بیشتر ناشی از عدم شناخت متقابل بود، پروژه سرانجام مطلوبی نمی‌رسید.
-                    اما با تدوین یک استراتژی درست، در سایبریشو راه موفقیت هموار است...
+                    <?php
+                    $about_page = get_page_by_path('about-us'); // اگر اسلاگ صفحه about-us است
+                    $about_page_id = $about_page->ID;
+                    $meta_content = get_post_meta($about_page->ID, '_page_header_text_key', true);
+                    $limited_content = mb_substr($meta_content, 0, 730, 'UTF-8'); // برش با پشتیبانی از UTF-8
+                    echo $limited_content . ' ...';
+                    ?>
+
                 </p>
                 <div class="about-us-redirect">
                     <a href="">درباره ما</a>

@@ -49,8 +49,10 @@
                         </g>
                     </svg>
                 </div>
-                <strong>طراحی وبسایت</strong>
-                <p>شرکتی، فروشگاهی، خبری، سازمانی، شخصی در هر زمینه و شغلی</p>
+                <strong><?php echo  get_option('home_service_1_title'); ?></strong>
+                <?php
+                ?>
+                <p><?php echo  get_option('home_service_1_content'); ?></p>
             </div>
             <div class="col-12 col-sm-6 wrapper animated-section-right">
                 <div class="icon">
@@ -76,8 +78,8 @@
                         </g>
                     </svg>
                 </div>
-                <strong>سئو (صفحه اول گوگل)</strong>
-                <p>سئو تکنیکال، سئو Off Page، سئو On Page بهینه سازی برای فروش</p>
+                <strong><?php echo  get_option('home_service_2_title'); ?></strong>
+                <p><?php echo  get_option('home_service_2_content'); ?></p>
             </div>
         </section>
     </div>

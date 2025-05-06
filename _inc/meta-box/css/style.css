@@ -180,3 +180,23 @@
   object-fit: cover;
   border-radius: 20px;
 }
+.main-page tbody tr {
+  width: 50%;
+  display: flex;
+}
+.main-page tbody tr td {
+  width: 100%;
+}
+.main-page tbody tr th {
+  width: 10%;
+}
+.main-page table:nth-of-type(even){
+  background-color: #efefef;
+  border-radius: 20px;
+  padding: 10px;
+}
+.main-page h3 {
+  color: #3a189f;
+  font-size: 26px;
+  margin-top: 20px;
+}
