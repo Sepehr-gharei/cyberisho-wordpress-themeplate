@@ -1,53 +1,11 @@
-   <!--************************* start collapse container *************************-->
-   <div class="collapse-container container animated-section">
-      <!-- منوی عناوین -->
-      <div class="collapse-menu">
-        <div class="collapse-item active" data-target="content1">خدمات ما</div>
-        <div class="collapse-item" data-target="content2">مسئولیت اجتماعی</div>
-        <div class="collapse-item" data-target="content3">
-          اهداف و چشم‌اندازها
-        </div>
-        <div class="collapse-item" data-target="content4">چرا سایبریشو؟</div>
-      </div>
-
-      <!-- محتوای مرتبط با عناوین -->
-      <div class="collapse-content-container">
-        <div id="content1" class="collapse-content active">
-          <p>
-            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با
-            استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در
-            ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز،
-            و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای
-            زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه و
-            متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان
-            رایانه ای علی الخصوص طراحان خلاقی، و فرهنگ پیشرو در زبان فارسی ایجاد
-            کرد، در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه
-            راهکارها، و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل
-            حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود
-            طراحی اساسا مورد استفاده قرار گیرد.
-          </p>
-        </div>
-        <div id="content2" class="collapse-content">
-          <p>
-            در حوزه مسئولیت اجتماعی، به پروژه‌های محیط زیستی و کمک به جوامع محلی
-            می‌پردازیم.
-          </p>
-        </div>
-        <div id="content3" class="collapse-content">
-          <p>
-            هدف ما ایجاد یک جامعه پیشرفته‌تر و ارائه راهکارهای نوآورانه برای
-            مشکلات جهانی است.
-          </p>
-        </div>
-        <div id="content4" class="collapse-content">
-          <p>
-            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با
-            استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در
-            ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز،
-            و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای
-            زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه و
-          </p>
-        </div>
-      </div>
-    </div>
-    <!--************************* end collapse container *************************-->
+<!--************************* start collapse container *************************-->
+<div class="collapse-container container animated-section">
+  <!-- منوی عناوین -->
+  <div class="collapse-menu">
+    <?php get_template_part('loop\about-us\collapse-title-section-loop', 'collapse-title-section-loop') ?>
+  </div>
+  <div class="collapse-content-container">
+    <?php get_template_part('loop\about-us\collapse-content-secion-loop', 'collapse-content-secion-loop') ?>
+  </div>
+</div>
+<!--************************* end collapse container *************************-->

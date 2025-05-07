@@ -200,3 +200,15 @@
   font-size: 26px;
   margin-top: 20px;
 }
+
+.site-information  table:nth-of-type(even){
+  background-color: #efefef;
+  border-radius: 20px;
+  padding: 10px;
+}
+.site-information tbody tr {
+  width: 50%;
+}
+.site-information tbody tr  td {
+  width: 80%;
+}
