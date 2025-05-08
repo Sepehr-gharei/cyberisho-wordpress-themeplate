@@ -16,14 +16,15 @@ function register_assets()
         true
     );
     wp_enqueue_script('jquery');
-    wp_register_script('main', get_template_directory_uri() . '/assets/js/main.js', [], '1.0.0', true);
-    wp_enqueue_script('main');
+  
     wp_register_script('video-wrapper', get_template_directory_uri() . '/assets/js/video-wrapper.js', [], '1.0.0', true);
     wp_enqueue_script('video-wrapper');
     wp_register_script('load-animate', get_template_directory_uri() . '/assets/js/load-animate.js', [], '1.0.0', true);
     wp_enqueue_script('load-animate');
     wp_register_script('portfolio', get_template_directory_uri() . '/assets/js/portfolio.js', [], '1.0.0', true);
     wp_enqueue_script('portfolio');
+    wp_register_script('main', get_template_directory_uri() . '/assets/js/main.js', [], '1.0.0', true);
+    wp_enqueue_script('main');
 }
 add_action('wp_enqueue_scripts', 'register_assets');
 function enqueue_panorama_slider_script() {

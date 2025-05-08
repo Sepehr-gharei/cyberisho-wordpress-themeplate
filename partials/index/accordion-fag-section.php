@@ -6,7 +6,7 @@
       <h2>سوالات متداوم</h2>
     </div>
     <div class="accordion-container">
-      <?php get_template_part('loop\index\accordion-fag-loop', 'accordion-fag-loop') ?>
+      <?php get_template_part('loop\landing\accordion-fag-section-loop', 'accordion-fag-section-loop') ?>
     </div>
   </div>
 </div>

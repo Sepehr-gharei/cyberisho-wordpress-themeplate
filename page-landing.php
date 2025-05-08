@@ -18,3 +18,4 @@ get_template_part('partials/landing/webdesing-price-section', 'webdesing-price-s
 get_template_part('partials/landing/accordion-fag-section', 'accordion-fag-section');
 get_template_part('partials/landing/article-slider-section', 'article-slider-section');
 get_footer();
+?>

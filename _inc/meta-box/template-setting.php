@@ -1,5 +1,4 @@
 <?php
-
 // Adding custom theme settings menu
 add_action('admin_menu', 'custom_theme_settings_menu');
 
@@ -94,9 +93,14 @@ function theme_settings_site_info_page()
         update_option('team_support', sanitize_textarea_field($_POST['team_support']));
         update_option('team_seo', sanitize_textarea_field($_POST['team_seo']));
 
+        // چهار ویژگی سایت
+        for ($i = 1; $i <= 4; $i++) {
+            update_option('home_feature_' . $i, sanitize_textarea_field($_POST['home_feature_' . $i]));
+        }
+
         ?>
         <div class="updated">
-            <p>تنظیمات بنر، پروژه‌ها و تیم ما ذخیره شد.</p>
+            <p>تنظیمات بنر، پروژه‌ها، تیم ما و ویژگی‌های سایت ذخیره شد.</p>
         </div>
         <?php
     }
@@ -112,6 +116,12 @@ function theme_settings_site_info_page()
     $team_graphic = get_option('team_graphic', '');
     $team_support = get_option('team_support', '');
     $team_seo = get_option('team_seo', '');
+
+    // دریافت مقادیر ویژگی‌های سایت
+    $features = [];
+    for ($i = 1; $i <= 4; $i++) {
+        $features[$i] = get_option('home_feature_' . $i, '');
+    }
     ?>
     <div class="tab-content site-information">
         <h2>اطلاعات سایت</h2>
@@ -123,13 +133,15 @@ function theme_settings_site_info_page()
                 <tr>
                     <th><label for="banner_header">هدر بنر</label></th>
                     <td>
-                        <textarea name="banner_header" id="banner_header" rows="3" class="large-text"><?php echo esc_textarea($banner_header); ?></textarea>
+                        <textarea name="banner_header" id="banner_header" rows="3"
+                            class="large-text"><?php echo esc_textarea($banner_header); ?></textarea>
                     </td>
                 </tr>
                 <tr>
                     <th><label for="banner_content">محتوا بنر</label></th>
                     <td>
-                        <textarea name="banner_content" id="banner_content" rows="5" class="large-text"><?php echo esc_textarea($banner_content); ?></textarea>
+                        <textarea name="banner_content" id="banner_content" rows="5"
+                            class="large-text"><?php echo esc_textarea($banner_content); ?></textarea>
                     </td>
                 </tr>
             </table>
@@ -140,13 +152,15 @@ function theme_settings_site_info_page()
                 <tr>
                     <th><label for="project_count">تعداد پروژه‌ها</label></th>
                     <td>
-                        <textarea name="project_count" id="project_count" rows="2" class="large-text"><?php echo esc_textarea($project_count); ?></textarea>
+                        <textarea name="project_count" id="project_count" rows="2"
+                            class="large-text"><?php echo esc_textarea($project_count); ?></textarea>
                     </td>
                 </tr>
                 <tr>
                     <th><label for="project_start_year">سال شروع پروژه‌ها</label></th>
                     <td>
-                        <textarea name="project_start_year" id="project_start_year" rows="2" class="large-text"><?php echo esc_textarea($project_start_year); ?></textarea>
+                        <textarea name="project_start_year" id="project_start_year" rows="2"
+                            class="large-text"><?php echo esc_textarea($project_start_year); ?></textarea>
                     </td>
                 </tr>
             </table>
@@ -157,33 +171,52 @@ function theme_settings_site_info_page()
                 <tr>
                     <th><label for="team_total">تعداد نفرات تیم</label></th>
                     <td>
-                        <textarea name="team_total" id="team_total" rows="2" class="large-text"><?php echo esc_textarea($team_total); ?></textarea>
+                        <textarea name="team_total" id="team_total" rows="2"
+                            class="large-text"><?php echo esc_textarea($team_total); ?></textarea>
                     </td>
                 </tr>
                 <tr>
                     <th><label for="team_developer">تعداد برنامه‌نویس</label></th>
                     <td>
-                        <textarea name="team_developer" id="team_developer" rows="2" class="large-text"><?php echo esc_textarea($team_developer); ?></textarea>
+                        <textarea name="team_developer" id="team_developer" rows="2"
+                            class="large-text"><?php echo esc_textarea($team_developer); ?></textarea>
                     </td>
                 </tr>
                 <tr>
                     <th><label for="team_graphic">تعداد گرافیست</label></th>
                     <td>
-                        <textarea name="team_graphic" id="team_graphic" rows="2" class="large-text"><?php echo esc_textarea($team_graphic); ?></textarea>
+                        <textarea name="team_graphic" id="team_graphic" rows="2"
+                            class="large-text"><?php echo esc_textarea($team_graphic); ?></textarea>
                     </td>
                 </tr>
                 <tr>
                     <th><label for="team_support">تعداد پشتیبان</label></th>
                     <td>
-                        <textarea name="team_support" id="team_support" rows="2" class="large-text"><?php echo esc_textarea($team_support); ?></textarea>
+                        <textarea name="team_support" id="team_support" rows="2"
+                            class="large-text"><?php echo esc_textarea($team_support); ?></textarea>
                     </td>
                 </tr>
                 <tr>
                     <th><label for="team_seo">تعداد سئوکار</label></th>
                     <td>
-                        <textarea name="team_seo" id="team_seo" rows="2" class="large-text"><?php echo esc_textarea($team_seo); ?></textarea>
+                        <textarea name="team_seo" id="team_seo" rows="2"
+                            class="large-text"><?php echo esc_textarea($team_seo); ?></textarea>
                     </td>
                 </tr>
+            </table>
+
+            <!-- فرم چهار ویژگی سایت -->
+            <h3>چهار ویژگی سایت</h3>
+            <table class="form-table">
+                <?php for ($i = 1; $i <= 4; $i++): ?>
+                    <tr>
+                        <th><label for="home_feature_<?php echo $i; ?>">ویژگی <?php echo $i; ?></label></th>
+                        <td>
+                            <textarea name="home_feature_<?php echo $i; ?>" id="home_feature_<?php echo $i; ?>" rows="3"
+                                class="large-text"><?php echo esc_textarea($features[$i]); ?></textarea>
+                        </td>
+                    </tr>
+                <?php endfor; ?>
             </table>
 
             <?php submit_button(); ?>
@@ -268,7 +301,7 @@ function theme_settings_home_page()
         for ($i = 1; $i <= 4; $i++) {
             update_option('home_cyberwhy_' . $i, sanitize_text_field($_POST['home_cyberwhy_' . $i]));
         }
-        // Save FAQs
+        // ذخیره سوالات متداول
         $faq_data = [];
         if (isset($_POST['home_faq_title_0'])) {
             for ($i = 0; isset($_POST['home_faq_title_' . $i]); $i++) {
@@ -344,7 +377,7 @@ function theme_settings_home_page()
                     </tr>
                 <?php endfor; ?>
             </table>
-            <h3>سوالات متداوم</h3>
+            <h3>سوالات متداول</h3>
             <div id="faq-container">
                 <?php
                 $faqs = get_option('home_faq_items', []);
@@ -409,7 +442,6 @@ function theme_settings_home_page()
     <?php
 }
 
-// صفحه درباره ما (خالی)
 // صفحه درباره ما - به‌روزشده
 function theme_settings_about_page()
 {
@@ -443,27 +475,33 @@ function theme_settings_about_page()
                 <tr>
                     <th><label for="about_chart_title">عملکرد سایبریشو</label></th>
                     <td>
-                        <textarea name="about_chart_title" id="about_chart_title" rows="5" class="large-text"><?php echo esc_textarea($chart_title); ?></textarea>
+                        <textarea name="about_chart_title" id="about_chart_title" rows="5"
+                            class="large-text"><?php echo esc_textarea($chart_title); ?></textarea>
                     </td>
                 </tr>
                 <tr>
                     <th><label for="about_chart_years">سال‌های نمودار</label></th>
                     <td>
-                        <textarea name="about_chart_years" id="about_chart_years" rows="5" class="large-text"><?php echo esc_textarea($chart_years); ?></textarea>
+                        <textarea name="about_chart_years" id="about_chart_years" rows="5"
+                            class="large-text"><?php echo esc_textarea($chart_years); ?></textarea>
                     </td>
                 </tr>
                 <tr>
                     <th><label>عکس نمودار در دسکتاپ</label></th>
                     <td>
-                        <input type="text" name="about_chart_desktop_image" id="about_chart_desktop_image" value="<?php echo esc_attr($desktop_image); ?>" class="regular-text">
-                        <input type="button" class="button upload-chart-image" value="آپلود تصویر دسکتاپ" data-target="desktop">
+                        <input type="text" name="about_chart_desktop_image" id="about_chart_desktop_image"
+                            value="<?php echo esc_attr($desktop_image); ?>" class="regular-text">
+                        <input type="button" class="button upload-chart-image" value="آپلود تصویر دسکتاپ"
+                            data-target="desktop">
                     </td>
                 </tr>
                 <tr>
                     <th><label>عکس نمودار در موبایل</label></th>
                     <td>
-                        <input type="text" name="about_chart_mobile_image" id="about_chart_mobile_image" value="<?php echo esc_attr($mobile_image); ?>" class="regular-text">
-                        <input type="button" class="button upload-chart-image" value="آپلود تصویر موبایل" data-target="mobile">
+                        <input type="text" name="about_chart_mobile_image" id="about_chart_mobile_image"
+                            value="<?php echo esc_attr($mobile_image); ?>" class="regular-text">
+                        <input type="button" class="button upload-chart-image" value="آپلود تصویر موبایل"
+                            data-target="mobile">
                     </td>
                 </tr>
             </table>
@@ -498,14 +536,519 @@ function theme_settings_about_page()
     <?php
 }
 
-// صفحه لندینگ (خالی)
+// صفحه لندینگ
 function theme_settings_landing_page()
 {
+    // ذخیره تنظیمات
+    if (isset($_POST['submit'])) {
+        // ذخیره هدر و محتوای اولیه
+        update_option('landing_initial_header', sanitize_textarea_field($_POST['landing_initial_header']));
+        update_option('landing_initial_content', sanitize_textarea_field($_POST['landing_initial_content']));
+        // ذخیره هدر و محتوای پاورقی
+        update_option('landing_footer_header', sanitize_textarea_field($_POST['landing_footer_header']));
+        update_option('landing_footer_content', sanitize_textarea_field($_POST['landing_footer_content']));
+        // ذخیره هدر قیمت‌گذاری
+        update_option('landing_pricing_header', sanitize_textarea_field($_POST['landing_pricing_header']));
+        // ذخیره جدول قیمت‌گذاری
+        $pricing_rows = [];
+        if (isset($_POST['pricing_row'])) {
+            foreach ($_POST['pricing_row'] as $index => $row) {
+                $pricing_rows[$index] = [
+                    'description' => sanitize_textarea_field($row['description']),
+                    'duration' => sanitize_textarea_field($row['duration']),
+                    'price' => sanitize_textarea_field($row['price']),
+                ];
+            }
+        }
+        update_option('landing_pricing_rows', $pricing_rows);
+        // ذخیره محتوای فوتر قیمت‌گذاری
+        update_option('landing_pricing_footer', sanitize_textarea_field($_POST['landing_pricing_footer']));
+        // ذخیره انواع سایت
+        $site_types = [];
+        if (isset($_POST['site_type'])) {
+            foreach ($_POST['site_type'] as $index => $site) {
+                $site_types[$index] = [
+                    'image' => esc_url_raw($site['image']),
+                    'content_header' => sanitize_textarea_field($site['content_header']),
+                    'content' => sanitize_textarea_field($site['content']),
+                    'feature_header' => sanitize_textarea_field($site['feature_header']),
+                    'feature_1' => sanitize_textarea_field($site['feature_1']),
+                    'feature_2' => sanitize_textarea_field($site['feature_2']),
+                    'feature_3' => sanitize_textarea_field($site['feature_3']),
+                ];
+            }
+        }
+        update_option('landing_site_types', $site_types);
+        // ذخیره سوالات متداول
+        $faq_data = [];
+        if (isset($_POST['landing_page_faq_title_0'])) {
+            for ($i = 0; isset($_POST['landing_page_faq_title_' . $i]); $i++) {
+                $faq_data[] = [
+                    'title' => sanitize_text_field($_POST['landing_page_faq_title_' . $i]),
+                    'content' => sanitize_textarea_field($_POST['landing_page_faq_content_' . $i]),
+                ];
+            }
+        }
+        update_option('landing_page_faqs', $faq_data);
+
+        ?>
+        <div class="updated">
+            <p>تنظیمات صفحه لندینگ ذخیره شد.</p>
+        </div>
+        <?php
+    }
+
+    // دریافت مقادیر فعلی
+    $initial_header = get_option('landing_initial_header', '');
+    $initial_content = get_option('landing_initial_content', '');
+    $footer_header = get_option('landing_footer_header', '');
+    $footer_content = get_option('landing_footer_content', '');
+    $pricing_header = get_option('landing_pricing_header', '');
+    $pricing_rows = get_option('landing_pricing_rows', []);
+    $pricing_footer = get_option('landing_pricing_footer', '');
+    $site_types = get_option('landing_site_types', []);
+    $faqs = get_option('landing_page_faqs', []);
+
+    // اگر هیچ نوع سایتی وجود ندارد، یک نمونه خالی اضافه کن
+    if (empty($site_types)) {
+        $site_types[] = [
+            'image' => '',
+            'content_header' => '',
+            'content' => '',
+            'feature_header' => '',
+            'feature_1' => '',
+            'feature_2' => '',
+            'feature_3' => ''
+        ];
+    }
+
+    // اگر هیچ سطری برای قیمت‌گذاری وجود ندارد، یک نمونه خالی اضافه کن
+    if (empty($pricing_rows)) {
+        $pricing_rows[] = [
+            'description' => '',
+            'duration' => '',
+            'price' => ''
+        ];
+    }
+
+    // اگر هیچ سوالی وجود ندارد، یک نمونه خالی اضافه کن
+    if (empty($faqs)) {
+        $faqs[] = [
+            'title' => '',
+            'content' => ''
+        ];
+    }
     ?>
-    <div class="tab-content">
+    <div class="tab-content landing-page">
         <h2>صفحه لندینگ</h2>
-        <p>این بخش فعلاً خالی است.</p>
+        <form method="post" action="">
+            <!-- هدر و محتوای اولیه -->
+            <h3>هدر و محتوای اولیه</h3>
+            <table class="form-table">
+                <tr>
+                    <th><label for="landing_initial_header">هدر اولیه</label></th>
+                    <td>
+                        <textarea name="landing_initial_header" id="landing_initial_header" rows="3" class="large-text"><?php echo esc_textarea($initial_header); ?></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="landing_initial_content">محتوای اولیه</label></th>
+                    <td>
+                        <textarea name="landing_initial_content" id="landing_initial_content" rows="5" class="large-text"><?php echo esc_textarea($initial_content); ?></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="landing_footer_header">هدر پاورقی</label></th>
+                    <td>
+                        <textarea name="landing_footer_header" id="landing_footer_header" rows="3" class="large-text"><?php echo esc_textarea($footer_header); ?></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="landing_footer_content">محتوای پاورقی</label></th>
+                    <td>
+                        <textarea name="landing_footer_content" id="landing_footer_content" rows="5" class="large-text"><?php echo esc_textarea($footer_content); ?></textarea>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- کانتینر انواع سایت -->
+            <h3>انواع سایت</h3>
+            <div id="site-types-container">
+                <?php foreach ($site_types as $index => $site): ?>
+                    <div class="site-type-item" data-index="<?php echo $index; ?>">
+                        <h4>نوع سایت <?php echo $index + 1; ?>
+                            <button type="button" class="button remove-site-type">حذف</button>
+                        </h4>
+                        <table class="form-table">
+                            <tr class="image-section">
+                                <th><label>عکس این قسمت</label></th>
+                                <td>
+                                    <input type="hidden" name="site_type[<?php echo $index; ?>][image]" 
+                                        class="site-image-url" value="<?php echo esc_attr($site['image']); ?>">
+                                    <input type="button" class="button upload-image-button" value="آپلود تصویر" data-target="site">
+                                    <div class="image-preview site-image-preview">
+                                        <?php if (!empty($site['image'])): ?>
+                                            <img src="<?php echo esc_url($site['image']); ?>" style="max-width: 200px;">
+                                        <?php endif; ?>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="site_type_content_header_<?php echo $index; ?>">هدر محتوا</label></th>
+                                <td>
+                                    <textarea name="site_type[<?php echo $index; ?>][content_header]" 
+                                        id="site_type_content_header_<?php echo $index; ?>" rows="3" 
+                                        class="large-text"><?php echo esc_textarea($site['content_header']); ?></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="site_type_content_<?php echo $index; ?>">محتوا</label></th>
+                                <td>
+                                    <textarea name="site_type[<?php echo $index; ?>][content]" 
+                                        id="site_type_content_<?php echo $index; ?>" rows="5" 
+                                        class="large-text"><?php echo esc_textarea($site['content']); ?></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="site_type_feature_header_<?php echo $index; ?>">هدر ویژگی</label></th>
+                                <td>
+                                    <textarea name="site_type[<?php echo $index; ?>][feature_header]" 
+                                        id="site_type_feature_header_<?php echo $index; ?>" rows="3" 
+                                        class="large-text"><?php echo esc_textarea($site['feature_header']); ?></textarea>
+                                </td>
+                            </tr>
+                            <?php for ($i = 1; $i <= 3; $i++): ?>
+                                <tr>
+                                    <th><label for="site_type_feature_<?php echo $i; ?>_<?php echo $index; ?>">ویژگی <?php echo $i; ?></label></th>
+                                    <td>
+                                        <textarea name="site_type[<?php echo $index; ?>][feature_<?php echo $i; ?>]" 
+                                            id="site_type_feature_<?php echo $i; ?>_<?php echo $index; ?>" rows="3" 
+                                            class="large-text"><?php echo esc_textarea($site['feature_' . $i]); ?></textarea>
+                                    </td>
+                                </tr>
+                            <?php endfor; ?>
+                        </table>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <p>
+                <button type="button" class="button button-primary add-site-type">افزودن نوع سایت جدید</button>
+            </p>
+
+            <!-- قیمت و تعرفه‌های طراحی سایت -->
+            <h3>قیمت و تعرفه‌های طراحی سایت</h3>
+            <table class="form-table">
+                <tr>
+                    <th><label for="landing_pricing_header">محتوای هدر</label></th>
+                    <td>
+                        <textarea name="landing_pricing_header" id="landing_pricing_header" rows="3" class="large-text"><?php echo esc_textarea($pricing_header); ?></textarea>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- جدول قیمت‌گذاری -->
+            <h4>جدول</h4>
+            <div id="pricing-rows-container">
+                <?php foreach ($pricing_rows as $index => $row): ?>
+                    <div class="pricing-row-item" data-index="<?php echo $index; ?>">
+                        <h5>سطر <?php echo $index + 1; ?>
+                            <button type="button" class="button remove-pricing-row">حذف</button>
+                        </h5>
+                        <table class="form-table">
+                            <tr>
+                                <th><label for="pricing_row_description_<?php echo $index; ?>">شرح خدمات</label></th>
+                                <td>
+                                    <textarea name="pricing_row[<?php echo $index; ?>][description]" 
+                                        id="pricing_row_description_<?php echo $index; ?>" rows="3" 
+                                        class="large-text"><?php echo esc_textarea($row['description']); ?></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="pricing_row_duration_<?php echo $index; ?>">مدت زمان</label></th>
+                                <td>
+                                    <textarea name="pricing_row[<?php echo $index; ?>][duration]" 
+                                        id="pricing_row_duration_<?php echo $index; ?>" rows="3" 
+                                        class="large-text"><?php echo esc_textarea($row['duration']); ?></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="pricing_row_price_<?php echo $index; ?>">قیمت</label></th>
+                                <td>
+                                    <textarea name="pricing_row[<?php echo $index; ?>][price]" 
+                                        id="pricing_row_price_<?php echo $index; ?>" rows="3" 
+                                        class="large-text"><?php echo esc_textarea($row['price']); ?></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <p>
+                <button type="button" class="button button-primary add-pricing-row">افزودن سطر جدید</button>
+            </p>
+
+            <!-- محتوای فوتر قیمت‌گذاری -->
+            <table class="form-table">
+                <tr>
+                    <th><label for="landing_pricing_footer">محتوای فوتر</label></th>
+                    <td>
+                        <textarea name="landing_pricing_footer" id="landing_pricing_footer" rows="5" class="large-text"><?php echo esc_textarea($pricing_footer); ?></textarea>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- سوالات متداول -->
+            <h3>سوالات متداول</h3>
+            <div id="landing-faq-container">
+                <?php foreach ($faqs as $index => $faq): ?>
+                    <div class="faq-item" data-index="<?php echo $index; ?>">
+                        <h4>سوال <?php echo $index + 1; ?>
+                            <button type="button" class="button remove-landing-faq">حذف</button>
+                        </h4>
+                        <table class="form-table">
+                            <tr>
+                                <th><label for="landing_page_faq_title_<?php echo $index; ?>">عنوان سوال</label></th>
+                                <td>
+                                    <input type="text" name="landing_page_faq_title_<?php echo $index; ?>" 
+                                        id="landing_page_faq_title_<?php echo $index; ?>" 
+                                        value="<?php echo esc_attr($faq['title']); ?>" class="regular-text">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="landing_page_faq_content_<?php echo $index; ?>">متن پاسخ</label></th>
+                                <td>
+                                    <textarea name="landing_page_faq_content_<?php echo $index; ?>" 
+                                        id="landing_page_faq_content_<?php echo $index; ?>" rows="5" 
+                                        class="large-text"><?php echo esc_textarea($faq['content']); ?></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <p>
+                <button type="button" class="button button-primary add-landing-faq">افزودن سوال جدید</button>
+            </p>
+
+            <?php submit_button(); ?>
+        </form>
     </div>
+
+    <script>
+        jQuery(document).ready(function ($) {
+            // بررسی وجود wp.media
+            if (typeof wp === 'undefined' || typeof wp.media === 'undefined') {
+                console.error('wp.media is not loaded');
+                return;
+            }
+
+            // آپلود تصویر
+            $(document).on('click', '.upload-image-button', function (e) {
+                e.preventDefault();
+                var button = $(this);
+                var target = button.data('target');
+                var container = button.closest('.site-type-item');
+                var image_url_field = container.find('.' + target + '-image-url');
+                var image_preview = container.find('.' + target + '-image-preview');
+
+                var frame = wp.media({
+                    title: 'انتخاب تصویر',
+                    button: { text: 'استفاده از تصویر' },
+                    multiple: false
+                });
+
+                frame.on('select', function () {
+                    var attachment = frame.state().get('selection').first().toJSON();
+                    image_url_field.val(attachment.url);
+                    image_preview.html('<img src="' + attachment.url + '" style="max-width: 200px;">');
+                });
+
+                frame.open();
+            });
+
+            // افزودن نوع سایت جدید
+            $('.add-site-type').on('click', function () {
+                var container = $('#site-types-container');
+                var index = container.find('.site-type-item').length;
+                var template = `
+                    <div class="site-type-item" data-index="${index}">
+                        <h4>نوع سایت ${index + 1}
+                            <button type="button" class="button remove-site-type">حذف</button>
+                        </h4>
+                        <table class="form-table">
+                            <tr class="image-section">
+                                <th><label>عکس این قسمت</label></th>
+                                <td>
+                                    <input type="hidden" name="site_type[${index}][image]" class="site-image-url">
+                                    <input type="button" class="button upload-image-button" value="آپلود تصویر" data-target="site">
+                                    <div class="image-preview site-image-preview"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="site_type_content_header_${index}">هدر محتوا</label></th>
+                                <td>
+                                    <textarea name="site_type[${index}][content_header]" id="site_type_content_header_${index}" rows="3" class="large-text"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="site_type_content_${index}">محتوا</label></th>
+                                <td>
+                                    <textarea name="site_type[${index}][content]" id="site_type_content_${index}" rows="5" class="large-text"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="site_type_feature_header_${index}">هدر ویژگی</label></th>
+                                <td>
+                                    <textarea name="site_type[${index}][feature_header]" id="site_type_feature_header_${index}" rows="3" class="large-text"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="site_type_feature_1_${index}">ویژگی 1</label></th>
+                                <td>
+                                    <textarea name="site_type[${index}][feature_1]" id="site_type_feature_1_${index}" rows="3" class="large-text"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="site_type_feature_2_${index}">ویژگی 2</label></th>
+                                <td>
+                                    <textarea name="site_type[${index}][feature_2]" id="site_type_feature_2_${index}" rows="3" class="large-text"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="site_type_feature_3_${index}">ویژگی 3</label></th>
+                                <td>
+                                    <textarea name="site_type[${index}][feature_3]" id="site_type_feature_3_${index}" rows="3" class="large-text"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>`;
+                container.append(template);
+            });
+
+            // حذف نوع سایت
+            $(document).on('click', '.remove-site-type', function () {
+                if ($('.site-type-item').length > 1) {
+                    $(this).closest('.site-type-item').remove();
+                    $('.site-type-item').each(function (i) {
+                        $(this).attr('data-index', i);
+                        $(this).find('h4').text('نوع سایت ' + (i + 1));
+                        $(this).find('input, textarea, button').each(function () {
+                            var name = $(this).attr('name');
+                            var id = $(this).attr('id');
+                            if (name) {
+                                $(this).attr('name', name.replace(/site_type\[\d+\]/, 'site_type[' + i + ']'));
+                            }
+                            if (id) {
+                                $(this).attr('id', id.replace(/site_type_([a-z_]+)_(\d+)/, 'site_type_$1_' + i));
+                            }
+                        });
+                    });
+                }
+            });
+
+            // افزودن سطر جدید به جدول قیمت‌گذاری
+            $('.add-pricing-row').on('click', function () {
+                var container = $('#pricing-rows-container');
+                var index = container.find('.pricing-row-item').length;
+                var template = `
+                    <div class="pricing-row-item" data-index="${index}">
+                        <h5>سطر ${index + 1}
+                            <button type="button" class="button remove-pricing-row">حذف</button>
+                        </h5>
+                        <table class="form-table">
+                            <tr>
+                                <th><label for="pricing_row_description_${index}">شرح خدمات</label></th>
+                                <td>
+                                    <textarea name="pricing_row[${index}][description]" id="pricing_row_description_${index}" rows="3" class="large-text"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="pricing_row_duration_${index}">مدت زمان</label></th>
+                                <td>
+                                    <textarea name="pricing_row[${index}][duration]" id="pricing_row_duration_${index}" rows="3" class="large-text"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="pricing_row_price_${index}">قیمت</label></th>
+                                <td>
+                                    <textarea name="pricing_row[${index}][price]" id="pricing_row_price_${index}" rows="3" class="large-text"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>`;
+                container.append(template);
+            });
+
+            // حذف سطر قیمت‌گذاری
+            $(document).on('click', '.remove-pricing-row', function () {
+                if ($('.pricing-row-item').length > 1) {
+                    $(this).closest('.pricing-row-item').remove();
+                    $('.pricing-row-item').each(function (i) {
+                        $(this).attr('data-index', i);
+                        $(this).find('h5').text('سطر ' + (i + 1));
+                        $(this).find('textarea').each(function () {
+                            var name = $(this).attr('name');
+                            var id = $(this).attr('id');
+                            if (name) {
+                                $(this).attr('name', name.replace(/pricing_row\[\d+\]/, 'pricing_row[' + i + ']'));
+                            }
+                            if (id) {
+                                $(this).attr('id', id.replace(/pricing_row_([a-z_]+)_(\d+)/, 'pricing_row_$1_' + i));
+                            }
+                        });
+                    });
+                }
+            });
+
+            // افزودن سوال جدید به سوالات متداول
+            $('.add-landing-faq').on('click', function () {
+                var container = $('#landing-faq-container');
+                var index = container.find('.faq-item').length;
+                var template = `
+                    <div class="faq-item" data-index="${index}">
+                        <h4>سوال ${index + 1}
+                            <button type="button" class="button remove-landing-faq">حذف</button>
+                        </h4>
+                        <table class="form-table">
+                            <tr>
+                                <th><label for="landing_page_faq_title_${index}">عنوان سوال</label></th>
+                                <td>
+                                    <input type="text" name="landing_page_faq_title_${index}" id="landing_page_faq_title_${index}" class="regular-text">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="landing_page_faq_content_${index}">متن پاسخ</label></th>
+                                <td>
+                                    <textarea name="landing_page_faq_content_${index}" id="landing_page_faq_content_${index}" rows="5" class="large-text"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>`;
+                container.append(template);
+            });
+
+            // حذف سوال از سوالات متداول
+            $(document).on('click', '.remove-landing-faq', function () {
+                if ($('#landing-faq-container .faq-item').length > 1) {
+                    $(this).closest('.faq-item').remove();
+                    $('#landing-faq-container .faq-item').each(function (i) {
+                        $(this).attr('data-index', i);
+                        $(this).find('h4').text('سوال ' + (i + 1));
+                        $(this).find('input, textarea').each(function () {
+                            var name = $(this).attr('name');
+                            var id = $(this).attr('id');
+                            if (name) {
+                                $(this).attr('name', name.replace(/landing_page_faq_(title|content)_\d+/, 'landing_page_faq_$1_' + i));
+                            }
+                            if (id) {
+                                $(this).attr('id', id.replace(/landing_page_faq_(title|content)_\d+/, 'landing_page_faq_$1_' + i));
+                            }
+                        });
+                    });
+                }
+            });
+        });
+    </script>
     <?php
 }
 
@@ -560,7 +1103,7 @@ function theme_settings_portfolio_page()
         unset($portfolio); // Unset reference to avoid issues
     }
     ?>
-    <div class="tab-content">
+    <div class="tab-content landing-page">
         <h2>صفحه نمونه کارها</h2>
         <form method="post" action="">
             <div id="portfolio-container">

@@ -1,53 +1,81 @@
-    <!--************************* start video landing section  *************************-->
-    <div class="video-landing-section">
-      <div class="container">
-        <div class="row">
-          <div class="right-info animated-section-right">
-            <div class="item">
-              <span><p>1</p></span>
-              <p class="text">کنسـل کنید و بیخیال حـوزه سـایت شوید!</p>
-            </div>
-            <div class="item">
-              <span><p>2</p></span>
-              <p class="text">کســی را به ما برای یادگیـری معـرفی کنیـد</p>
-            </div>
+<!--************************* start video landing section  *************************-->
+<div class="video-landing-section">
+  <div class="container">
+    <div class="row">
+      <div class="right-info animated-section-right">
+        <?php
+        // Start the loop.
+        if (have_posts()):
+          while (have_posts()):
+            the_post();
+
+            // Get meta data
+            $video_id = get_post_meta(get_the_ID(), '_landing_video_attachment_id', true);
+            $thumbnail_id = get_post_meta(get_the_ID(), '_landing_thumbnail_attachment_id', true);
+            $container_1 = get_post_meta(get_the_ID(), '_landing_container_1', true);
+            $container_2 = get_post_meta(get_the_ID(), '_landing_container_2', true);
+            $container_3 = get_post_meta(get_the_ID(), '_landing_container_3', true);
+            $container_4 = get_post_meta(get_the_ID(), '_landing_container_4', true);
+
+            // Get URLs
+            $video_url = $video_id ? wp_get_attachment_url($video_id) : '';
+            $thumbnail_url = $thumbnail_id ? wp_get_attachment_image_url($thumbnail_id, 'large') : '';
+             ?>
+
+            <?php
+
+          endwhile;
+        endif;
+        ?>
+        <div class="item">
+          <span>
+            <p>1</p>
+          </span>
+          <p class="text"><?php echo  $container_1 ?></p>
+        </div>
+        <div class="item">
+          <span>
+            <p>2</p>
+          </span>
+          <p class="text"><?php echo  $container_2 ?></p>
+        </div>
+      </div>
+      <div class="video-wrapper animated-section">
+        <div id="videoContainer" class="video-container">
+          <video id="myVideo" class="video" src="<?php echo    $video_url  ?>"
+            poster="<?php echo    $thumbnail_url ?>">
+            <source src="mov_bbb.mp4" type="video/mp4" />
+            <source src="mov_bbb.ogg" type="video/ogg" />
+            Your browser does not support HTML video.
+          </video>
+          <div id="videoOverlay" class="video-overlay"></div>
+          <!-- المان جدید برای پوشش -->
+          <div id="playButton" class="play-button">
+            <svg>
+              <use href="#play-button-icon"></use>
+            </svg>
           </div>
-          <div class="video-wrapper animated-section">
-            <div id="videoContainer" class="video-container">
-              <video
-                id="myVideo"
-                class="video"
-                src="<?php echo get_template_directory_uri() . '/assets/video/115_1.mp4'?>"
-                poster="<?php echo get_template_directory_uri() . '/assets/img/bryan-cranston-aaron-paul-breaking-bad_11zon-min.jpg' ?>"
-              >
-                <source src="mov_bbb.mp4" type="video/mp4" />
-                <source src="mov_bbb.ogg" type="video/ogg" />
-                Your browser does not support HTML video.
-              </video>
-              <div id="videoOverlay" class="video-overlay"></div>
-              <!-- المان جدید برای پوشش -->
-              <div id="playButton" class="play-button">
-                <svg>
-                  <use href="#play-button-icon"></use>
-                </svg>
-              </div>
-              <div class="text-video" id="landing-video-text">
-                <h3>برای یک انتخـــــــــاب درست</h3>
-                <p>ویدئوی بالا بهترین مشاوره برای شماست!</p>
-              </div>
-            </div>
-          </div>
-          <div class="left-info animated-section-left">
-            <div class="item">
-              <span><p>3</p></span>
-              <p class="text">به مـــا جهـت ارائـه خدمـات اعتمــاد کنیـد</p>
-            </div>
-            <div class="item">
-              <span><p>4</p></span>
-              <p class="text">رقبای کاربلــد را ما به شــــما معـرفی کنیم</p>
-            </div>
+          <div class="text-video" id="landing-video-text">
+            <h3>برای یک انتخـــــــــاب درست</h3>
+            <p>ویدئوی بالا بهترین مشاوره برای شماست!</p>
           </div>
         </div>
       </div>
+      <div class="left-info animated-section-left">
+        <div class="item">
+          <span>
+            <p>3</p>
+          </span>
+          <p class="text"><?php echo  $container_3 ?></p>
+        </div>
+        <div class="item">
+          <span>
+            <p>4</p>
+          </span>
+          <p class="text"><?php echo  $container_4 ?></p>
+        </div>
+      </div>
     </div>
-    <!--************************* end video landing section  *************************-->
+  </div>
+</div>
+<!--************************* end video landing section  *************************-->

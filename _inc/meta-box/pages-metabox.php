@@ -536,3 +536,698 @@ function save_my_contact_location_metabox($post_id)
     }
 }
 add_action('save_post', 'save_my_contact_location_metabox');
+
+
+
+// Add meta boxes for 'landing' page template
+function my_custom_landing_metaboxes()
+{
+    global $post;
+
+    if ($post && $post->post_type === 'page') {
+        $page_slug = $post->post_name;
+        if ($page_slug === 'landing') {
+
+            // Meta box for video upload via Media Library
+            add_meta_box(
+                'my_landing_video_metabox',
+                'ویدیو صفحه لندینگ',
+                'my_landing_video_metabox_callback',
+                'page',
+                'normal',
+                'high'
+            );
+
+            // Meta box for thumbnail image upload
+            add_meta_box(
+                'my_landing_thumbnail_metabox',
+                'عکس تامبنیل صفحه لندینگ',
+                'my_landing_thumbnail_metabox_callback',
+                'page',
+                'normal',
+                'high'
+            );
+
+            // Meta box for 4 text containers
+            add_meta_box(
+                'my_landing_containers_metabox',
+                'چهار کانتینر متنی',
+                'my_landing_containers_metabox_callback',
+                'page',
+                'normal',
+                'high'
+            );
+        }
+    }
+}
+add_action('add_meta_boxes', 'my_custom_landing_metaboxes');
+
+
+// Callback for Video Upload Metabox
+function my_landing_video_metabox_callback($post)
+{
+    $video_id = get_post_meta($post->ID, '_landing_video_attachment_id', true);
+    $video_url = $video_id ? wp_get_attachment_url($video_id) : '';
+
+    wp_nonce_field('my_landing_video_nonce', 'landing_video_nonce');
+    ?>
+    <div class="video-preview">
+        <?php if ($video_url): ?>
+            <video controls style="max-width:100%; margin-top:10px;">
+                <source src="<?php echo esc_url($video_url); ?>" type="video/mp4">
+                مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.
+            </video>
+        <?php endif; ?>
+    </div>
+
+    <input type="hidden" name="landing_video_attachment_id" id="landing_video_attachment_id" value="<?php echo esc_attr($video_id); ?>" />
+
+    <button type="button" class="button button-secondary" id="upload_video_button">
+        <?php echo $video_id ? 'تغییر ویدیو' : 'انتخاب ویدیو'; ?>
+    </button>
+
+    <?php if ($video_id): ?>
+        <button type="button" class="button button-secondary" id="remove_video_button" style="margin-top: 10px; color: red;">
+            حذف ویدیو
+        </button>
+    <?php endif; ?>
+
+    <script>
+        jQuery(document).ready(function ($) {
+            var mediaUploader;
+
+            $('#upload_video_button').on('click', function (e) {
+                e.preventDefault();
+
+                if (mediaUploader) {
+                    mediaUploader.open();
+                    return;
+                }
+
+                mediaUploader = wp.media.frames.file_frame = wp.media({
+                    title: 'انتخاب ویدیو',
+                    button: {
+                        text: 'استفاده از این ویدیو'
+                    },
+                    multiple: false,
+                    library: {
+                        type: 'video'
+                    }
+                });
+
+                mediaUploader.on('select', function () {
+                    var attachment = mediaUploader.state().get('selection').first().toJSON();
+                    $('#landing_video_attachment_id').val(attachment.id);
+
+                    var videoHtml = '<video controls style="max-width:100%; margin-top:10px;"><source src="' + attachment.url + '" type="video/mp4"></video>';
+                    $('.video-preview').html(videoHtml);
+                    $('#remove_video_button').show();
+                });
+
+                mediaUploader.open();
+            });
+
+            $('#remove_video_button').on('click', function (e) {
+                e.preventDefault();
+                $('#landing_video_attachment_id').val('');
+                $('.video-preview').html('');
+                $(this).hide();
+            });
+        });
+    </script>
+    <?php
+}
+
+
+// Callback for Thumbnail Image Upload Metabox
+function my_landing_thumbnail_metabox_callback($post)
+{
+    $thumbnail_id = get_post_meta($post->ID, '_landing_thumbnail_attachment_id', true);
+    $thumbnail_url = $thumbnail_id ? wp_get_attachment_image_url($thumbnail_id, 'medium') : '';
+
+    wp_nonce_field('my_landing_thumbnail_nonce', 'landing_thumbnail_nonce');
+    ?>
+    <div class="thumbnail-preview">
+        <?php if ($thumbnail_url): ?>
+            <img src="<?php echo esc_url($thumbnail_url); ?>" alt="Thumbnail Preview" style="max-width: 100%; margin-top: 10px; border-radius: 8px;" />
+        <?php endif; ?>
+    </div>
+
+    <input type="hidden" name="landing_thumbnail_attachment_id" id="landing_thumbnail_attachment_id" value="<?php echo esc_attr($thumbnail_id); ?>" />
+
+    <button type="button" class="button button-secondary" id="upload_thumbnail_button">
+        <?php echo $thumbnail_id ? 'تغییر تصویر' : 'انتخاب تامبنیل'; ?>
+    </button>
+
+    <?php if ($thumbnail_id): ?>
+        <button type="button" class="button button-secondary" id="remove_thumbnail_button" style="margin-top: 10px; color: red;">
+            حذف تصویر
+        </button>
+    <?php endif; ?>
+
+    <script>
+        jQuery(document).ready(function ($) {
+            var mediaUploader;
+
+            $('#upload_thumbnail_button').on('click', function (e) {
+                e.preventDefault();
+
+                if (mediaUploader) {
+                    mediaUploader.open();
+                    return;
+                }
+
+                mediaUploader = wp.media.frames.file_frame = wp.media({
+                    title: 'انتخاب تصویر',
+                    button: {
+                        text: 'استفاده از این تصویر'
+                    },
+                    multiple: false,
+                    library: {
+                        type: 'image'
+                    }
+                });
+
+                mediaUploader.on('select', function () {
+                    var attachment = mediaUploader.state().get('selection').first().toJSON();
+                    $('#landing_thumbnail_attachment_id').val(attachment.id);
+
+                    var imageUrl = attachment.sizes && attachment.sizes.medium ? attachment.sizes.medium.url : attachment.url;
+
+                    $('.thumbnail-preview').html('<img src="' + imageUrl + '" style="max-width:100%; margin-top:10px; border-radius:8px;" />');
+                    $('#remove_thumbnail_button').show();
+                });
+
+                mediaUploader.open();
+            });
+
+            $('#remove_thumbnail_button').on('click', function (e) {
+                e.preventDefault();
+                $('#landing_thumbnail_attachment_id').val('');
+                $('.thumbnail-preview').html('');
+                $(this).hide();
+            });
+        });
+    </script>
+    <?php
+}
+
+
+// Callback for 4 Text Containers Metabox
+function my_landing_containers_metabox_callback($post)
+{
+    $container_1 = get_post_meta($post->ID, '_landing_container_1', true);
+    $container_2 = get_post_meta($post->ID, '_landing_container_2', true);
+    $container_3 = get_post_meta($post->ID, '_landing_container_3', true);
+    $container_4 = get_post_meta($post->ID, '_landing_container_4', true);
+
+    wp_nonce_field('my_landing_containers_nonce', 'landing_containers_nonce');
+    ?>
+    <div style="display:flex; flex-direction:column; gap:15px;">
+        <div>
+            <label for="landing_container_1">کانتینر 1:</label>
+            <textarea name="landing_container_1" id="landing_container_1" rows="3" style="width:100%;"><?php echo esc_textarea($container_1); ?></textarea>
+        </div>
+
+        <div>
+            <label for="landing_container_2">کانتینر 2:</label>
+            <textarea name="landing_container_2" id="landing_container_2" rows="3" style="width:100%;"><?php echo esc_textarea($container_2); ?></textarea>
+        </div>
+
+        <div>
+            <label for="landing_container_3">کانتینر 3:</label>
+            <textarea name="landing_container_3" id="landing_container_3" rows="3" style="width:100%;"><?php echo esc_textarea($container_3); ?></textarea>
+        </div>
+
+        <div>
+            <label for="landing_container_4">کانتینر 4:</label>
+            <textarea name="landing_container_4" id="landing_container_4" rows="3" style="width:100%;"><?php echo esc_textarea($container_4); ?></textarea>
+        </div>
+    </div>
+    <?php
+}
+
+
+// Save Metabox Data
+function save_my_landing_metaboxes($post_id) {
+    // Check if this is an autosave
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    // Check Nonces
+    if (
+        (isset($_POST['landing_video_nonce']) && !wp_verify_nonce($_POST['landing_video_nonce'], 'my_landing_video_nonce')) ||
+        (isset($_POST['landing_thumbnail_nonce']) && !wp_verify_nonce($_POST['landing_thumbnail_nonce'], 'my_landing_thumbnail_nonce')) ||
+        (isset($_POST['landing_containers_nonce']) && !wp_verify_nonce($_POST['landing_containers_nonce'], 'my_landing_containers_nonce'))
+    ) {
+        return;
+    }
+
+    // Check user capability
+    if (!current_user_can('edit_page', $post_id)) {
+        return;
+    }
+
+    // Save Video Attachment ID
+    if (isset($_POST['landing_video_attachment_id'])) {
+        update_post_meta($post_id, '_landing_video_attachment_id', intval($_POST['landing_video_attachment_id']));
+    } else {
+        delete_post_meta($post_id, '_landing_video_attachment_id');
+    }
+
+    // Save Thumbnail Attachment ID
+    if (isset($_POST['landing_thumbnail_attachment_id'])) {
+        update_post_meta($post_id, '_landing_thumbnail_attachment_id', intval($_POST['landing_thumbnail_attachment_id']));
+    } else {
+        delete_post_meta($post_id, '_landing_thumbnail_attachment_id');
+    }
+
+    // Save Text Containers with character count validation
+    $containers = [
+        'landing_container_1',
+        'landing_container_2',
+        'landing_container_3',
+        'landing_container_4'
+    ];
+
+    $has_error = false;
+    
+    foreach ($containers as $container) {
+        if (isset($_POST[$container])) {
+            $text = sanitize_textarea_field($_POST[$container]);
+            $char_count = mb_strlen($text, 'UTF-8');
+            
+            if ($char_count > 42) {
+                $has_error = true;
+                set_transient('landing_container_error_' . $container, 
+                    sprintf('متن وارد شده در کانتینر %s باید حداکثر 42 کاراکتر باشد (تعداد کاراکترهای وارد شده: %d).', 
+                    str_replace('landing_container_', '', $container), 
+                    $char_count), 
+                45);
+            } else {
+                update_post_meta($post_id, '_' . $container, $text);
+            }
+        }
+    }
+    
+    if ($has_error) {
+        set_transient('landing_containers_validation_error', 'برخی فیلدها ذخیره نشدند. لطفا خطاهای مربوط به تعداد کاراکترها را بررسی کنید.', 45);
+    }
+}
+add_action('save_post', 'save_my_landing_metaboxes');
+
+// Display admin notices for container errors
+function display_landing_container_errors() {
+    // Display general validation error
+    if ($error = get_transient('landing_containers_validation_error')) {
+        ?>
+        <div class="notice notice-error is-dismissible">
+            <p><?php echo esc_html($error); ?></p>
+        </div>
+        <?php
+        delete_transient('landing_containers_validation_error');
+    }
+    
+    // Display individual container errors
+    for ($i = 1; $i <= 4; $i++) {
+        $container_key = 'landing_container_' . $i;
+        if ($error = get_transient('landing_container_error_' . $container_key)) {
+            ?>
+            <div class="notice notice-error is-dismissible">
+                <p><?php echo esc_html($error); ?></p>
+            </div>
+            <?php
+            delete_transient('landing_container_error_' . $container_key);
+        }
+    }
+}
+add_action('admin_notices', 'display_landing_container_errors');
+
+// Add character counter to textareas
+function add_container_character_counter() {
+    global $post;
+    
+    if ($post && $post->post_type === 'page' && $post->post_name === 'landing') {
+        ?>
+        <script>
+        jQuery(document).ready(function($) {
+            // Add character counter for each container
+            for (var i = 1; i <= 4; i++) {
+                var textarea = $('#landing_container_' + i);
+                var counter = $('<div class="character-counter" style="text-align: left; font-size: 12px; color: #666; margin-top: 5px;"></div>');
+                textarea.after(counter);
+                
+                // Update counter on input
+                textarea.on('input', function() {
+                    var text = $(this).val();
+                    var charCount = text.length;
+                    var counter = $(this).next('.character-counter');
+                    
+                    counter.text('تعداد کاراکترها: ' + charCount + ' (حداکثر 42 کاراکتر مجاز است)');
+                    
+                    if (charCount > 42) {
+                        counter.css('color', 'red');
+                    } else {
+                        counter.css('color', 'green');
+                    }
+                });
+                
+                // Trigger input event to update counter initially
+                textarea.trigger('input');
+            }
+        });
+        </script>
+        <?php
+    }
+}
+add_action('admin_footer', 'add_container_character_counter');
+
+
+
+function my_landing_page_metabox() {
+    global $post;
+
+    if ($post) {
+        $page_slug = $post->post_name;
+        if ($page_slug === 'landing') {
+            add_meta_box(
+                'landing_page_metabox',
+                'محتوا صفحه لندینگ',
+                'landing_page_metabox_callback',
+                'page',
+                'normal',
+                'high'
+            );
+        }
+    }
+}
+add_action('add_meta_boxes', 'my_landing_page_metabox');
+function landing_page_metabox_callback($post) {
+    wp_nonce_field('landing_metabox_nonce', 'landing_nonce');
+
+    // دریافت مقادیر ذخیره شده
+    $about_text = get_post_meta($post->ID, '_landing_about_text', true);
+    $content_text = get_post_meta($post->ID, '_landing_content_text', true);
+    $containers = get_post_meta($post->ID, '_landing_containers', true);
+    $containers_data = !empty($containers) ? json_decode($containers, true) : array();
+
+    ?>
+    <div class="landing-metabox-container">
+        <!-- فیلدهای اصلی -->
+        <div class="landing-field-group">
+            <h4>درباره صفحه طراحی سایت</h4>
+            <textarea name="landing_about_text" style="width: 100%; height: 100px;"><?php echo esc_textarea($about_text); ?></textarea>
+        </div>
+
+        <div class="landing-field-group">
+            <h4>محتوا</h4>
+            <textarea name="landing_content_text" style="width: 100%; height: 100px;"><?php echo esc_textarea($content_text); ?></textarea>
+        </div>
+
+        <!-- کانتینرها -->
+        <div class="landing-containers-wrapper">
+            <h3>محتوای داخل این صفحه</h3>
+            <button type="button" class="button add-container-btn">اضافه کردن کانتینر جدید</button>
+            
+            <div class="landing-containers">
+                <?php if (!empty($containers_data)): ?>
+                    <?php foreach ($containers_data as $index => $container): ?>
+                        <div class="landing-container" data-index="<?php echo $index; ?>">
+                            <div class="container-header">
+                                <h4>کانتینر <?php echo $index + 1; ?></h4>
+                                <button type="button" class="button remove-container-btn">حذف کانتینر</button>
+                            </div>
+                            
+                            <div class="container-fields">
+                                <!-- هدر کانتینر -->
+                                <div class="landing-field-group">
+                                    <h4>هدر (H4)</h4>
+                                    <input type="text" name="landing_containers[<?php echo $index; ?>][header]" 
+                                           value="<?php echo esc_attr($container['header'] ?? ''); ?>" style="width: 100%;">
+                                </div>
+                                
+                                <!-- آیتم‌ها (محتوا و لیست به ترتیب زمانی) -->
+                                <?php if (!empty($container['items'])): ?>
+                                    <?php foreach ($container['items'] as $item_index => $item): ?>
+                                        <div class="content-group" data-type="<?php echo esc_attr($item['type']); ?>">
+                                            <label><?php echo $item['type'] === 'content' ? 'محتوا' : 'لیست محتوا'; ?> <?php echo $item_index + 1; ?></label>
+                                            <textarea name="landing_containers[<?php echo $index; ?>][items][<?php echo $item_index; ?>][value]" 
+                                                      style="width: 100%; height: <?php echo $item['type'] === 'content' ? '100px' : '60px'; ?>;">
+                                                      <?php echo esc_textarea($item['value']); ?>
+                                            </textarea>
+                                            <input type="hidden" name="landing_containers[<?php echo $index; ?>][items][<?php echo $item_index; ?>][type]" 
+                                                   value="<?php echo esc_attr($item['type']); ?>">
+                                            <button type="button" class="button remove-content-btn">حذف آیتم</button>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                                
+                                <!-- دکمه‌های افزودن -->
+                                <div class="container-actions">
+                                    <button type="button" class="button add-content-btn">اضافه کردن محتوا</button>
+                                    <button type="button" class="button add-list-content-btn">اضافه کردن لیست محتوا</button>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    jQuery(document).ready(function($) {
+        // افزودن کانتینر جدید
+        $('.add-container-btn').on('click', function() {
+            var containerIndex = $('.landing-container').length;
+            var newContainer = `
+                <div class="landing-container" data-index="${containerIndex}">
+                    <div class="container-header">
+                        <h4>کانتینر ${containerIndex + 1}</h4>
+                        <button type="button" class="button remove-container-btn">حذف کانتینر</button>
+                    </div>
+                    
+                    <div class="container-fields">
+                        <div class="landing-field-group">
+                            <h4>هدر (H4)</h4>
+                            <input type="text" name="landing_containers[${containerIndex}][header]" style="width: 100%;">
+                        </div>
+                        
+                        <div class="container-actions">
+                            <button type="button" class="button add-content-btn">اضافه کردن محتوا</button>
+                            <button type="button" class="button add-list-content-btn">اضافه کردن لیست محتوا</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            $('.landing-containers').append(newContainer);
+        });
+        
+        // افزودن محتوای جدید
+        $(document).on('click', '.add-content-btn', function() {
+            var container = $(this).closest('.landing-container');
+            var containerIndex = container.data('index');
+            var itemCount = container.find('.content-group').length;
+            
+            var newContent = `
+                <div class="content-group" data-type="content">
+                    <label>محتوا ${itemCount + 1}</label>
+                    <textarea name="landing_containers[${containerIndex}][items][${itemCount}][value]" style="width: 100%; height: 100px;"></textarea>
+                    <input type="hidden" name="landing_containers[${containerIndex}][items][${itemCount}][type]" value="content">
+                    <button type="button" class="button remove-content-btn">حذف آیتم</button>
+                </div>
+            `;
+            
+            container.find('.container-actions').before(newContent);
+        });
+        
+        // افزودن لیست محتوای جدید
+        $(document).on('click', '.add-list-content-btn', function() {
+            var container = $(this).closest('.landing-container');
+            var containerIndex = container.data('index');
+            var itemCount = container.find('.content-group').length;
+            
+            var newListContent = `
+                <div class="content-group" data-type="list">
+                    <label>لیست محتوا ${itemCount + 1}</label>
+                    <textarea name="landing_containers[${containerIndex}][items][${itemCount}][value]" style="width: 100%; height: 60px;"></textarea>
+                    <input type="hidden" name="landing_containers[${containerIndex}][items][${itemCount}][type]" value="list">
+                    <button type="button" class="button remove-content-btn">حذف آیتم</button>
+                </div>
+            `;
+            
+            container.find('.container-actions').before(newListContent);
+        });
+        
+        // حذف کانتینر
+        $(document).on('click', '.remove-container-btn', function() {
+            if (confirm('آیا از حذف این کانتینر مطمئن هستید؟')) {
+                $(this).closest('.landing-container').remove();
+                updateContainerIndexes();
+            }
+        });
+        
+        // حذف آیتم
+        $(document).on('click', '.remove-content-btn', function() {
+            if (confirm('آیا از حذف این آیتم مطمئن هستید؟')) {
+                var contentGroup = $(this).closest('.content-group');
+                var container = contentGroup.closest('.landing-container');
+                contentGroup.remove();
+                updateItemIndexes(container);
+            }
+        });
+        
+        // به‌روزرسانی اندیس‌های کانتینرها
+        function updateContainerIndexes() {
+            $('.landing-container').each(function(index) {
+                $(this).attr('data-index', index);
+                $(this).find('.container-header h4').text(`کانتینر ${index + 1}`);
+                
+                $(this).find('[name^="landing_containers"]').each(function() {
+                    var name = $(this).attr('name');
+                    name = name.replace(/landing_containers\[\d+\]/, `landing_containers[${index}]`);
+                    $(this).attr('name', name);
+                });
+            });
+        }
+        
+        // به‌روزرسانی اندیس‌های آیتم‌ها
+        function updateItemIndexes(container) {
+            container.find('.content-group').each(function(index) {
+                var type = $(this).data('type');
+                var label = type === 'content' ? 'محتوا' : 'لیست محتوا';
+                $(this).find('label').text(`${label} ${index + 1}`);
+                
+                $(this).find('textarea').attr('name', `landing_containers[${container.data('index')}][items][${index}][value]`);
+                $(this).find('input[type="hidden"]').attr('name', `landing_containers[${container.data('index')}][items][${index}][type]`);
+            });
+        }
+    });
+    </script>
+
+    <style>
+    .landing-metabox-container {
+        padding: 15px;
+    }
+    .landing-field-group {
+        margin-bottom: 20px;
+    }
+    .landing-containers-wrapper {
+        margin-top: 30px;
+        border-top: 1px solid #ddd;
+        padding-top: 20px;
+    }
+    .landing-container {
+        background: #f9f9f9;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+    }
+    .container-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .container-header h4 {
+        margin: 0 15px 0 0;
+        flex: 1;
+        min-width: 100%;
+    }
+    .container-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .content-group {
+        background: #fff;
+        padding: 10px;
+        border: 1px solid #eee;
+        border-radius: 3px;
+    }
+    .content-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    .content-group button {
+        margin-top: 5px;
+    }
+    .container-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px dashed #ccc;
+    }
+    </style>
+    <?php
+}
+
+function save_landing_page_metabox($post_id) {
+    if (!isset($_POST['landing_nonce']) || !wp_verify_nonce($_POST['landing_nonce'], 'landing_metabox_nonce')) {
+        return;
+    }
+
+    if (!current_user_can('edit_page', $post_id)) {
+        return;
+    }
+
+    // ذخیره فیلدهای اصلی
+    if (isset($_POST['landing_about_text'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_about_text',
+            sanitize_textarea_field(wp_unslash($_POST['landing_about_text']))
+        );
+    }
+
+    if (isset($_POST['landing_content_text'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_content_text',
+            sanitize_textarea_field(wp_unslash($_POST['landing_content_text']))
+        );
+    }
+
+    // ذخیره کانتینرها
+    if (isset($_POST['landing_containers'])) {
+        $containers = $_POST['landing_containers'];
+        $clean_containers = array();
+
+        foreach ($containers as $container) {
+            $clean_container = array(
+                'header' => sanitize_text_field(wp_unslash($container['header'] ?? '')),
+                'items' => array()
+            );
+
+            // ذخیره آیتم‌ها (محتوا و لیست)
+            if (!empty($container['items'])) {
+                foreach ($container['items'] as $item) {
+                    $clean_item = array(
+                        'type' => sanitize_text_field(wp_unslash($item['type'])),
+                        'value' => sanitize_textarea_field(wp_unslash($item['value']))
+                    );
+                    if (!empty(trim($clean_item['value'])) && in_array($clean_item['type'], ['content', 'list'])) {
+                        $clean_container['items'][] = $clean_item;
+                    }
+                }
+            }
+
+            $clean_containers[] = $clean_container;
+        }
+
+        update_post_meta(
+            $post_id,
+            '_landing_containers',
+            wp_json_encode($clean_containers, JSON_UNESCAPED_UNICODE)
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_containers');
+    }
+}
+add_action('save_post', 'save_landing_page_metabox');

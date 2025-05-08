@@ -212,3 +212,17 @@
 .site-information tbody tr  td {
   width: 80%;
 }
+
+.landing-page  tr {
+  width: 50% !important;
+}
+.landing-page form table:nth-of-type(odd){
+  background-color: #efefef;
+  border-radius: 20px;
+  padding: 10px;
+}
+.landing-page h3 {
+  color: #3a189f;
+  font-size: 26px;
+  margin-top: 20px;
+}

@@ -1,26 +1,11 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <?php
 // دریافت داده‌ها از get_option
-$faq_items = get_option('landing_page_faqs', []);
+$faq_items = get_option('home_faq_items', []);
 
 // بررسی وجود داده
 if (!empty($faq_items) && is_array($faq_items)) {
+
+
     foreach ($faq_items as $index => $item) {
         $title = isset($item['title']) ? esc_html($item['title']) : '';
         $content = isset($item['content']) ? esc_html($item['content']) : '';
@@ -29,12 +14,16 @@ if (!empty($faq_items) && is_array($faq_items)) {
             <div class="col-11 wrapper-text">
                 <button class="accordion-header">
                     <p class="text">
-                        <?php echo $title; ?>
+                        <?php
+                       echo $title
+                            ?>
                     </p>
                 </button>
                 <div class="accordion-content">
                     <p>
-                        <?php echo $content; ?>
+                        <?php
+                        echo $content
+                            ?>
                     </p>
                 </div>
             </div>
@@ -49,9 +38,14 @@ if (!empty($faq_items) && is_array($faq_items)) {
                 </div>
             </div>
         </div>
-        <?php
+
+    <?php
     }
+
+
 } else {
     echo '<p>سوالی یافت نشد.</p>';
 }
 ?>
+
+

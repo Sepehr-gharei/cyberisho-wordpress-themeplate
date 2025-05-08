@@ -1,80 +1,75 @@
-    <!--************************* start webdesing price section  *************************-->
-    <div class="webdesing-price-section animated-section">
-      <div class="container">
-        <div class="title-wrapper">
-          <h3>قیمت و تعرفه طراحی سایت</h3>
-          <p>
-            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
-            استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در
-            ستون و سطر آن چنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
-            و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می‌باشد. کتابهای
-            زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و
-            متخصصان را می‌طلبد تا با نرم‌افزارها شناخت بیشتری را برای طراحان
-            رایانه ای علی‌الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد
-            کرد. در این صورت می‌توان امید داشت که تمام و دشواری موجود در ارائه
-            راهکارها و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل
-            حروفچینی دستاوردهای اصلی و جوابگوی سوالات پیوسته اهل دنیای موجود
-            طراحی اساساً مورد استفاده قرار گیرد. لورم ایپسوم متن ساختگی با تولید
-            سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها
-            و متون بلکه روزنامه و مجله در ستون و سطر آن چنان که لازم است و برای
-            شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود
-            ابزارهای کاربردی می‌باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال
-            و آینده شناخت فراوان جامعه و متخصصان را می‌طلبد تا با نرم‌افزارها
-            شناخت بیشتری را برای طراحان رایانه ای علی‌الخصوص طراحان خلاقی و
-            فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می‌توان امید داشت
-            که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان
-            رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی و جوابگوی سوالات
-            پیوسته اهل دنیای موجود طراحی اساساً مورد استفاده قرار گیرد.
-          </p>
+<!--************************* start webdesing price section  *************************-->
+<div class="webdesing-price-section animated-section">
+  <div class="container">
+    <div class="title-wrapper">
+      <h3>قیمت و تعرفه طراحی سایت</h3>
+
+
+
+
+
+      <?php
+      // Retrieve pricing section content
+      $pricing_header = get_option('landing_pricing_header', '');
+      $pricing_rows = get_option('landing_pricing_rows', []);
+      $pricing_footer = get_option('landing_pricing_footer', '');
+      // Display pricing section
+      ?>
+      <p>
+        <?php echo esc_html($pricing_header); ?>
+      </p>
+    </div>
+    <div class="price-container">
+      <div class="wrapper-box header">
+        <div class="line-box box col-1">
+          <p>ردیف</p>
+          <span>|</span>
         </div>
-        <div class="price-container">
-          <div class="wrapper-box header">
-            <div class="line-box box col-1">
-              <p>ردیف</p>
-              <span>|</span>
-            </div>
-            <div class="service-box box col-5"><p>شرح خدمات</p></div>
-            <div class="time-box box col-3">
-              <span>|</span>
-              <p>مدت زمان انجام</p>
-              <span>|</span>
-            </div>
-            <div class="price-box box col-3"><p>قیمت</p></div>
-          </div>
-          <div class="wrapper-box">
-            <div class="line-box box col-1"><p>1</p></div>
-            <div class="service-box box col-5">
-              <p>طراحی سایت با قالب اماده</p>
-            </div>
-            <div class="time-box box col-3"><p>3 روز کاری</p></div>
-            <div class="price-box box col-3"><p>10 ملیون تومان</p></div>
-          </div>
-          <div class="wrapper-box">
-            <div class="line-box box col-1"><p>2</p></div>
-            <div class="service-box box col-5">
-              <p>طراحی سایت با قالب آماده و طراحی اختصاصی تمامی صفحات</p>
-            </div>
-            <div class="time-box box col-3"><p>10 روز کاری</p></div>
-            <div class="price-box box col-3"><p>30 ملیون تومان</p></div>
-          </div>
-          <div class="wrapper-box">
-            <div class="line-box box col-1"><p>3</p></div>
-            <div class="service-box box col-5">
-              <p>طراحی سایت با کدنویسی از 0 تا 100</p>
-            </div>
-            <div class="time-box box col-3"><p>45 روز کاری</p></div>
-            <div class="price-box box col-3"><p>120 ملیون تومان</p></div>
-          </div>
+        <div class="service-box box col-5">
+          <p>شرح خدمات</p>
         </div>
-        <div class="bott-info">
-          لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده
-          از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطر
-          آن چنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای
-          متنوع با هدف بهبود ابزارهای کاربردی می‌باشد. کتابهای زیادی در شصت و سه
-          درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می‌طلبد تا با
-          نرم‌افزارها شناخت بیشتری را برای طراحان رایانه ای علی‌الخصوص طراحان
-          خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد.
+        <div class="time-box box col-3">
+          <span>|</span>
+          <p>مدت زمان انجام</p>
+          <span>|</span>
+        </div>
+        <div class="price-box box col-3">
+          <p>قیمت</p>
         </div>
       </div>
+
+
+      <?php if (!empty($pricing_rows)): ?>
+
+        <?php foreach ($pricing_rows as $index => $row): ?>
+
+          <div class="wrapper-box">
+
+            <div class="line-box box col-1">
+              <p><?php echo esc_html($index + 1); ?></p>
+            </div>
+            <div class="service-box box col-5">
+              <p> <?php echo esc_html($row['description']); ?></p>
+            </div>
+            <div class="time-box box col-3">
+              <p><?php echo esc_html($row['duration']); ?></p>
+            </div>
+            <div class="price-box box col-3">
+              <p><?php echo esc_html($row['price']); ?></p>
+            </div>
+
+          </div>
+        <?php endforeach; ?>
+
+      <?php endif; ?>
+
+
+
+
     </div>
-    <!--************************* start webdesing price section  *************************-->
+    <div class="bott-info">
+      <?php echo esc_html($pricing_footer); ?>
+    </div>
+  </div>
+</div>
+<!--************************* start webdesing price section  *************************-->

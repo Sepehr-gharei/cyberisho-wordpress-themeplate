@@ -1,0 +1,28 @@
+<?php
+$portfolios = get_option('theme_portfolios', []);
+$portfolios = array_slice($portfolios, 0, 5); // فقط ۵ آیتم اول
+$index = 0; // برای اضافه کردن کلاس active به اولین wrapper
+?>
+
+<?php if (!empty($portfolios)): ?>
+    <?php foreach ($portfolios as $portfolio):
+        if (!empty($portfolio['name'])):
+            $desktop_image = !empty($portfolio['desktop_image']) ? esc_url($portfolio['desktop_image']) : '';
+            $class = ($index === 0) ? 'wrapper active' : 'wrapper'; // اضافه کردن کلاس active به اولین wrapper
+            ?>
+            <div class="<?php echo $class; ?>">
+                <div class="content">
+                    <div class="text"><?php echo esc_html($portfolio['name']); ?></div>
+                    <div class="image-container">
+                        <img src="<?php echo $desktop_image; ?>" alt="<?php echo esc_attr($portfolio['name']); ?>" />
+                    </div>
+                    <div class="image-caption"><?php echo esc_html($portfolio['name']); ?></div>
+                </div>
+            </div>
+            <?php
+            $index++; // افزایش شاخص
+        endif;
+    endforeach; ?>
+<?php else: ?>
+    <p>هیچ نمونه کاری یافت نشد.</p>
+<?php endif; ?>
