@@ -23,6 +23,8 @@ function register_assets()
     wp_enqueue_script('load-animate');
     wp_register_script('portfolio', get_template_directory_uri() . '/assets/js/portfolio.js', [], '1.0.0', true);
     wp_enqueue_script('portfolio');
+    wp_register_script('jquery-toc', get_template_directory_uri() . '/assets/js/jquery-toc.js', [], '1.0.0', true);
+    wp_enqueue_script('jquery-toc');
     wp_register_script('main', get_template_directory_uri() . '/assets/js/main.js', [], '1.0.0', true);
     wp_enqueue_script('main');
 }

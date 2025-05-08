@@ -10,8 +10,8 @@
           </div>
           <div class="col-12 col-md-6 wrapper left-side d-flex">
             <div class="text-field">
-              <strong>021 880 68 221</strong>
-              <p>0919 730 3855</p>
+              <strong><?php echo get_option('contact_hotline', ''); ?></strong>
+              <p><?php echo get_option('contact_emergency', ''); ?></p>
             </div>
             <div class="icon">
               <svg>
