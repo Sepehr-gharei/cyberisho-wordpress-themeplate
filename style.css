@@ -59,6 +59,11 @@ body {
   margin: 0;
   background-color: var(--background-color);
   color: var(--text-color);
+  overflow-x: hidden;
+}
+body, html {
+  overflow-x: hidden;
+  width: 100%;
 }
 ul,
 li {
@@ -2194,18 +2199,6 @@ footer .samandehi-2 {
 .animated-section.active {
   opacity: 1;
   transform: translateY(0);
-}
-@media (max-width: 992px) {
-  /* تغییر حالت انیمیشن از چپ به راست به پایین به بالا */
-  .animated-section-left,
-  .animated-section-right {
-    transform: translateY(100px); /* حرکت از پایین به بالا */
-  }
-
-  .animated-section-left.active,
-  .animated-section-right.active {
-    transform: translateY(0); /* حرکت به حالت نهایی */
-  }
 }
 
 
