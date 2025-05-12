@@ -1,91 +1,40 @@
-    <!--************************* start comment-section *************************-->
-    <div class="comment-section">
-      <div class="container">
-        <div class="user-comment-container">
-          <div class="title">
-            <h3>دیدگاه کاربران</h3>
-          </div>
-          <div class="comment-container">
-            <li>
-              <div class="comment-item">
-                <div class="user-comment-details">
-                  <div class="profile-image">
-                    <img src="<?php echo get_template_directory_uri() . '/assets/img/user-profile.png' ?>" alt="" />
-                  </div>
-                  <div class="user-detail">
-                    <p class="user-name">حمیدرضا علیبخشی</p>
-                    <div class="date-of-comment">
-                      <span>1401/05/11</span>در <span>17:53</span>
-                    </div>
-                  </div>
-                  <div class="answer">
-                    <a href="">پاسخ</a>
-                  </div>
-                </div>
-                <div class="user-comment-text">
-                  <p>سلام و مقاله بسیار کاربردی و خوبی بود . ممنون از شما</p>
-                </div>
-              </div>
-              <ul class="comment-children">
-                <li>
-                  <div class="comment-item">
-                    <div class="user-comment-details">
-                      <div class="profile-image">
-                        <svg>
-                          <use href="#favicon-logo-icon"></use>
-                        </svg>
-                      </div>
-                      <div class="user-detail">
-                        <p class="user-name">تحریریه سایبریشو</p>
-                        <div class="date-of-comment">
-                            <span>1401/05/11</span>در <span>17:53</span>
-                        </div>
-                      </div>
-                      <div class="answer">
-                        <a href="">پاسخ</a>
-                      </div>
-                    </div>
-                    <div class="user-comment-text">
-                      <p>سلام و نظر لطف شماست . موفق باشید</p>
-                    </div>
-                  </div>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <div class="comment-item">
-                <div class="user-comment-details">
-                  <div class="profile-image">
-                    <img src="<?php echo get_template_directory_uri() . '/assets/img/user-profile.png' ?>" alt="" />
-                  </div>
-                  <div class="user-detail">
-                    <p class="user-name">حمیدرضا علیبخشی</p>
-                    <div class="date-of-comment">
-                        <span>1401/05/11</span>در <span>17:53</span>
-                    </div>
-                  </div>
-                  <div class="answer">
-                    <a href="">پاسخ</a>
-                  </div>
-                </div>
-                <div class="user-comment-text">
-                  <p>سلام و مقاله بسیار کاربردی و خوبی بود . ممنون از شما</p>
-                </div>
-              </div>
-            </li>
-          </div>
-          <div class="comment-form">
-            <div class="comment-form-title">
-              <p>دیدگاه خود را بنویسید . نشانی ایمیل شما منتشر نخواهد شد</p>
-            </div>
-            <form action="">
-              <textarea name="" id="" placeholder="متن پیام*"></textarea>
-              <input type="text" placeholder="نام شما" />
-              <input type="text" placeholder="ایمیل شما" />
-              <input type="button" class="button" value="ارسال دیدگاه" />
-            </form>
-          </div>
-        </div>
+<!--************************* start comment-section *************************-->
+<div class="comment-section">
+  <div class="container">
+    <div class="user-comment-container">
+      <div class="title">
+        <h3>دیدگاه کاربران</h3>
       </div>
+
+      <?php comments_template(null, true); ?>
+
+
+
+      <div class="comment-form">
+        <div class="comment-form-title">
+          <p>دیدگاه خود را بنویسید . نشانی ایمیل شما منتشر نخواهد شد</p>
+        </div>
+
+        <?php if (comments_open()): ?>
+          <form id="custom-comment-form" method="post">
+            <textarea name="comment" id="comment" placeholder="متن پیام*" required></textarea>
+            <input type="text" name="author" placeholder="نام شما" required />
+            <input type="email" name="email" placeholder="ایمیل شما" required />
+
+            <input type="hidden" name="post_id" value="<?php the_ID(); ?>" />
+            <input type="hidden" name="action" value="custom_ajax_comment" />
+            <?php wp_nonce_field('custom_ajax_comment_nonce', 'security'); ?>
+
+            <input type="submit" class="button" value="ارسال دیدگاه" />
+            <div id="ajax-response"></div>
+          </form>
+        <?php else: ?>
+          <p>ثبت دیدگاه برای این پست بسته است.</p>
+        <?php endif; ?>
+      </div>
+
+
     </div>
-    <!--************************* end comment-section *************************-->
+  </div>
+</div>
+<!--************************* end comment-section *************************-->

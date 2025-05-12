@@ -25,6 +25,16 @@ function register_assets()
     wp_enqueue_script('portfolio');
     wp_register_script('jquery-toc', get_template_directory_uri() . '/assets/js/jquery-toc.js', [], '1.0.0', true);
     wp_enqueue_script('jquery-toc');
+    wp_enqueue_script('like-dislike-script', get_template_directory_uri() . '/assets/js/like-dislike.js', array('jquery'), null, true);
+    wp_localize_script('like-dislike-script', 'like_dislike_ajax', array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce'    => wp_create_nonce('like_dislike_nonce')
+    ));
+    wp_enqueue_script('post-like-dislike', get_template_directory_uri() . '/assets/js/post-like-dislike.js', array('jquery'), null, true);
+    wp_localize_script('post-like-dislike', 'ajax_object', array(
+        'ajaxurl' => admin_url('admin-ajax.php')
+    ));
+
     wp_register_script('main', get_template_directory_uri() . '/assets/js/main.js', [], '1.0.0', true);
     wp_enqueue_script('main');
 }
@@ -55,3 +65,34 @@ function enqueue_custom_scripts() {
         'ajaxurl' => admin_url('admin-ajax.php')
     ));
 }
+
+function cyberisho_enqueue_scripts() {
+    // ... سایر اسکریپت‌ها ...
+
+    // تنها در صفحات تکی (single post) که فرم دیدگاه وجود دارد
+    if ( is_single() ) {
+        wp_enqueue_script(
+            'custom-comment-ajax',
+            get_template_directory_uri() . '/assets/js/comment-form-ajax.js',
+            [],
+            filemtime(get_template_directory() . '/assets/js/comment-form-ajax.js'),
+            true
+        );
+    }
+}
+add_action('wp_enqueue_scripts', 'cyberisho_enqueue_scripts');
+
+function cyberisho_add_ajax_url_to_form() {
+    ?>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("custom-comment-form");
+            if (form) {
+                form.setAttribute("data-ajax-url", "<?php echo admin_url('admin-ajax.php'); ?>");
+            }
+        });
+    </script>
+    <?php
+}
+add_action('wp_footer', 'cyberisho_add_ajax_url_to_form');
+

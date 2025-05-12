@@ -50,6 +50,16 @@ function save_my_portfolio_metabox($post_id)
 add_action('save_post', 'save_my_portfolio_metabox');
 */
 
+
+function remove_editor_from_pages() {
+    // فقط برای برگه‌ها
+    if (isset($_GET['post']) && get_post_type($_GET['post']) === 'page' || isset($_GET['post_type']) && $_GET['post_type'] === 'page') {
+        // حذف ویرایشگر پیش‌فرض
+        remove_post_type_support('page', 'editor');
+    }
+}
+add_action('admin_init', 'remove_editor_from_pages');
+
 //***************** افزودن متا باکس متن هدر برگه ها**********************
 //***************** افزودن متا باکس متن هدر برگه ها**********************
 function add_page_header_meta_box()

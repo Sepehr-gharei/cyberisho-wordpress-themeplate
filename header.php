@@ -405,3 +405,9 @@
       <!-- منوی جانبی -->
     </header>
     <!--************************* end header *************************-->
+    <div id="customAlert" class="custom-alert hidden">
+  <span id="alertMessage"></span>
+</div>
+<div id="customAlertRed" class="custom-alert-red hidden">
+  <span id="alertMessageRed"></span>
+</div>
