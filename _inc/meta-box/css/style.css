@@ -226,3 +226,10 @@
   font-size: 26px;
   margin-top: 20px;
 }
+
+.footer-content form  tbody tr {
+  width: 50% !important;
+}
+.footer-content form  tbody tr .upload-icon-image {
+  margin-top: 10px;
+}

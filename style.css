@@ -577,7 +577,8 @@ header nav .nav-items .item {
 header nav .nav-items .item a {
   position: relative;
   font-size: 16px;
-  margin: 0px 2px;
+  margin: 0px 4px;
+  padding: 0 2px;
 }
 header nav .nav-items .item a::after {
   content: ".";

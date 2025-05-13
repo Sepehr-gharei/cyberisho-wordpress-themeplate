@@ -21,6 +21,7 @@ if (!function_exists('custom_theme_settings_menu')) {
 function theme_settings_page()
 {
     $tabs = [
+        'footer-content' => 'محتواهای پاورچین', // تب جدید
         'site-info' => 'اطلاعات سایت',
         'contact' => 'اطلاعات تماس',
         'home' => 'صفحه اصلی',
@@ -29,7 +30,7 @@ function theme_settings_page()
         'portfolio' => 'صفحه نمونه کارها'
     ];
 
-    $current_tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'site-info';
+    $current_tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'footer-content';
 
     ?>
     <div class="wrap">
@@ -44,8 +45,10 @@ function theme_settings_page()
         </h2>
 
         <?php
-        // Display content based on active tab
         switch ($current_tab) {
+            case 'footer-content':
+                theme_settings_footer_content_page();
+                break;
             case 'site-info':
                 theme_settings_site_info_page();
                 break;
@@ -65,7 +68,7 @@ function theme_settings_page()
                 theme_settings_portfolio_page();
                 break;
             default:
-                theme_settings_site_info_page();
+                theme_settings_footer_content_page();
                 break;
         }
         ?>
@@ -73,31 +76,142 @@ function theme_settings_page()
     <?php
 }
 
-// اطلاعات سایت (خالی)
+// محتوای پاورچین (جدید)
+function theme_settings_footer_content_page()
+{
+    if (isset($_POST['submit'])) {
+        update_option('footer_text', sanitize_textarea_field($_POST['footer_text']));
+        update_option('footer_icon_1_image', esc_url_raw($_POST['footer_icon_1_image']));
+        update_option('footer_icon_2_image', esc_url_raw($_POST['footer_icon_2_image']));
+        update_option('footer_icon_1_url', sanitize_textarea_field($_POST['footer_icon_1_url']));
+        update_option('footer_icon_2_url', sanitize_textarea_field($_POST['footer_icon_2_url']));
+        ?>
+        <div class="updated">
+            <p>تنظیمات محتوای پاورچین ذخیره شد.</p>
+        </div>
+        <?php
+    }
+
+    $footer_text = get_option('footer_text', '');
+    $footer_icon_1_image = get_option('footer_icon_1_image', '');
+    $footer_icon_2_image = get_option('footer_icon_2_image', '');
+    $footer_icon_1_url = get_option('footer_icon_1_url', '');
+    $footer_icon_2_url = get_option('footer_icon_2_url', '');
+    ?>
+    <div class="tab-content footer-content">
+        <h2>محتواهای پاورچین</h2>
+
+        <form method="post" action="">
+            <h3>متن پاورچین</h3>
+            <table class="form-table">
+                <tr>
+                    <th><label for="footer_text">متن پاورچین</label></th>
+                    <td>
+                        <textarea name="footer_text" id="footer_text" rows="5"
+                            class="large-text"><?php echo esc_textarea($footer_text); ?></textarea>
+                    </td>
+                </tr>
+            </table>
+
+            <h3>عکس نمادهای سایت</h3>
+            <table class="form-table">
+                <tr>
+                    <th><label>عکس نماد اول</label></th>
+                    <td>
+                        <input type="text" name="footer_icon_1_image" id="footer_icon_1_image"
+                            value="<?php echo esc_attr($footer_icon_1_image); ?>" class="regular-text">
+                        <input type="button" class="button upload-icon-image" value="آپلود تصویر"
+                            data-target="icon_1">
+                        <div class="image-preview icon-1-image-preview">
+                            <?php if (!empty($footer_icon_1_image)): ?>
+                                <img src="<?php echo esc_url($footer_icon_1_image); ?>" style="max-width: 200px;">
+                            <?php endif; ?>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label>عکس نماد دوم</label></th>
+                    <td>
+                        <input type="text" name="footer_icon_2_image" id="footer_icon_2_image"
+                            value="<?php echo esc_attr($footer_icon_2_image); ?>" class="regular-text">
+                        <input type="button" class="button upload-icon-image" value="آپلود تصویر"
+                            data-target="icon_2">
+                        <div class="image-preview icon-2-image-preview">
+                            <?php if (!empty($footer_icon_2_image)): ?>
+                                <img src="<?php echo esc_url($footer_icon_2_image); ?>" style="max-width: 200px;">
+                            <?php endif; ?>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="footer_icon_1_url">URL نماد اول</label></th>
+                    <td>
+                        <textarea name="footer_icon_1_url" id="footer_icon_1_url" rows="3"
+                            class="large-text"><?php echo esc_textarea($footer_icon_1_url); ?></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="footer_icon_2_url">URL نماد دوم</label></th>
+                    <td>
+                        <textarea name="footer_icon_2_url" id="footer_icon_2_url" rows="3"
+                            class="large-text"><?php echo esc_textarea($footer_icon_2_url); ?></textarea>
+                    </td>
+                </tr>
+            </table>
+
+            <?php submit_button(); ?>
+        </form>
+    </div>
+
+    <script>
+        jQuery(document).ready(function ($) {
+            if (typeof wp === 'undefined' || typeof wp.media === 'undefined') {
+                console.error('wp.media is not loaded');
+                return;
+            }
+
+            $(document).on('click', '.upload-icon-image', function (e) {
+                e.preventDefault();
+                var button = $(this);
+                var target = button.data('target');
+                var inputField = $('#footer_' + target + '_image');
+                var previewField = $('.icon-' + target.replace('_', '-') + '-image-preview');
+
+                var frame = wp.media({
+                    title: 'انتخاب تصویر',
+                    button: { text: 'استفاده از تصویر' },
+                    multiple: false
+                });
+
+                frame.on('select', function () {
+                    var attachment = frame.state().get('selection').first().toJSON();
+                    inputField.val(attachment.url);
+                    previewField.html('<img src="' + attachment.url + '" style="max-width: 200px;">');
+                });
+
+                frame.open();
+            });
+        });
+    </script>
+    <?php
+}
+
+// اطلاعات سایت
 function theme_settings_site_info_page()
 {
-    // ذخیره تنظیمات
     if (isset($_POST['submit'])) {
-        // بنر فعلی
         update_option('banner_header', sanitize_textarea_field($_POST['banner_header']));
         update_option('banner_content', sanitize_textarea_field($_POST['banner_content']));
-
-        // تعداد پروژه ها
         update_option('project_count', sanitize_textarea_field($_POST['project_count']));
         update_option('project_start_year', sanitize_textarea_field($_POST['project_start_year']));
-
-        // تعداد تیم
         update_option('team_total', sanitize_textarea_field($_POST['team_total']));
         update_option('team_developer', sanitize_textarea_field($_POST['team_developer']));
         update_option('team_graphic', sanitize_textarea_field($_POST['team_graphic']));
         update_option('team_support', sanitize_textarea_field($_POST['team_support']));
         update_option('team_seo', sanitize_textarea_field($_POST['team_seo']));
-
-        // چهار ویژگی سایت
         for ($i = 1; $i <= 4; $i++) {
             update_option('home_feature_' . $i, sanitize_textarea_field($_POST['home_feature_' . $i]));
         }
-
         ?>
         <div class="updated">
             <p>تنظیمات بنر، پروژه‌ها، تیم ما و ویژگی‌های سایت ذخیره شد.</p>
@@ -105,19 +219,15 @@ function theme_settings_site_info_page()
         <?php
     }
 
-    // دریافت مقادیر فعلی
     $banner_header = get_option('banner_header', '');
     $banner_content = get_option('banner_content', '');
     $project_count = get_option('project_count', '');
     $project_start_year = get_option('project_start_year', '');
-
     $team_total = get_option('team_total', '');
     $team_developer = get_option('team_developer', '');
     $team_graphic = get_option('team_graphic', '');
     $team_support = get_option('team_support', '');
     $team_seo = get_option('team_seo', '');
-
-    // دریافت مقادیر ویژگی‌های سایت
     $features = [];
     for ($i = 1; $i <= 4; $i++) {
         $features[$i] = get_option('home_feature_' . $i, '');
@@ -125,8 +235,6 @@ function theme_settings_site_info_page()
     ?>
     <div class="tab-content site-information">
         <h2>اطلاعات سایت</h2>
-
-        <!-- فرم بنر شعار -->
         <form method="post" action="">
             <h3>قسمت بنر شعار</h3>
             <table class="form-table">
@@ -145,8 +253,6 @@ function theme_settings_site_info_page()
                     </td>
                 </tr>
             </table>
-
-            <!-- فرم تعداد پروژه ها -->
             <h3>تعداد پروژه‌ها</h3>
             <table class="form-table">
                 <tr>
@@ -164,8 +270,6 @@ function theme_settings_site_info_page()
                     </td>
                 </tr>
             </table>
-
-            <!-- فرم تعداد تیم -->
             <h3>تیم ما</h3>
             <table class="form-table">
                 <tr>
@@ -204,8 +308,6 @@ function theme_settings_site_info_page()
                     </td>
                 </tr>
             </table>
-
-            <!-- فرم چهار ویژگی سایت -->
             <h3>چهار ویژگی سایت</h3>
             <table class="form-table">
                 <?php for ($i = 1; $i <= 4; $i++): ?>
@@ -218,12 +320,12 @@ function theme_settings_site_info_page()
                     </tr>
                 <?php endfor; ?>
             </table>
-
             <?php submit_button(); ?>
         </form>
     </div>
     <?php
 }
+
 // اطلاعات تماس
 function theme_settings_contact_page()
 {
@@ -301,7 +403,6 @@ function theme_settings_home_page()
         for ($i = 1; $i <= 4; $i++) {
             update_option('home_cyberwhy_' . $i, sanitize_text_field($_POST['home_cyberwhy_' . $i]));
         }
-        // ذخیره سوالات متداول
         $faq_data = [];
         if (isset($_POST['home_faq_title_0'])) {
             for ($i = 0; isset($_POST['home_faq_title_' . $i]); $i++) {
@@ -408,7 +509,6 @@ function theme_settings_home_page()
                         <?php
                     }
                 } else {
-                    // Default one empty item
                     ?>
                     <div class="faq-item" data-index="0">
                         <h4>سوال 1
@@ -442,16 +542,14 @@ function theme_settings_home_page()
     <?php
 }
 
-// صفحه درباره ما - به‌روزشده
+// صفحه درباره ما
 function theme_settings_about_page()
 {
-    // ذخیره تنظیمات
     if (isset($_POST['submit'])) {
         update_option('about_chart_title', sanitize_textarea_field($_POST['about_chart_title']));
         update_option('about_chart_years', sanitize_textarea_field($_POST['about_chart_years']));
         update_option('about_chart_desktop_image', esc_url_raw($_POST['about_chart_desktop_image']));
         update_option('about_chart_mobile_image', esc_url_raw($_POST['about_chart_mobile_image']));
-
         ?>
         <div class="updated">
             <p>تنظیمات نمودار در صفحه درباره ما ذخیره شد.</p>
@@ -464,11 +562,8 @@ function theme_settings_about_page()
     $desktop_image = get_option('about_chart_desktop_image', '');
     $mobile_image = get_option('about_chart_mobile_image', '');
     ?>
-
     <div class="tab-content about-page">
         <h2>صفحه درباره ما</h2>
-
-        <!-- فرم قسمت نمودار -->
         <form method="post" action="">
             <h3>نمودار</h3>
             <table class="form-table">
@@ -505,18 +600,16 @@ function theme_settings_about_page()
                     </td>
                 </tr>
             </table>
-
             <?php submit_button(); ?>
         </form>
     </div>
-
     <script>
         jQuery(document).ready(function ($) {
             $(document).on('click', '.upload-chart-image', function (e) {
                 e.preventDefault();
                 var button = $(this);
                 var target = button.data('target');
-                var inputField = $('#' + 'about_chart_' + target + '_image');
+                var inputField = $('#about_chart_' + target + '_image');
 
                 var frame = wp.media({
                     title: 'انتخاب تصویر',
@@ -539,17 +632,12 @@ function theme_settings_about_page()
 // صفحه لندینگ
 function theme_settings_landing_page()
 {
-    // ذخیره تنظیمات
     if (isset($_POST['submit'])) {
-        // ذخیره هدر و محتوای اولیه
         update_option('landing_initial_header', sanitize_textarea_field($_POST['landing_initial_header']));
         update_option('landing_initial_content', sanitize_textarea_field($_POST['landing_initial_content']));
-        // ذخیره هدر و محتوای پاورقی
         update_option('landing_footer_header', sanitize_textarea_field($_POST['landing_footer_header']));
         update_option('landing_footer_content', sanitize_textarea_field($_POST['landing_footer_content']));
-        // ذخیره هدر قیمت‌گذاری
         update_option('landing_pricing_header', sanitize_textarea_field($_POST['landing_pricing_header']));
-        // ذخیره جدول قیمت‌گذاری
         $pricing_rows = [];
         if (isset($_POST['pricing_row'])) {
             foreach ($_POST['pricing_row'] as $index => $row) {
@@ -561,9 +649,7 @@ function theme_settings_landing_page()
             }
         }
         update_option('landing_pricing_rows', $pricing_rows);
-        // ذخیره محتوای فوتر قیمت‌گذاری
         update_option('landing_pricing_footer', sanitize_textarea_field($_POST['landing_pricing_footer']));
-        // ذخیره انواع سایت
         $site_types = [];
         if (isset($_POST['site_type'])) {
             foreach ($_POST['site_type'] as $index => $site) {
@@ -579,7 +665,6 @@ function theme_settings_landing_page()
             }
         }
         update_option('landing_site_types', $site_types);
-        // ذخیره سوالات متداول
         $faq_data = [];
         if (isset($_POST['landing_page_faq_title_0'])) {
             for ($i = 0; isset($_POST['landing_page_faq_title_' . $i]); $i++) {
@@ -590,7 +675,6 @@ function theme_settings_landing_page()
             }
         }
         update_option('landing_page_faqs', $faq_data);
-
         ?>
         <div class="updated">
             <p>تنظیمات صفحه لندینگ ذخیره شد.</p>
@@ -598,7 +682,6 @@ function theme_settings_landing_page()
         <?php
     }
 
-    // دریافت مقادیر فعلی
     $initial_header = get_option('landing_initial_header', '');
     $initial_content = get_option('landing_initial_content', '');
     $footer_header = get_option('landing_footer_header', '');
@@ -609,7 +692,6 @@ function theme_settings_landing_page()
     $site_types = get_option('landing_site_types', []);
     $faqs = get_option('landing_page_faqs', []);
 
-    // اگر هیچ نوع سایتی وجود ندارد، یک نمونه خالی اضافه کن
     if (empty($site_types)) {
         $site_types[] = [
             'image' => '',
@@ -622,7 +704,6 @@ function theme_settings_landing_page()
         ];
     }
 
-    // اگر هیچ سطری برای قیمت‌گذاری وجود ندارد، یک نمونه خالی اضافه کن
     if (empty($pricing_rows)) {
         $pricing_rows[] = [
             'description' => '',
@@ -631,7 +712,6 @@ function theme_settings_landing_page()
         ];
     }
 
-    // اگر هیچ سوالی وجود ندارد، یک نمونه خالی اضافه کن
     if (empty($faqs)) {
         $faqs[] = [
             'title' => '',
@@ -642,7 +722,6 @@ function theme_settings_landing_page()
     <div class="tab-content landing-page">
         <h2>صفحه لندینگ</h2>
         <form method="post" action="">
-            <!-- هدر و محتوای اولیه -->
             <h3>هدر و محتوای اولیه</h3>
             <table class="form-table">
                 <tr>
@@ -670,8 +749,6 @@ function theme_settings_landing_page()
                     </td>
                 </tr>
             </table>
-
-            <!-- کانتینر انواع سایت -->
             <h3>انواع سایت</h3>
             <div id="site-types-container">
                 <?php foreach ($site_types as $index => $site): ?>
@@ -734,8 +811,6 @@ function theme_settings_landing_page()
             <p>
                 <button type="button" class="button button-primary add-site-type">افزودن نوع سایت جدید</button>
             </p>
-
-            <!-- قیمت و تعرفه‌های طراحی سایت -->
             <h3>قیمت و تعرفه‌های طراحی سایت</h3>
             <table class="form-table">
                 <tr>
@@ -745,8 +820,6 @@ function theme_settings_landing_page()
                     </td>
                 </tr>
             </table>
-
-            <!-- جدول قیمت‌گذاری -->
             <h4>جدول</h4>
             <div id="pricing-rows-container">
                 <?php foreach ($pricing_rows as $index => $row): ?>
@@ -786,8 +859,6 @@ function theme_settings_landing_page()
             <p>
                 <button type="button" class="button button-primary add-pricing-row">افزودن سطر جدید</button>
             </p>
-
-            <!-- محتوای فوتر قیمت‌گذاری -->
             <table class="form-table">
                 <tr>
                     <th><label for="landing_pricing_footer">محتوای فوتر</label></th>
@@ -796,8 +867,6 @@ function theme_settings_landing_page()
                     </td>
                 </tr>
             </table>
-
-            <!-- سوالات متداول -->
             <h3>سوالات متداول</h3>
             <div id="landing-faq-container">
                 <?php foreach ($faqs as $index => $faq): ?>
@@ -829,20 +898,15 @@ function theme_settings_landing_page()
             <p>
                 <button type="button" class="button button-primary add-landing-faq">افزودن سوال جدید</button>
             </p>
-
             <?php submit_button(); ?>
         </form>
     </div>
-
     <script>
         jQuery(document).ready(function ($) {
-            // بررسی وجود wp.media
             if (typeof wp === 'undefined' || typeof wp.media === 'undefined') {
                 console.error('wp.media is not loaded');
                 return;
             }
-
-            // آپلود تصویر
             $(document).on('click', '.upload-image-button', function (e) {
                 e.preventDefault();
                 var button = $(this);
@@ -850,23 +914,18 @@ function theme_settings_landing_page()
                 var container = button.closest('.site-type-item');
                 var image_url_field = container.find('.' + target + '-image-url');
                 var image_preview = container.find('.' + target + '-image-preview');
-
                 var frame = wp.media({
                     title: 'انتخاب تصویر',
                     button: { text: 'استفاده از تصویر' },
                     multiple: false
                 });
-
                 frame.on('select', function () {
                     var attachment = frame.state().get('selection').first().toJSON();
                     image_url_field.val(attachment.url);
                     image_preview.html('<img src="' + attachment.url + '" style="max-width: 200px;">');
                 });
-
                 frame.open();
             });
-
-            // افزودن نوع سایت جدید
             $('.add-site-type').on('click', function () {
                 var container = $('#site-types-container');
                 var index = container.find('.site-type-item').length;
@@ -924,8 +983,6 @@ function theme_settings_landing_page()
                     </div>`;
                 container.append(template);
             });
-
-            // حذف نوع سایت
             $(document).on('click', '.remove-site-type', function () {
                 if ($('.site-type-item').length > 1) {
                     $(this).closest('.site-type-item').remove();
@@ -945,8 +1002,6 @@ function theme_settings_landing_page()
                     });
                 }
             });
-
-            // افزودن سطر جدید به جدول قیمت‌گذاری
             $('.add-pricing-row').on('click', function () {
                 var container = $('#pricing-rows-container');
                 var index = container.find('.pricing-row-item').length;
@@ -978,8 +1033,6 @@ function theme_settings_landing_page()
                     </div>`;
                 container.append(template);
             });
-
-            // حذف سطر قیمت‌گذاری
             $(document).on('click', '.remove-pricing-row', function () {
                 if ($('.pricing-row-item').length > 1) {
                     $(this).closest('.pricing-row-item').remove();
@@ -999,8 +1052,6 @@ function theme_settings_landing_page()
                     });
                 }
             });
-
-            // افزودن سوال جدید به سوالات متداول
             $('.add-landing-faq').on('click', function () {
                 var container = $('#landing-faq-container');
                 var index = container.find('.faq-item').length;
@@ -1026,8 +1077,6 @@ function theme_settings_landing_page()
                     </div>`;
                 container.append(template);
             });
-
-            // حذف سوال از سوالات متداول
             $(document).on('click', '.remove-landing-faq', function () {
                 if ($('#landing-faq-container .faq-item').length > 1) {
                     $(this).closest('.faq-item').remove();
@@ -1055,7 +1104,6 @@ function theme_settings_landing_page()
 // صفحه نمونه کارها
 function theme_settings_portfolio_page()
 {
-    // Save portfolio data
     if (isset($_POST['submit'])) {
         $portfolios = [];
         if (isset($_POST['portfolio'])) {
@@ -1080,7 +1128,6 @@ function theme_settings_portfolio_page()
         <?php
     }
 
-    // Load existing portfolios
     $portfolios = get_option('theme_portfolios', []);
     if (empty($portfolios)) {
         $portfolios[] = [
@@ -1094,13 +1141,12 @@ function theme_settings_portfolio_page()
             'mobile_image' => ''
         ];
     } else {
-        // Ensure main_image exists in existing portfolios
         foreach ($portfolios as &$portfolio) {
             if (!isset($portfolio['main_image'])) {
                 $portfolio['main_image'] = '';
             }
         }
-        unset($portfolio); // Unset reference to avoid issues
+        unset($portfolio);
     }
     ?>
     <div class="tab-content landing-page">
@@ -1133,7 +1179,7 @@ function theme_settings_portfolio_page()
                                 <td><input type="text" name="portfolio[<?php echo $index; ?>][location]"
                                         value="<?php echo esc_attr($portfolio['location']); ?>" class="regular-text"></td>
                             </tr>
-                            <tr style="width: 100%;">
+                            <tr>
                                 <th><label>URL سایت</label></th>
                                 <td><input type="url" name="portfolio[<?php echo $index; ?>][url]"
                                         value="<?php echo esc_attr($portfolio['url']); ?>" class="regular-text"></td>
@@ -1191,16 +1237,12 @@ function theme_settings_portfolio_page()
             <?php submit_button(); ?>
         </form>
     </div>
-
     <script>
         jQuery(document).ready(function ($) {
-            // بررسی وجود wp.media
             if (typeof wp === 'undefined' || typeof wp.media === 'undefined') {
                 console.error('wp.media is not loaded');
                 return;
             }
-
-            // آپلود تصویر
             $(document).on('click', '.upload-image-button', function (e) {
                 e.preventDefault();
                 var button = $(this);
@@ -1208,23 +1250,18 @@ function theme_settings_portfolio_page()
                 var container = button.closest('.portfolio-item');
                 var image_url_field = container.find('.' + target + '-image-url');
                 var image_preview = container.find('.' + target + '-image-preview');
-
                 var frame = wp.media({
                     title: 'انتخاب تصویر',
                     button: { text: 'استفاده از تصویر' },
                     multiple: false
                 });
-
                 frame.on('select', function () {
                     var attachment = frame.state().get('selection').first().toJSON();
                     image_url_field.val(attachment.url);
                     image_preview.html('<img src="' + attachment.url + '" style="max-width: 200px;">');
                 });
-
                 frame.open();
             });
-
-            // افزودن نمونه‌کار جدید
             $('.add-portfolio').on('click', function () {
                 var container = $('#portfolio-container');
                 var index = container.find('.portfolio-item').length;
@@ -1250,7 +1287,7 @@ function theme_settings_portfolio_page()
                                 <th><label>موقعیت</label></th>
                                 <td><input type="text" name="portfolio[${index}][location]" class="regular-text"></td>
                             </tr>
-                            <tr style="width: 100%;">
+                            <tr>
                                 <th><label>URL سایت</label></th>
                                 <td><input type="url" name="portfolio[${index}][url]" class="regular-text"></td>
                             </tr>
@@ -1282,8 +1319,6 @@ function theme_settings_portfolio_page()
                     </div>`;
                 container.append(template);
             });
-
-            // حذف نمونه‌کار
             $(document).on('click', '.remove-portfolio', function () {
                 if ($('.portfolio-item').length > 1) {
                     $(this).closest('.portfolio-item').remove();
@@ -1312,12 +1347,9 @@ function theme_settings_enqueue_scripts($hook)
     if ($hook !== 'toplevel_page_theme-settings') {
         return;
     }
-    // بارگذاری استایل
     wp_enqueue_style('theme-settings', get_template_directory_uri() . '/_inc/meta-box/css/style.css', [], '1.0');
-    // بارگذاری اسکریپت‌های مورد نیاز برای آپلود رسانه
     wp_enqueue_media();
     wp_enqueue_script('jquery');
     wp_enqueue_script('theme-admin-js', get_template_directory_uri() . '/_inc/meta-box/js/admin.js', ['jquery'], null, true);
 }
-
 ?>
