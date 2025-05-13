@@ -16,16 +16,13 @@
         <div class="text-loop animated-section">
             <div class="ticker-container">
                 <div class="ticker-content" id="tickerContent">
-                    <a href="#" class="ticker-item">فروشگاه چی کالا</a>
-                    <a href="#" class="ticker-item">شرکت دانش بنیان مهرماه</a>
-                    <a href="#" class="ticker-item">خدمات پرستار در منزل</a>
-                    <a href="#" class="ticker-item">فروشگاه لاویسا</a>
-                    <a href="#" class="ticker-item">موسسه پیشرو پشتیبان</a>
-                    <a href="#" class="ticker-item">شرکت آرین بال</a>
+                    <?php 
+                    get_template_part('loop\landing\work-sample-text-loop', 'work-sample-text-loop');
+                    ?>
                 </div>
             </div>
             <div class="btn">
-                <a href="">مشاهده همه</a>
+                <a href="<?php echo home_url() . '/portfolio' ?>">مشاهده همه</a>
             </div>
         </div>
     </div>

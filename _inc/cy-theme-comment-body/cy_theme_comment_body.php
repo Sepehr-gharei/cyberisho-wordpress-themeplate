@@ -103,7 +103,6 @@ function cy_theme_comment($comment, $args, $depth)
         $user = get_user_by('email', $email);
 
         if ($user && in_array('administrator', (array) $user->roles)) {
-            // کاربر نقش ادمین دارد
             echo 'admin-comment';
         }
         ?> 
@@ -128,7 +127,9 @@ function cy_theme_comment($comment, $args, $depth)
                     </div>
                 </div>
                 <div class="answer">
-                    <a href="#comment-form" data-comment-id="<?php echo $comment->comment_ID; ?>">
+                    <a href="#comment-form" 
+                       data-comment-id="<?php echo $comment->comment_ID; ?>" 
+                       data-comment-author="<?php echo esc_attr($comment->comment_author); ?>">
                         پاسخ
                     </a>
                 </div>

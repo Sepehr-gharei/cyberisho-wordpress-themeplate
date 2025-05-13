@@ -212,9 +212,17 @@ function theme_settings_site_info_page()
         for ($i = 1; $i <= 4; $i++) {
             update_option('home_feature_' . $i, sanitize_textarea_field($_POST['home_feature_' . $i]));
         }
+        // Save brand images
+        $brand_images = [];
+        if (isset($_POST['brand_image'])) {
+            foreach ($_POST['brand_image'] as $index => $image) {
+                $brand_images[$index] = esc_url_raw($image);
+            }
+        }
+        update_option('brand_images', $brand_images);
         ?>
         <div class="updated">
-            <p>تنظیمات بنر، پروژه‌ها، تیم ما و ویژگی‌های سایت ذخیره شد.</p>
+            <p>تنظیمات بنر، پروژه‌ها، تیم ما، ویژگی‌های سایت و برندها ذخیره شد.</p>
         </div>
         <?php
     }
@@ -232,6 +240,7 @@ function theme_settings_site_info_page()
     for ($i = 1; $i <= 4; $i++) {
         $features[$i] = get_option('home_feature_' . $i, '');
     }
+    $brand_images = get_option('brand_images', ['']); // Initialize with one empty brand image
     ?>
     <div class="tab-content site-information">
         <h2>اطلاعات سایت</h2>
@@ -320,12 +329,116 @@ function theme_settings_site_info_page()
                     </tr>
                 <?php endfor; ?>
             </table>
+            <h3>برندها</h3>
+            <div id="brand-images-container" class="brand-images-container" >
+                <?php foreach ($brand_images as $index => $image): ?>
+                    <div class="brand-image-item" data-index="<?php echo $index; ?>">
+                        <h4>عکس برند <?php echo $index + 1; ?>
+                            <?php if (count($brand_images) > 1): ?>
+                                <button type="button" class="button remove-brand-image">حذف</button>
+                            <?php endif; ?>
+                        </h4>
+                        <table class="form-table">
+                            <tr>
+                                <th><label>عکس برند</label></th>
+                                <td>
+                                    <input type="text" name="brand_image[<?php echo $index; ?>]" 
+                                        class="brand-image-url" value="<?php echo esc_attr($image); ?>" class="regular-text">
+                                    <input type="button" class="button upload-brand-image" value="آپلود تصویر" 
+                                        data-target="brand_<?php echo $index; ?>">
+                                    <div class="image-preview brand-image-preview-<?php echo $index; ?>">
+                                        <?php if (!empty($image)): ?>
+                                            <img src="<?php echo esc_url($image); ?>" style="max-width: 200px;">
+                                        <?php endif; ?>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <p>
+                <button type="button" class="button button-primary add-brand-image">افزودن عکس برند جدید</button>
+            </p>
             <?php submit_button(); ?>
         </form>
     </div>
+    <script>
+        jQuery(document).ready(function ($) {
+            if (typeof wp === 'undefined' || typeof wp.media === 'undefined') {
+                console.error('wp.media is not loaded');
+                return;
+            }
+
+            $(document).on('click', '.upload-brand-image', function (e) {
+                e.preventDefault();
+                var button = $(this);
+                var target = button.data('target');
+                var container = button.closest('.brand-image-item');
+                var image_url_field = container.find('.brand-image-url');
+                var image_preview = container.find('.image-preview');
+                
+                var frame = wp.media({
+                    title: 'انتخاب تصویر',
+                    button: { text: 'استفاده از تصویر' },
+                    multiple: false
+                });
+
+                frame.on('select', function () {
+                    var attachment = frame.state().get('selection').first().toJSON();
+                    image_url_field.val(attachment.url);
+                    image_preview.html('<img src="' + attachment.url + '" style="max-width: 200px;">');
+                });
+
+                frame.open();
+            });
+
+            $('.add-brand-image').on('click', function () {
+                var container = $('#brand-images-container');
+                var index = container.find('.brand-image-item').length;
+                var template = `
+                    <div class="brand-image-item" data-index="${index}">
+                        <h4>عکس برند ${index + 1}
+                            <button type="button" class="button remove-brand-image">حذف</button>
+                        </h4>
+                        <table class="form-table">
+                            <tr>
+                                <th><label>عکس برند</label></th>
+                                <td>
+                                    <input type="text" name="brand_image[${index}]" class="brand-image-url" class="regular-text">
+                                    <input type="button" class="button upload-brand-image" value="آپلود تصویر" data-target="brand_${index}">
+                                    <div class="image-preview brand-image-preview-${index}"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>`;
+                container.append(template);
+            });
+
+            $(document).on('click', '.remove-brand-image', function () {
+                if ($('.brand-image-item').length > 1) {
+                    $(this).closest('.brand-image-item').remove();
+                    $('.brand-image-item').each(function (i) {
+                        $(this).attr('data-index', i);
+                        $(this).find('h4').text('عکس برند ' + (i + 1));
+                        $(this).find('input, button').each(function () {
+                            var name = $(this).attr('name');
+                            var dataTarget = $(this).attr('data-target');
+                            if (name) {
+                                $(this).attr('name', name.replace(/brand_image\[\d+\]/, 'brand_image[' + i + ']'));
+                            }
+                            if (dataTarget) {
+                                $(this).attr('data-target', 'brand_' + i);
+                            }
+                        });
+                        $(this).find('.image-preview').attr('class', 'image-preview brand-image-preview-' + i);
+                    });
+                }
+            });
+        });
+    </script>
     <?php
 }
-
 // اطلاعات تماس
 function theme_settings_contact_page()
 {

@@ -16,12 +16,13 @@
         </div>
 
         <?php if (comments_open()): ?>
-          <form id="custom-comment-form" method="post">
+          <form id="custom-comment-form" method="post" data-ajax-url="<?php echo admin_url('admin-ajax.php'); ?>">
             <textarea name="comment" id="comment" placeholder="متن پیام*" required></textarea>
             <input type="text" name="author" placeholder="نام شما" required />
             <input type="email" name="email" placeholder="ایمیل شما" required />
 
             <input type="hidden" name="post_id" value="<?php the_ID(); ?>" />
+            <input type="hidden" name="comment_parent" id="comment_parent" value="0" />
             <input type="hidden" name="action" value="custom_ajax_comment" />
             <?php wp_nonce_field('custom_ajax_comment_nonce', 'security'); ?>
 

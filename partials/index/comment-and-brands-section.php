@@ -7,111 +7,40 @@
                 <p>مشتریان ما چه برندهایی و چه کسانی هستن؟</p>
                 <p>در همکاری با ما چه تجربه ای دارند و نظرشان درباره ما چیست؟</p>
                 <div class="brands d-flex">
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="image-container">
-                            <img src="<?php echo get_template_directory_uri() . '/assets/img/brand.png' ?>" alt="" />
-                        </div>
-                    </div>
+                 
+
+
+
+
+                <?php
+                    // Retrieve brand images from the options
+                    $brand_images = get_option('brand_images', ['']);
+
+                    // Check if there are images to display
+                    if (!empty($brand_images) && is_array($brand_images)): ?>
+
+
+
+
+
+
+                        <?php foreach ($brand_images as $index => $image_url):
+                            // Skip empty URLs
+                            if (!empty($image_url)): ?>
+                                <div class="item">
+                                    <div class="image-container">
+                                        <img src="<?php echo esc_url($image_url); ?>"
+                                            alt="برند <?php echo esc_attr($index + 1); ?>">
+                                    </div>
+                                </div>
+                            <?php endif;
+                        endforeach; ?>
+                    <?php endif; ?>
+
+
+
+
+
                 </div>
                 <div class="bott-text">
                     <a href="">+ شما هم میتوانید در کنار برترین برند ها به موفقیت برسید...</a>
@@ -131,7 +60,8 @@
                     <div class="body">
                         <div class="comment-item">
                             <div class="profile">
-                                <img src="<?php echo get_template_directory_uri() . '/assets/img/comment-profile.png' ?>" alt="" />
+                                <img src="<?php echo get_template_directory_uri() . '/assets/img/comment-profile.png' ?>"
+                                    alt="" />
                             </div>
                             <div class="text-field">
                                 <h6>اقای نسجیان</h6>
@@ -142,7 +72,8 @@
                         </div>
                         <div class="comment-item">
                             <div class="profile">
-                                <img src="<?php echo get_template_directory_uri() . '/assets/img/comment-profile-2.png' ?>" alt="" />
+                                <img src="<?php echo get_template_directory_uri() . '/assets/img/comment-profile-2.png' ?>"
+                                    alt="" />
                             </div>
                             <div class="text-field">
                                 <h6>اقای حسینی</h6>
@@ -154,7 +85,8 @@
                         </div>
                         <div class="comment-item">
                             <div class="profile">
-                                <img src="<?php echo get_template_directory_uri() . '/assets/img/comment-profile.png' ?>" alt="" />
+                                <img src="<?php echo get_template_directory_uri() . '/assets/img/comment-profile.png' ?>"
+                                    alt="" />
                             </div>
                             <div class="text-field">
                                 <h6>اقای صمدی</h6>

@@ -49,12 +49,12 @@
                         </g>
                     </svg>
                 </div>
-                <strong><?php echo  get_option('home_service_1_title'); ?></strong>
+                <strong><?php echo get_option('home_service_1_title'); ?></strong>
                 <?php
                 ?>
-                <p><?php echo  get_option('home_service_1_content'); ?></p>
+                <p><?php echo get_option('home_service_1_content'); ?></p>
             </div>
-            <div class="col-12 col-sm-6 wrapper animated-section-right">
+            <div class="col-12 col-sm-6 wrapper animated-section-left">
                 <div class="icon">
                     <svg width="512pt" height="512pt" viewBox="0 0 512 512" version="1.1"
                         xmlns="http://www.w3.org/2000/svg">
@@ -78,8 +78,8 @@
                         </g>
                     </svg>
                 </div>
-                <strong><?php echo  get_option('home_service_2_title'); ?></strong>
-                <p><?php echo  get_option('home_service_2_content'); ?></p>
+                <strong><?php echo get_option('home_service_2_title'); ?></strong>
+                <p><?php echo get_option('home_service_2_content'); ?></p>
             </div>
         </section>
     </div>

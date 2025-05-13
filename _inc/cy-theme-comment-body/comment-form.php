@@ -7,6 +7,7 @@ function handle_ajax_comment_submission() {
     $author  = sanitize_text_field($_POST['author']);
     $email   = sanitize_email($_POST['email']);
     $content = sanitize_textarea_field($_POST['comment']);
+    $comment_parent = isset($_POST['comment_parent']) ? intval($_POST['comment_parent']) : 0;
 
     if (!is_numeric($post_id) || !get_post($post_id)) {
         wp_send_json_error('پست معتبر نیست.');
@@ -23,7 +24,7 @@ function handle_ajax_comment_submission() {
         'comment_author_email' => $email,
         'comment_content'      => $content,
         'comment_type'         => '',
-        'comment_parent'       => 0,
+        'comment_parent'       => $comment_parent, // مقدار جدید
         'user_id'              => 0,
         'comment_approved'     => 1, // یا 0 برای نیاز به تأیید مدیر
     );

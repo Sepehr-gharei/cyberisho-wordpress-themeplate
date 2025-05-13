@@ -185,7 +185,7 @@
               </div>
               <div class="logo">
                 <h1>
-                  <a href=""><svg>
+                  <a href="<?php echo home_url() ?>"><svg>
                       <use href="#logo-icon"></use>
                     </svg></a>
                 </h1>

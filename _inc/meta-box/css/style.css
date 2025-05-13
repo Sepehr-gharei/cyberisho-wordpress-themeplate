@@ -190,7 +190,7 @@
 .main-page tbody tr th {
   width: 10%;
 }
-.main-page table:nth-of-type(even){
+.main-page table:nth-of-type(even) {
   background-color: #efefef;
   border-radius: 20px;
   padding: 10px;
@@ -201,7 +201,7 @@
   margin-top: 20px;
 }
 
-.site-information  table:nth-of-type(even){
+.site-information table:nth-of-type(even) {
   background-color: #efefef;
   border-radius: 20px;
   padding: 10px;
@@ -209,14 +209,14 @@
 .site-information tbody tr {
   width: 50%;
 }
-.site-information tbody tr  td {
+.site-information tbody tr td {
   width: 80%;
 }
 
-.landing-page  tr {
+.landing-page tr {
   width: 50% !important;
 }
-.landing-page form table:nth-of-type(odd){
+.landing-page form table:nth-of-type(odd) {
   background-color: #efefef;
   border-radius: 20px;
   padding: 10px;
@@ -227,9 +227,19 @@
   margin-top: 20px;
 }
 
-.footer-content form  tbody tr {
+.footer-content form tbody tr {
   width: 50% !important;
 }
-.footer-content form  tbody tr .upload-icon-image {
+.footer-content form tbody tr .upload-icon-image {
   margin-top: 10px;
+}
+
+.brand-images-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.brand-images-container .brand-image-item {
+  width: 33.333%;
+  margin: 0;
+  padding: 0;
 }
