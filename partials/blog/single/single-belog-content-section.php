@@ -12,8 +12,8 @@
         while (have_posts()):
           the_post();
           // دریافت داده‌های متاباکس
-          $intro = get_post_meta(get_the_ID(), '_blog_intro', true);
-          $sections = get_post_meta(get_the_ID(), '_blog_sections', true);
+          $intro = get_post_meta(get_the_ID(), '_post_intro', true);
+          $sections = get_post_meta(get_the_ID(), '_post_sections', true);
           if (!is_array($sections)) {
             $sections = [];
           }

@@ -43,3 +43,9 @@ function handle_ajax_comment_submission() {
 }
 add_action('wp_ajax_custom_ajax_comment', 'handle_ajax_comment_submission');
 add_action('wp_ajax_nopriv_custom_ajax_comment', 'handle_ajax_comment_submission');
+
+
+
+
+
+

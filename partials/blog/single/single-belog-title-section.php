@@ -37,8 +37,7 @@
         <div class="header">
           <p><span> <?php
           // فرض کنید taxonomy ما 'blog_category_tax' است
-          $terms = get_the_terms(get_the_ID(), 'blog_category');
-
+          $terms = get_the_terms(get_the_ID(), 'category');
           if (!empty($terms) && !is_wp_error($terms)) {
             // فقط اولین دسته را نمایش بده
             echo esc_html($terms[0]->name);

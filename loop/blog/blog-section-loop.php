@@ -2,7 +2,7 @@
 $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 
 $args = array(
-    'post_type' => 'blog',
+    'post_type' => 'post',
     'posts_per_page' => 1,
     'paged' => $paged,
 );
@@ -29,7 +29,7 @@ if ($loop->have_posts()):
                             <p>
                                 <?php
                                 // فرض کنید taxonomy ما 'blog_category_tax' است
-                                $terms = get_the_terms(get_the_ID(), 'blog_category');
+                                $terms = get_the_terms(get_the_ID(), 'category');
 
                                 if (!empty($terms) && !is_wp_error($terms)) {
                                     // فقط اولین دسته را نمایش بده

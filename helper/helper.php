@@ -16,14 +16,14 @@ add_action('pre_get_posts', 'custom_post_type_pagination');
 
 function calculate_reading_time($post_id) {
     // دریافت محتوای مقدمه
-    $intro = get_post_meta($post_id, '_blog_intro', true);
+    $intro = get_post_meta($post_id, '_post_intro', true);
     $intro = is_string($intro) ? $intro : ''; // اطمینان از رشته بودن
     $intro_clean = strip_tags($intro); // حذف تگ‌های HTML
     $intro_word_count = str_word_count($intro_clean, 0, 'آابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی'); // پشتیبانی از حروف فارسی
     error_log('Intro Word Count: ' . $intro_word_count); // لاگ برای عیب‌یابی
 
     // دریافت محتوای بخش‌ها
-    $sections = get_post_meta($post_id, '_blog_sections', true);
+    $sections = get_post_meta($post_id, '_post_sections', true);
     $sections_word_count = 0;
 
     if (is_array($sections) && !empty($sections)) {
@@ -108,177 +108,85 @@ add_shortcode('post_views', 'display_post_views');
 
 
 
-// در فایل functions.php قالب وردپرس
 
-// ایجاد جدول برای ذخیره آی‌پی‌ها هنگام فعال‌سازی قالب
-function create_like_dislike_table() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function add_like_dislike_fields() {
     global $wpdb;
-    $table_name = $wpdb->prefix . 'like_dislike_ips';
     $charset_collate = $wpdb->get_charset_collate();
-
-    $sql = "CREATE TABLE $table_name (
-        id bigint(20) NOT NULL AUTO_INCREMENT,
-        post_id bigint(20) NOT NULL,
-        user_ip varchar(100) NOT NULL,
-        action varchar(10) NOT NULL,
-        PRIMARY KEY (id)
-    ) $charset_collate;";
-
+    
+    // Add like_count and dislike_count to wp_postmeta if they don't exist
+    $sql = "ALTER TABLE $wpdb->postmeta 
+            ADD IF NOT EXISTS like_count INT DEFAULT 0,
+            ADD IF NOT EXISTS dislike_count INT DEFAULT 0";
+    
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql);
 }
-register_activation_hook(__FILE__, 'create_like_dislike_table');
+add_action('after_switch_theme', 'add_like_dislike_fields');
 
-// مدیریت درخواست AJAX برای لایک و دیسلایک
-add_action('wp_ajax_handle_like_dislike', 'handle_like_dislike');
-add_action('wp_ajax_nopriv_handle_like_dislike', 'handle_like_dislike');
-
+// AJAX handler for like/dislike
 function handle_like_dislike() {
-    global $wpdb;
-    $post_id = intval($_POST['post_id']);
-    $action = sanitize_text_field($_POST['action_type']);
-    $user_ip = $_SERVER['REMOTE_ADDR'];
-    $table_name = $wpdb->prefix . 'like_dislike_ips';
-
-    // بررسی اینکه آیا کاربر قبلاً رای داده است
-    $existing = $wpdb->get_var($wpdb->prepare(
-        "SELECT COUNT(*) FROM $table_name WHERE post_id = %d AND user_ip = %s",
-        $post_id, $user_ip
-    ));
-
-    if ($existing > 0) {
-        wp_send_json_error('شما قبلاً رای داده‌اید.');
-    }
-
-    // ثبت رای
-    $wpdb->insert(
-        $table_name,
-        array(
-            'post_id' => $post_id,
-            'user_ip' => $user_ip,
-            'action' => $action
-        ),
-        array('%d', '%s', '%s')
-    );
-
-    // به‌روزرسانی تعداد لایک‌ها یا دیسلایک‌ها
-    $meta_key = $action == 'like' ? 'post_likes' : 'post_dislikes';
-    $current_count = get_post_meta($post_id, $meta_key, true);
-    $current_count = $current_count ? intval($current_count) + 1 : 1;
-    update_post_meta($post_id, $meta_key, $current_count);
-
-    wp_send_json_success(array(
-        'count' => $current_count,
-        'action' => $action
-    ));
-}
-
-// افزودن کد جاوااسکریپت و HTML به قالب
-function add_like_dislike_scripts() {
-    wp_enqueue_script('like-dislike', get_template_directory_uri() . '/js/like-dislike.js', array('jquery'), '1.0', true);
-    wp_localize_script('like-dislike', 'likeDislikeAjax', array(
-        'ajax_url' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('like_dislike_nonce')
-    ));
-}
-add_action('wp_enqueue_scripts', 'add_like_dislike_scripts');
-
-// نمایش دکمه‌ها در محتوا
-// افزودن متا فیلدها برای ذخیره تعداد لایک و دیسلایک
-function blog_add_like_dislike_meta() {
-    $posts = get_posts(array('post_type' => 'blog', 'numberposts' => -1));
-    foreach ($posts as $post) {
-        if (!metadata_exists('post', $post->ID, '_likes')) {
-            update_post_meta($post->ID, '_likes', 0);
-        }
-        if (!metadata_exists('post', $post->ID, '_dislikes')) {
-            update_post_meta($post->ID, '_dislikes', 0);
-        }
-    }
-}
-add_action('init', 'blog_add_like_dislike_meta');
-
-// ثبت اسکریپت‌های Ajax و جاوااسکریپت
-function blog_enqueue_scripts() {
-    wp_enqueue_script('blog-like-dislike', get_template_directory_uri() . '/js/like-dislike.js', array('jquery'), '1.0', true);
-    wp_localize_script('blog-like-dislike', 'blog_ajax', array(
-        'ajax_url' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('blog_like_dislike_nonce')
-    ));
-    wp_enqueue_style('blog-like-dislike-style', get_template_directory_uri() . '/css/like-dislike.css');
-}
-add_action('wp_enqueue_scripts', 'blog_enqueue_scripts');
-
-// مدیریت درخواست‌های Ajax برای لایک و دیسلایک
-function blog_handle_like_dislike() {
-    check_ajax_referer('blog_like_dislike_nonce', 'nonce');
-
-    $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
-    $action_type = isset($_POST['action_type']) ? sanitize_text_field($_POST['action_type']) : '';
-
-    if (!$post_id || !in_array($action_type, ['like', 'dislike'])) {
+    if (!isset($_POST['post_id']) || !isset($_POST['action_type'])) {
         wp_send_json_error('Invalid request');
     }
 
-    // بررسی کوکی
-    $cookie_name = 'blog_voted_' . $post_id;
+    $post_id = intval($_POST['post_id']);
+    $action_type = sanitize_text_field($_POST['action_type']);
+    $cookie_name = 'voted_' . $post_id;
+    
+    // Check if user has already voted
     if (isset($_COOKIE[$cookie_name])) {
         wp_send_json_error('You have already voted');
     }
-
-    // به‌روزرسانی متا فیلد
+    
+    // Update the appropriate counter
     if ($action_type === 'like') {
-        $likes = get_post_meta($post_id, '_likes', true);
-        update_post_meta($post_id, '_likes', intval($likes) + 1);
+        $meta_key = 'like_count';
     } elseif ($action_type === 'dislike') {
-        $dislikes = get_post_meta($post_id, '_dislikes', true);
-        update_post_meta($post_id, '_dislikes', intval($dislikes) + 1);
+        $meta_key = 'dislike_count';
+    } else {
+        wp_send_json_error('Invalid action');
     }
-
-    // تنظیم کوکی برای جلوگیری از رای‌دهی مجدد
-    setcookie($cookie_name, 'voted', time() + (365 * 24 * 60 * 60), '/'); // کوکی برای یک سال
-
-    // ارسال پاسخ
-    $response = array(
-        'likes' => get_post_meta($post_id, '_likes', true),
-        'dislikes' => get_post_meta($post_id, '_dislikes', true)
-    );
-    wp_send_json_success($response);
+    
+    $current_count = (int) get_post_meta($post_id, $meta_key, true);
+    $new_count = $current_count + 1;
+    
+    update_post_meta($post_id, $meta_key, $new_count);
+    
+    // Set cookie to prevent multiple votes (expires in 30 days)
+    setcookie($cookie_name, $action_type, time() + (30 * 24 * 60 * 60), '/');
+    
+    wp_send_json_success([
+        'like_count' => (int) get_post_meta($post_id, 'like_count', true),
+        'dislike_count' => (int) get_post_meta($post_id, 'dislike_count', true)
+    ]);
 }
-add_action('wp_ajax_blog_like_dislike', 'blog_handle_like_dislike');
-add_action('wp_ajax_nopriv_blog_like_dislike', 'blog_handle_like_dislike');
+add_action('wp_ajax_handle_like_dislike', 'handle_like_dislike');
+add_action('wp_ajax_nopriv_handle_like_dislike', 'handle_like_dislike');
 
-// نمایش دکمه‌های لایک و دیسلایک
-function blog_display_like_dislike_buttons($content) {
-    if (get_post_type() === 'blog' && is_singular('blog')) {
-        $post_id = get_the_ID();
-        $likes = get_post_meta($post_id, '_likes', true) ?: 0;
-        $dislikes = get_post_meta($post_id, '_dislikes', true) ?: 0;
-        $cookie_name = 'blog_voted_' . $post_id;
-        $voted = isset($_COOKIE[$cookie_name]) ? true : false;
-
-        $buttons = '<div class="blog-like-dislike">';
-        $buttons .= '<button class="like-button ' . ($voted ? 'disabled' : '') . '" data-post-id="' . $post_id . '" data-action="like" ' . ($voted ? 'disabled' : '') . '>لایک (' . $likes . ')</button>';
-        $buttons .= '<button class="dislike-button ' . ($voted ? 'disabled' : '') . '" data-post-id="' . $post_id . '" data-action="dislike" ' . ($voted ? 'disabled' : '') . '>دیسلایک (' . $dislikes . ')</button>';
-        $buttons .= '</div>';
-
-        $content .= $buttons;
-    }
-    return $content;
+// Enqueue JavaScript
+function enqueue_like_dislike_scripts() {
+    wp_enqueue_script('like-dislike-script', get_template_directory_uri() . '/js/like-dislike.js', ['jquery'], '1.0', true);
+    wp_localize_script('like-dislike-script', 'likeDislikeAjax', [
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('like_dislike_nonce')
+    ]);
 }
-add_filter('the_content', 'blog_display_like_dislike_buttons');
-
-function get_excerpt_article_title($content, $char_limit = 38) {
-    // حذف تگ‌های HTML و whitespace اضافی
-    $clean_content = strip_tags($content);
-    $clean_content = preg_replace('/\s+/', ' ', $clean_content);
-    $clean_content = trim($clean_content);
-
-    // شمارش تعداد حروف (فاصله‌ها در نظر گرفته نمی‌شن)
-    $char_count = mb_strlen(preg_replace('/\s/u', '', $clean_content), 'UTF-8');
-
-    // گرفتن ۳۸ حرف اول به صورت UTF-8
-    $shortened = mb_substr($clean_content, 0, $char_limit, 'UTF-8');
-
-    return $shortened;
-}
+add_action('wp_enqueue_scripts', 'enqueue_like_dislike_scripts');
+?>

@@ -1,5 +1,5 @@
 <!--************************* start belog section  *************************-->
-<div class="blog-section animated-section">
+<div class="blog-section">
   <div class="container">
     <div class="row">
       <?php
