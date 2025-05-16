@@ -11,9 +11,6 @@ function custom_post_type_pagination($query)
     }
 }
 add_action('pre_get_posts', 'custom_post_type_pagination');
-
-
-
 function calculate_reading_time($post_id) {
     // دریافت محتوای مقدمه
     $intro = get_post_meta($post_id, '_post_intro', true);
@@ -104,28 +101,6 @@ function display_post_views() {
 }
 add_shortcode('post_views', 'display_post_views');
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function add_like_dislike_fields() {
     global $wpdb;
     $charset_collate = $wpdb->get_charset_collate();
@@ -189,4 +164,18 @@ function enqueue_like_dislike_scripts() {
     ]);
 }
 add_action('wp_enqueue_scripts', 'enqueue_like_dislike_scripts');
-?>
+function get_excerpt_article_title($text) {
+    if (!is_string($text)) {
+        return '';
+    }
+
+    // گرفتن 34 حرف اول متن ورودی به صورت ایمن
+    $excerpt = mb_substr($text, 0, 41, 'UTF-8');
+
+    // اضافه کردن "..." در صورتی که متن بیشتر از 34 حرف باشد
+    if (mb_strlen($text, 'UTF-8') > 34) {
+        $excerpt .= '…'; // یا '...' بسته به سبک مورد نظر
+    }
+
+    return $excerpt;
+}

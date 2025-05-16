@@ -9,7 +9,7 @@
         <div class="swiper-wrapper">
           
           <?php
-          get_template_part('loop\landing\article-slider-loop', 'article-slider-loop');
+          get_template_part('loop/landing/article-slider-loop', 'article-slider-loop');
           ?>
         </div>
         <!-- <div class="swiper-pagination"></div> -->

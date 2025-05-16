@@ -1,7 +1,5 @@
 <?php
-
 $args = array(
-    'post_type' => 'blog',
     'posts_per_page' => 10,
 );
 
@@ -12,7 +10,7 @@ if ($loop->have_posts()):
         $loop->the_post();
         ?>
         <div class="swiper-slide">
-            <a href="" <?php the_permalink(); ?>">
+            <a href="<?php the_permalink(); ?>">
                 <?php if (has_post_thumbnail()): ?>
                     <?php the_post_thumbnail('post-thumbnail', array('class' => 'slide-image')); ?>
                 <?php else: ?>
@@ -22,8 +20,7 @@ if ($loop->have_posts()):
                 <div class="text-field">
                     <div class="text">
                         <p>
-                            <?php echo get_excerpt_article_title(get_the_title()) ?>
-
+                        <?php echo get_excerpt_article_title(get_the_title()) ?>
                         </p>
                     </div>
                     <div class="more-information">
@@ -33,10 +30,6 @@ if ($loop->have_posts()):
                 </div>
             </a>
         </div>
-
-
-
-
 
         <?php
     endwhile;

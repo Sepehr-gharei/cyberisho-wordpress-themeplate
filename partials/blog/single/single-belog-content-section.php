@@ -29,22 +29,23 @@
             </div>
           <?php endif; ?>
 
-          <div class="list-content-wrapper normal-content-wrapper">
-            <h5>فهرست مطالب</h5>
-            <ul>
-              <li>سئو محتوایی چیست ؟</li>
-              <li>مهمترین نکات در سئو چیست</li>
-              <li>سئو محتوای متنی چیست</li>
-              <li>سئوی تصاویر و متن جایگرین</li>
-              <li>چگونه نمره ستو محتول را ارتقا دهیم ؟</li>
-              <li>
-                15 نکته در رابطه با ایجاد یک محتوای بهینه برای موتور های جستجو
-              </li>
-              <li>اشتباه رایج در سئو محتوایی</li>
-              <li>جمع بندی</li>
-            </ul>
-          </div>
+          <?php
+          $post_sections = get_post_meta(get_the_ID(), '_post_sections', true);
+          if (!empty($post_sections) && is_array($post_sections)) {
+            echo '<div class="list-content-wrapper normal-content-wrapper">';
+            echo '<h5>فهرست مطالب</h5>';
+            echo '<ul>';
 
+            foreach ($post_sections as $section) {
+              if (!empty($section['header_content'])) {
+                echo '<li>' . esc_html($section['header_content']) . '</li>';
+              }
+            }
+
+            echo '</ul>';
+            echo '</div>';
+          }
+          ?>
 
           <!-- نمایش بخش‌ها -->
           <?php foreach ($sections as $section):

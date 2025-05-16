@@ -1,4 +1,3 @@
-
 <?php
 function remove_editor_from_post() {
     // فقط برای برگه‌ها
@@ -196,10 +195,7 @@ function post_save_meta_box_data($post_id) {
     }
 }
 add_action('save_post', 'post_save_meta_box_data');
-?>
 
-
-<?php
 // افزودن متاباکس به پست‌تایپ post
 function faq_metabox_add() {
     add_meta_box(

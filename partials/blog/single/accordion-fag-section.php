@@ -7,7 +7,7 @@
         <h2>سوالات متداوم</h2>
       </div>
       <?php
-      get_template_part('loop\blog\accordion-fag-loop', 'accordion-fag-loop');
+      get_template_part('loop/blog/accordion-fag-loop', 'accordion-fag-loop');
       ?>
     </div>
   </div>

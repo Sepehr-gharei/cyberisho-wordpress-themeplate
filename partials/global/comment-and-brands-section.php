@@ -7,23 +7,12 @@
                 <p>مشتریان ما چه برندهایی و چه کسانی هستن؟</p>
                 <p>در همکاری با ما چه تجربه ای دارند و نظرشان درباره ما چیست؟</p>
                 <div class="brands d-flex">
-                 
-
-
-
-
-                <?php
+                    <?php
                     // Retrieve brand images from the options
                     $brand_images = get_option('brand_images', ['']);
 
                     // Check if there are images to display
                     if (!empty($brand_images) && is_array($brand_images)): ?>
-
-
-
-
-
-
                         <?php foreach ($brand_images as $index => $image_url):
                             // Skip empty URLs
                             if (!empty($image_url)): ?>
@@ -36,11 +25,6 @@
                             <?php endif;
                         endforeach; ?>
                     <?php endif; ?>
-
-
-
-
-
                 </div>
                 <div class="bott-text">
                     <a href="">+ شما هم میتوانید در کنار برترین برند ها به موفقیت برسید...</a>

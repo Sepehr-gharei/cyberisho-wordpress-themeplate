@@ -1,35 +1,35 @@
-// انتخاب المان‌ها
-const video = document.getElementById("myVideo");
-const playButton = document.getElementById("playButton");
-const videoContainer = document.getElementById("videoContainer");
-const textContainer = document.getElementById("landing-video-text");
+// انتخاب تمام دکمه‌های پخش ویدیو و ویدیوها
+const playButtons = document.querySelectorAll("[id='playButton']");
+const videos = document.querySelectorAll("[id='myVideo']");
+const videoContainers = document.querySelectorAll("[id='videoContainer']");
 
-// تابع برای شروع ویدیو
-// تابع برای شروع ویدیو
-function startVideo() {
-  // فعال کردن کنترل‌های پیش‌فرض مرورگر
+// تابع شروع ویدیو
+function startVideo(event) {
+  // پیدا کردن ویدیوی مربوطه (والد مشترک)
+  const clickedPlayButton = event.currentTarget;
+  const container = clickedPlayButton.closest(".video-container");
+  const video = container.querySelector("video");
+
+  // فعال کردن کنترل‌ها و شروع ویدیو
   video.setAttribute("controls", "controls");
-
-  // شروع ویدیو
   video.play();
 
-  // مخفی کردن دکمه شروع
-  playButton.style.display = "none";
+  // پنهان کردن دکمه پلی
+  clickedPlayButton.style.display = "none";
 
-  // افزودن کلاس hide-effects به videoContainer
-  if (videoContainer) {
-    videoContainer.classList.add("hide-effects");
-    console.log("کلاس hide-effects اضافه شد:", videoContainer.classList); // برای دیباگ
-  } else {
-    console.error("videoContainer پیدا نشد!");
+  // اضافه کردن کلاس hide-effects به container مربوطه
+  if (container) {
+    container.classList.add("hide-effects");
   }
 
-  // افزودن کلاس جدید به والد :after
-  const videoWrapper = document.querySelector('.video-landing-section .video-wrapper');
+  // اختیاری: اگر بخواهید .video-wrapper را هم تغییر دهید
+  const videoWrapper = container.querySelector('.video-wrapper');
   if (videoWrapper) {
     videoWrapper.classList.add('hide-after');
   }
 }
 
-// رویداد کلیک روی دکمه شروع
-playButton.addEventListener("click", startVideo);
+// اضافه کردن رویداد به تمام دکمه‌ها
+playButtons.forEach(button => {
+  button.addEventListener("click", startVideo);
+});

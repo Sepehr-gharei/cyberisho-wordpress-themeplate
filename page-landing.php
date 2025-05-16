@@ -12,7 +12,7 @@ get_template_part('partials/landing/our-work-samples-section', 'our-work-samples
 get_template_part('partials/landing/species-text-field-section', 'species-text-field-section');
 get_template_part('partials/landing/type-of-side-section', 'type-of-side-section');
 get_template_part('partials/landing/about-template-and-webdesign-section', 'about-template-and-webdesign-section');
-get_template_part('partials/landing/comment-and-brands-landing-section', 'comment-and-brands-landing-section');
+get_template_part('partials/global/comment-and-brands-section', 'comment-and-brands-section');
 get_template_part('partials/landing/banner-container-landing-section', 'banner-container-landing-section');
 get_template_part('partials/landing/webdesing-price-section', 'webdesing-price-section');
 get_template_part('partials/landing/accordion-fag-section', 'accordion-fag-section');

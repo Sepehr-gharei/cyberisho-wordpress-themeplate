@@ -7,10 +7,9 @@
         <div class="panorama-slider">
             <div class="swiper">
                 <div class="swiper-wrapper">
-                    <?php 
-get_template_part('loop\index\article-slider-loop', 'article-slider-loop');
+                    <?php
+                    get_template_part('loop/index/article-slider-loop', 'article-slider-loop');
                     ?>
-                   
                 </div>
                 <!-- <div class="swiper-pagination"></div> -->
             </div>

@@ -10,11 +10,9 @@
             </div>
             <div class="text-field">
                 <h3>
-
                     <h2><?php echo get_option('home_meeting_title'); ?></h2>
                 </h3>
                 <p>
-
                 <p><?php echo get_option('home_meeting_content') ?></p>
                 </p>
             </div>

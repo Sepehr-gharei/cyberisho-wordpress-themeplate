@@ -1,20 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <?php
 // دریافت داده‌ها از get_option
 $faq_items = get_option('landing_page_faqs', []);

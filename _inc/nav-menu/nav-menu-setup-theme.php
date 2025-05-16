@@ -1,4 +1,3 @@
-
 <?Php
 function cyberisho_setup_theme_support() {
     // منوهای ناوبری
@@ -28,11 +27,6 @@ function cyberisho_setup_theme_support() {
 }
 
 add_action('after_setup_theme', 'cyberisho_setup_theme_support');
-
-
-
-
-
 
 // Custom Walker to output only <a> tags
 class Cyberisho_Nav_Walker extends Walker_Nav_Menu {
@@ -83,10 +77,6 @@ class Cyberisho_Nav_Walker extends Walker_Nav_Menu {
         // No output
     }
 }
-?>
-
-
-<?php
 // Custom Walker to output only <li> and <a> tags
 class Cyberisho_Footer_Nav_Walker extends Walker_Nav_Menu {
     // Start of the menu (remove <ul>)

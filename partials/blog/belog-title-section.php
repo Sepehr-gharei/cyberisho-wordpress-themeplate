@@ -29,7 +29,7 @@
         <div class="row">
           <div class="col-12 col-md-8 image-preview">
             <div class="image-wrapper">
-            <?php get_template_part('loop\blog\blog-title-loop', 'blog-title-loop') ?>
+            <?php get_template_part('loop/blog/blog-title-loop', 'blog-title-loop') ?>
 
             </div>
           </div>
@@ -38,7 +38,7 @@
               <h4>در کدام زمینه نیاز به آزمایش دارید؟</h4>
               <div class="content-wrapper">
                 <div class="content" id="scroll-content">
-                <?php get_template_part('loop\blog\blog-title-category-loop', 'blog-title-category-loop') ?>
+                <?php get_template_part('loop/blog/blog-title-category-loop', 'blog-title-category-loop') ?>
 
                 </div>
                 <div class="custom-scrollbar" id="custom-scrollbar">

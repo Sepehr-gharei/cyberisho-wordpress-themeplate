@@ -41,8 +41,6 @@ if (!empty($faq_items) && is_array($faq_items)) {
 
     <?php
     }
-
-
 } else {
     echo '<p>سوالی یافت نشد.</p>';
 }
