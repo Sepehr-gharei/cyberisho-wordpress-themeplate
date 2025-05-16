@@ -170,7 +170,7 @@ function get_excerpt_article_title($text) {
     }
 
     // گرفتن 34 حرف اول متن ورودی به صورت ایمن
-    $excerpt = mb_substr($text, 0, 41, 'UTF-8');
+    $excerpt = mb_substr($text, 0, 34, 'UTF-8');
 
     // اضافه کردن "..." در صورتی که متن بیشتر از 34 حرف باشد
     if (mb_strlen($text, 'UTF-8') > 34) {

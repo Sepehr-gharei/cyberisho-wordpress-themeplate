@@ -232,7 +232,7 @@
           </div>
           <div class="logo">
             <h2>
-              <a href="">
+              <a href="<?php echo home_url() ?> ">
                 <svg>
                   <use href="#logo-icon"></use>
                 </svg></a>

@@ -3,8 +3,15 @@
   <div class="container">
     <div class="row">
       <div class="col-12 header-text">
-        <small>SINGLE BLOG</small>
-        <h2>صفحه تکی مقالات</h2>
+        <small><?php
+        $english_name = get_post_meta(get_the_ID(), '_english_name_value_key', true);
+        if ($english_name) {
+          echo esc_html($english_name);
+        }else {
+          echo 'SINGLE POST';
+        }
+        ?></small>
+        <h2><?php echo get_the_title() ?></h2>
       </div>
       <div class="col-12 breadcrumb">
         <div class="d-flex">
@@ -20,7 +27,7 @@
               <use href="#double-arrow-icon"></use>
             </svg>
           </div>
-          <li class="breadcrumb-page"><a href="">صفحه تکی مقالات</a></li>
+          <li class="breadcrumb-page"><a href="<?php the_permalink() ?>"><?php echo get_the_title() ?></a></li>
         </div>
       </div>
     </div>

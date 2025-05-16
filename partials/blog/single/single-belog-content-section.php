@@ -2,10 +2,6 @@
 <div class="single-belog-content-section">
   <div class="container">
     <div class="content-container">
-
-
-
-
       <?php
 
       if (have_posts()):
@@ -18,7 +14,6 @@
             $sections = [];
           }
           ?>
-
           <!-- نمایش مقدمه -->
           <?php if (!empty($intro)): ?>
             <div class="normal-content-wrapper">
@@ -66,10 +61,7 @@
           <?php
         endwhile;
       endif;
-
       ?>
-
-
     </div>
   </div>
 </div>

@@ -466,26 +466,32 @@ items.forEach((item) => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  const container = document.querySelector('.programming-fields');
-  const items = document.querySelectorAll('.programming-fields .section .content .item');
-  const imageContainers = document.querySelectorAll('.programming-fields .image-container');
+  const container = document.querySelector(".programming-fields");
+  const items = document.querySelectorAll(
+    ".programming-fields .section .content .item"
+  );
+  const imageContainers = document.querySelectorAll(
+    ".programming-fields .image-container"
+  );
 
-  items.forEach(item => {
-    item.addEventListener('click', () => {
+  items.forEach((item) => {
+    item.addEventListener("click", () => {
       // حذف کلاس active از همه آیتم‌ها
-      items.forEach(i => i.classList.remove('active'));
+      items.forEach((i) => i.classList.remove("active"));
       // اضافه کردن کلاس active به آیتم کلیک‌شده
-      item.classList.add('active');
+      item.classList.add("active");
 
       // گرفتن شماره آیتم از id (مثلاً item-1 -> 1)
-      const itemNumber = item.id.split('-')[1];
+      const itemNumber = item.id.split("-")[1];
       // پیدا کردن image-container مربوطه
       const targetContainer = container.querySelector(`#content-${itemNumber}`);
 
       // حذف کلاس active-content از همه کانتینرها
-      imageContainers.forEach(container => container.classList.remove('active-content'));
+      imageContainers.forEach((container) =>
+        container.classList.remove("active-content")
+      );
       // اضافه کردن کلاس active-content به کانتینر هدف
-      targetContainer.classList.add('active-content');
+      targetContainer.classList.add("active-content");
     });
   });
 });

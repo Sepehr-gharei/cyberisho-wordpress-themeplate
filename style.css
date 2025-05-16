@@ -2461,6 +2461,9 @@ footer .samandehi-2 {
   .top-info .item .wrapper-pages .icon {
     margin-left: 0;
   }
+  .top-info .item .wrapper-pages .icon a {
+    display: flex;
+  }
 
   .bott-info .text-field {
     align-items: center;
@@ -3051,7 +3054,6 @@ footer .samandehi-2 {
 
 .comment-and-brands {
   background-color: var(--light-white-color);
-  margin-bottom: 100px;
   padding: 85px 0;
 }
 .comment-and-brands .brands-container .brands {
@@ -4202,8 +4204,13 @@ footer .samandehi-2 {
   .header-information .header-information-container .wrapper .text-field {
     top: 315px;
   }
+
   .header-information .header-information-container {
     height: 455px;
+    border-radius: 0;
+  }
+  .header-information .header-information-container .city-bg {
+    border-radius: 0;
   }
   .header-information .header-information-container .wrapper img {
     width: 170px;
@@ -4243,6 +4250,12 @@ footer .samandehi-2 {
   }
 }
 @media (max-width: 576px) {
+  .accordion-fag .accordion-item .wrapper-icon {
+    max-width: 100% !important;
+  }
+  .about-cyberisho section .item strong span {
+    padding: 15px 5px;
+}
   .about-us-section {
     padding: 0 15px;
   }
@@ -4305,6 +4318,7 @@ footer .samandehi-2 {
       background: var(--light-blue-color);
       border-radius: 10px;
     }
+  
   }
   .header-information .header-information-container .wrapper .text-field {
     width: 315px;
@@ -6589,12 +6603,28 @@ webdesing-text-field-section {
 @media (max-width: 768px) {
   .belog-title-section .programming-fields .image-preview {
     padding-left: 0;
+    margin-bottom: 45px;
     margin-top: 20px;
   }
-
+  .belog-title-section .programming-fields .image-wrapper {
+    padding: 30px;
+  }
   .belog-title-section .programming-fields .content .blog-scroll-container {
     max-height: 300px;
   }
+  .belog-title-section .programming-fields .description .header p {
+    width: 80%;
+}
+.belog-title-section .programming-fields .description .footer {
+  flex-direction: column;
+}
+.belog-title-section .programming-fields .description .footer .item {
+  padding: 10px 0;
+  margin: 0;
+}
+.belog-title-section .programming-fields .description .footer .item::after {
+  display: none;
+}
 }
 /* ************************* start  belog section ************************* */
 
@@ -7323,6 +7353,8 @@ margin: 0 5px;
   padding: 5px;
   border-radius: 20px;
   color: var(--normal-text-color);
+  direction: ltr;
+  text-align: center;
 }
 .about-this-page-section
   .about-this-page-container
@@ -7657,6 +7689,7 @@ margin: 0 5px;
     margin-top: 15px;
     
 }
+
 .about-this-page-section .about-this-page-container .about-this-page .wrapper.like-wrapper {
   margin: 15px auto;
   width: 45%;
@@ -7688,7 +7721,7 @@ margin: 0 5px;
   width: 40%;
 }
 .single-belog-title-section .content-section .text-field .header p {
-  width: 50%;
+  width: 80%;
 }
 .single-belog-content-section .content-container {
   width: 100%;

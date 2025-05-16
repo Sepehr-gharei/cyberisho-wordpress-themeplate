@@ -94,3 +94,21 @@ function cyberisho_add_ajax_url_to_form()
 }
 add_action('wp_footer', 'cyberisho_add_ajax_url_to_form');
 
+function my_theme_enqueue_scripts() {
+    // ثبت و بارگذاری فایل جاوااسکریپت
+    wp_enqueue_script(
+        'custom-script',
+        get_template_directory_uri() . '/assets/js/copy-url.js',
+        array('jquery'), // وابستگی به jQuery
+        '1.0.0',
+        true
+    );
+
+    // ارسال متغیر ajaxurl به جاوااسکریپت
+    wp_localize_script(
+        'custom-script',
+        'my_ajax_object',
+        array('ajaxurl' => admin_url('admin-ajax.php'))
+    );
+}
+add_action('wp_enqueue_scripts', 'my_theme_enqueue_scripts');

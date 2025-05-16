@@ -291,4 +291,53 @@ function faq_enqueue_scripts() {
     wp_enqueue_script('jquery');
 }
 add_action('admin_enqueue_scripts', 'faq_enqueue_scripts');
-?>
+
+// افزودن متا باکس
+function add_english_name_meta_box() {
+    add_meta_box(
+        'english_name_meta_box',       // ID منحصر به فرد متا باکس
+        'نام انگلیسی',                 // عنوان متا باکس
+        'render_english_name_meta_box',// تابعی که محتوای باکس را نمایش می‌دهد
+        'post',                        // نوع مطلب (post, page یا CPT)
+        'side',                        // موقعیت (side, normal, advanced)
+        'default'                      // اولویت نمایش
+    );
+}
+add_action('add_meta_boxes', 'add_english_name_meta_box');
+
+// نمایش فیلد در متا باکس
+function render_english_name_meta_box($post) {
+    // امنیت: غربالگری و Nonce
+    wp_nonce_field(basename(__FILE__), 'english_name_nonce');
+
+    // دریافت مقدار قبلی ذخیره‌شده
+    $value = get_post_meta($post->ID, '_english_name_value_key', true);
+
+    echo '<label for="english_name_field">نام انگلیسی:</label>';
+    echo '<input type="text" id="english_name_field" name="english_name_field" value="' . esc_attr($value) . '" class="widefat" />';
+}
+
+// ذخیره داده‌ها
+function save_english_name_meta_box_data($post_id) {
+    // بررسی nonce برای امنیت
+    if (!isset($_POST['english_name_nonce']) || !wp_verify_nonce($_POST['english_name_nonce'], basename(__FILE__))) {
+        return;
+    }
+
+    // بررسی اینکه آیا داده از طریق autosave نیست
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    // بررسی مجوز کاربر
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    // ذخیره یا به‌روزرسانی داده
+    if (isset($_POST['english_name_field'])) {
+        $sanitized_value = sanitize_text_field($_POST['english_name_field']);
+        update_post_meta($post_id, '_english_name_value_key', $sanitized_value);
+    }
+}
+add_action('save_post', 'save_english_name_meta_box_data');

@@ -5,16 +5,23 @@
       <div class="title">
         <h3>دیدگاه کاربران</h3>
       </div>
+      <?php
+      global $post;
+      $post_id = $post->ID;
+      $comments_count = get_comments_number($post_id);
 
-      <?php comments_template(null, true); ?>
+      if ($comments_count > 0) {
+        comments_template(null, true);
 
+      } else {
+        echo 'تاکنون کامنتی گزاشته نشده';
 
-
+      }
+      ?>
       <div class="comment-form">
         <div class="comment-form-title">
           <p>دیدگاه خود را بنویسید . نشانی ایمیل شما منتشر نخواهد شد</p>
         </div>
-
         <?php if (comments_open()): ?>
           <form id="custom-comment-form" method="post" data-ajax-url="<?php echo admin_url('admin-ajax.php'); ?>">
             <textarea name="comment" id="comment" placeholder="متن پیام*" required></textarea>
@@ -33,8 +40,6 @@
           <p>ثبت دیدگاه برای این پست بسته است.</p>
         <?php endif; ?>
       </div>
-
-
     </div>
   </div>
 </div>
