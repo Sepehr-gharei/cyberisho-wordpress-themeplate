@@ -1,26 +1,26 @@
-// تابع برای فعال‌سازی اسکرول‌بار برای هر wrapper
-function initImageScrollbars() {
+function initPortfolioScrollbars() {
+  // فقط اسکرول‌بارهای مربوط به portfolio را حذف کنید
   document
-    .querySelectorAll(".image-scrollbar-container")
+    .querySelectorAll(".portfolio-web-design-sample-section .image-scrollbar-container")
     .forEach((el) => el.remove());
 
   const wrappers = document.querySelectorAll(
     ".portfolio-web-design-sample-section .wrapper"
   );
   if (!wrappers.length) {
-    console.error("No wrappers found");
+    console.error("No wrappers found in portfolio section");
     return;
   }
 
   wrappers.forEach((wrapper) => {
     const container = wrapper.querySelector(".image-container");
     if (!container) {
-      console.error("Image container not found in wrapper");
+      console.error("Image container not found in portfolio wrapper");
       return;
     }
 
     const scrollbarContainer = document.createElement("div");
-    scrollbarContainer.className = "image-scrollbar-container";
+    scrollbarContainer.className = "image-scrollbar-container portfolio-scrollbar"; // کلاس اختصاصی برای شناسایی
 
     const thumb = document.createElement("div");
     thumb.className = "image-scrollbar-thumb";
@@ -44,8 +44,7 @@ function initImageScrollbars() {
       }
 
       const scrollRatio = containerHeight / contentHeight;
-      const thumbMaxTop =
-        scrollbarContainer.clientHeight - thumb.offsetHeight;
+      const thumbMaxTop = scrollbarContainer.clientHeight - thumb.offsetHeight;
       const scrollTop = container.scrollTop;
       const maxScroll = contentHeight - containerHeight;
       const thumbTop = (scrollTop / maxScroll) * thumbMaxTop;
@@ -69,8 +68,7 @@ function initImageScrollbars() {
       if (!isDragging) return;
 
       const deltaY = e.clientY - startY;
-      const thumbMaxTop =
-        scrollbarContainer.clientHeight - thumb.offsetHeight;
+      const thumbMaxTop = scrollbarContainer.clientHeight - thumb.offsetHeight;
 
       let newThumbTop = startThumbTop + deltaY;
       newThumbTop = Math.max(0, Math.min(newThumbTop, thumbMaxTop));
@@ -79,8 +77,7 @@ function initImageScrollbars() {
       const contentHeight = container.scrollHeight;
       const containerHeight = container.clientHeight;
       const scrollRatio = newThumbTop / thumbMaxTop;
-      container.scrollTop =
-        scrollRatio * (contentHeight - containerHeight);
+      container.scrollTop = scrollRatio * (contentHeight - containerHeight);
     });
 
     document.addEventListener("mouseup", () => {
@@ -95,41 +92,34 @@ function initImageScrollbars() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  initImageScrollbars();
-});
+  initPortfolioScrollbars();
 
-
-document.addEventListener("DOMContentLoaded", function () {
-  // انتخاب تمام لینک‌های title
+  // مدیریت کلیک لینک‌های title و footer
   const titleLinks = document.querySelectorAll(
     ".example-of-portfolio-container .title a"
   );
-  // انتخاب تمام لینک‌های footer
   const footerLinks = document.querySelectorAll(
     ".portfolio-web-design-sample-section .footer a"
   );
 
-  // افزودن رویداد کلیک به هر لینک title
   titleLinks.forEach((link) => {
     link.addEventListener("click", function (e) {
-      e.preventDefault(); // جلوگیری از رفتار پیش‌فرض لینک
-      // پیدا کردن نزدیک‌ترین example-of-portfolio-section
-      const portfolioSection = this.closest(
-        ".example-of-portfolio-section"
-      );
-      portfolioSection.classList.add("active");
+      e.preventDefault();
+      const portfolioSection = this.closest(".example-of-portfolio-section");
+      if (portfolioSection) {
+        portfolioSection.classList.add("active");
+        initPortfolioScrollbars(); // به‌روزرسانی اسکرول‌بارها پس از فعال شدن
+      }
     });
   });
 
-  // افزودن رویداد کلیک به هر لینک footer
   footerLinks.forEach((link) => {
     link.addEventListener("click", function (e) {
-      e.preventDefault(); // جلوگیری از رفتار پیش‌فرض لینک
-      // پیدا کردن نزدیک‌ترین example-of-portfolio-section
-      const portfolioSection = this.closest(
-        ".example-of-portfolio-section"
-      );
-      portfolioSection.classList.remove("active");
+      e.preventDefault();
+      const portfolioSection = this.closest(".example-of-portfolio-section");
+      if (portfolioSection) {
+        portfolioSection.classList.remove("active");
+      }
     });
   });
 });

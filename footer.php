@@ -118,7 +118,14 @@
 </footer>
 <div class="bottom-line"></div>
 <?php wp_footer() ?>
-
+<?php
+function register_portfolio_assets()
+{
+  wp_register_script('portfolio', get_template_directory_uri() . '/assets/js/portfolio.js', [], '1.0.0', true);
+  wp_enqueue_script('portfolio');
+}
+add_action('wp_enqueue_scripts', 'register_portfolio_assets');
+?>
 </body>
 
 </html>
