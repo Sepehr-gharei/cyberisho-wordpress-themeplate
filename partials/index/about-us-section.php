@@ -33,7 +33,7 @@
                     $about_page = get_page_by_path('about-us'); // اگر اسلاگ صفحه about-us است
                     $about_page_id = $about_page->ID;
                     $meta_content = get_post_meta($about_page->ID, '_page_header_text_key', true);
-                    $limited_content = mb_substr($meta_content, 0, 730, 'UTF-8'); // برش با پشتیبانی از UTF-8
+                    $limited_content = mb_substr($meta_content, 0, 485, 'UTF-8'); // برش با پشتیبانی از UTF-8
                     echo $limited_content . ' ...';
                     ?>
 

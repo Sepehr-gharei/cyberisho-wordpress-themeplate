@@ -1,7 +1,7 @@
     <!-- ************************* start form container   *************************-->
     <div class="form-container animated-section">
       <div class="container d-flex justify-content-center">
-        <div class="col-12 col-md-7">
+        <div class="col-12 col-md-8">
           <form action="">
             <input type="text" placeholder="نام شما" />
             <input type="text" placeholder="ایمیل" />

@@ -51,7 +51,8 @@ add_action('save_post', 'save_my_portfolio_metabox');
 */
 
 
-function remove_editor_from_pages() {
+function remove_editor_from_pages()
+{
     // فقط برای برگه‌ها
     if (isset($_GET['post']) && get_post_type($_GET['post']) === 'page' || isset($_GET['post_type']) && $_GET['post_type'] === 'page') {
         // حذف ویرایشگر پیش‌فرض
@@ -127,7 +128,7 @@ function my_custom_aboutus_metaboxes()
     if ($post) {
         $page_slug = $post->post_name;
         if ($page_slug === 'about-us') {
-            // متاباکس اول برای ویدیو
+            // Meta box for video
             add_meta_box(
                 'aboutus_video_metabox',
                 'ویدیو درباره ما',
@@ -137,7 +138,7 @@ function my_custom_aboutus_metaboxes()
                 'high'
             );
 
-            // متاباکس دوم برای تامبنیل ویدیو
+            // Meta box for video thumbnail
             add_meta_box(
                 'aboutus_video_thumbnail_metabox',
                 'عکس تامبنیل ویدیو درباره ما',
@@ -146,10 +147,69 @@ function my_custom_aboutus_metaboxes()
                 'normal',
                 'high'
             );
+
+            // New meta box for more information container image
+            add_meta_box(
+                'aboutus_info_image_metabox',
+                'عکس کانتینر اطلاعات بیشتر',
+                'aboutus_info_image_metabox_callback',
+                'page',
+                'normal',
+                'high'
+            );
         }
     }
 }
 add_action('add_meta_boxes', 'my_custom_aboutus_metaboxes');
+function aboutus_info_image_metabox_callback($post)
+{
+    $image_id = get_post_meta($post->ID, '_aboutus_info_image_id', true);
+    $image_url = $image_id ? wp_get_attachment_url($image_id) : '';
+    wp_nonce_field('aboutus_metabox_nonce', 'aboutus_nonce');
+    ?>
+    <label for="aboutus_info_image">عکس کانتینر اطلاعات بیشتر:</label>
+    <input type="hidden" id="aboutus_info_image_id" name="aboutus_info_image_id" value="<?php echo esc_attr($image_id); ?>">
+    <input type="text" id="aboutus_info_image_url" name="aboutus_info_image_url" value="<?php echo esc_url($image_url); ?>"
+        style="width: 100%; margin-bottom: 10px;" readonly>
+    <input type="button" id="upload_info_image_button" class="button" value="انتخاب تصویر از رسانه">
+    <input type="button" id="remove_info_image_button" class="button" value="حذف تصویر"
+        style="<?php echo $image_id ? '' : 'display:none;'; ?> margin-bottom: 10px;">
+    <div id="info_image_preview" style="margin-top: 10px;">
+        <?php if ($image_url): ?>
+            <img src="<?php echo esc_url($image_url); ?>" style="max-width: 200px; height: auto;">
+        <?php endif; ?>
+    </div>
+    <script>
+        jQuery(document).ready(function ($) {
+            $('#upload_info_image_button').click(function () {
+                var frame = wp.media({
+                    title: 'انتخاب عکس کانتینر اطلاعات بیشتر',
+                    library: { type: 'image' },
+                    multiple: false
+                });
+
+                frame.on('select', function () {
+                    var attachment = frame.state().get('selection').first().toJSON();
+                    $('#aboutus_info_image_id').val(attachment.id);
+                    $('#aboutus_info_image_url').val(attachment.url);
+                    $('#info_image_preview').html('<img src="' + attachment.url + '" style="max-width: 200px; height: auto;">');
+                    $('#remove_info_image_button').show();
+                });
+
+                frame.open();
+            });
+
+            $('#remove_info_image_button').click(function () {
+                $('#aboutus_info_image_id').val('');
+                $('#aboutus_info_image_url').val('');
+                $('#info_image_preview').html('');
+                $(this).hide();
+            });
+        });
+    </script>
+    <?php
+}
+// Save meta box data
 
 // کالبک متاباکس ویدیو
 function aboutus_video_metabox_callback($post)
@@ -222,7 +282,6 @@ function aboutus_video_thumbnail_metabox_callback($post)
     </script>
     <?php
 }
-
 // تابع ذخیره سازی داده‌های متاباکس
 function save_aboutus_metaboxes($post_id)
 {
@@ -234,14 +293,25 @@ function save_aboutus_metaboxes($post_id)
         return;
     }
 
-    // ذخیره ویدیو
+    // Save video URL
     if (isset($_POST['aboutus_video_url'])) {
         update_post_meta($post_id, '_aboutus_video_url', esc_url_raw($_POST['aboutus_video_url']));
+    } else {
+        delete_post_meta($post_id, '_aboutus_video_url');
     }
 
-    // ذخیره تامبنیل
+    // Save video thumbnail
     if (isset($_POST['aboutus_video_thumbnail_id'])) {
         update_post_meta($post_id, '_aboutus_video_thumbnail_id', absint($_POST['aboutus_video_thumbnail_id']));
+    } else {
+        delete_post_meta($post_id, '_aboutus_video_thumbnail_id');
+    }
+
+    // Save more information container image
+    if (isset($_POST['aboutus_info_image_id']) && !empty($_POST['aboutus_info_image_id'])) {
+        update_post_meta($post_id, '_aboutus_info_image_id', absint($_POST['aboutus_info_image_id']));
+    } else {
+        delete_post_meta($post_id, '_aboutus_info_image_id');
     }
 }
 add_action('save_post', 'save_aboutus_metaboxes');
@@ -610,7 +680,8 @@ function my_landing_video_metabox_callback($post)
         <?php endif; ?>
     </div>
 
-    <input type="hidden" name="landing_video_attachment_id" id="landing_video_attachment_id" value="<?php echo esc_attr($video_id); ?>" />
+    <input type="hidden" name="landing_video_attachment_id" id="landing_video_attachment_id"
+        value="<?php echo esc_attr($video_id); ?>" />
 
     <button type="button" class="button button-secondary" id="upload_video_button">
         <?php echo $video_id ? 'تغییر ویدیو' : 'انتخاب ویدیو'; ?>
@@ -679,18 +750,21 @@ function my_landing_thumbnail_metabox_callback($post)
     ?>
     <div class="thumbnail-preview">
         <?php if ($thumbnail_url): ?>
-            <img src="<?php echo esc_url($thumbnail_url); ?>" alt="Thumbnail Preview" style="max-width: 100%; margin-top: 10px; border-radius: 8px;" />
+            <img src="<?php echo esc_url($thumbnail_url); ?>" alt="Thumbnail Preview"
+                style="max-width: 100%; margin-top: 10px; border-radius: 8px;" />
         <?php endif; ?>
     </div>
 
-    <input type="hidden" name="landing_thumbnail_attachment_id" id="landing_thumbnail_attachment_id" value="<?php echo esc_attr($thumbnail_id); ?>" />
+    <input type="hidden" name="landing_thumbnail_attachment_id" id="landing_thumbnail_attachment_id"
+        value="<?php echo esc_attr($thumbnail_id); ?>" />
 
     <button type="button" class="button button-secondary" id="upload_thumbnail_button">
         <?php echo $thumbnail_id ? 'تغییر تصویر' : 'انتخاب تامبنیل'; ?>
     </button>
 
     <?php if ($thumbnail_id): ?>
-        <button type="button" class="button button-secondary" id="remove_thumbnail_button" style="margin-top: 10px; color: red;">
+        <button type="button" class="button button-secondary" id="remove_thumbnail_button"
+            style="margin-top: 10px; color: red;">
             حذف تصویر
         </button>
     <?php endif; ?>
@@ -756,22 +830,26 @@ function my_landing_containers_metabox_callback($post)
     <div style="display:flex; flex-direction:column; gap:15px;">
         <div>
             <label for="landing_container_1">کانتینر 1:</label>
-            <textarea name="landing_container_1" id="landing_container_1" rows="3" style="width:100%;"><?php echo esc_textarea($container_1); ?></textarea>
+            <textarea name="landing_container_1" id="landing_container_1" rows="3"
+                style="width:100%;"><?php echo esc_textarea($container_1); ?></textarea>
         </div>
 
         <div>
             <label for="landing_container_2">کانتینر 2:</label>
-            <textarea name="landing_container_2" id="landing_container_2" rows="3" style="width:100%;"><?php echo esc_textarea($container_2); ?></textarea>
+            <textarea name="landing_container_2" id="landing_container_2" rows="3"
+                style="width:100%;"><?php echo esc_textarea($container_2); ?></textarea>
         </div>
 
         <div>
             <label for="landing_container_3">کانتینر 3:</label>
-            <textarea name="landing_container_3" id="landing_container_3" rows="3" style="width:100%;"><?php echo esc_textarea($container_3); ?></textarea>
+            <textarea name="landing_container_3" id="landing_container_3" rows="3"
+                style="width:100%;"><?php echo esc_textarea($container_3); ?></textarea>
         </div>
 
         <div>
             <label for="landing_container_4">کانتینر 4:</label>
-            <textarea name="landing_container_4" id="landing_container_4" rows="3" style="width:100%;"><?php echo esc_textarea($container_4); ?></textarea>
+            <textarea name="landing_container_4" id="landing_container_4" rows="3"
+                style="width:100%;"><?php echo esc_textarea($container_4); ?></textarea>
         </div>
     </div>
     <?php
@@ -779,7 +857,8 @@ function my_landing_containers_metabox_callback($post)
 
 
 // Save Metabox Data
-function save_my_landing_metaboxes($post_id) {
+function save_my_landing_metaboxes($post_id)
+{
     // Check if this is an autosave
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
         return;
@@ -822,25 +901,29 @@ function save_my_landing_metaboxes($post_id) {
     ];
 
     $has_error = false;
-    
+
     foreach ($containers as $container) {
         if (isset($_POST[$container])) {
             $text = sanitize_textarea_field($_POST[$container]);
             $char_count = mb_strlen($text, 'UTF-8');
-            
+
             if ($char_count > 42) {
                 $has_error = true;
-                set_transient('landing_container_error_' . $container, 
-                    sprintf('متن وارد شده در کانتینر %s باید حداکثر 42 کاراکتر باشد (تعداد کاراکترهای وارد شده: %d).', 
-                    str_replace('landing_container_', '', $container), 
-                    $char_count), 
-                45);
+                set_transient(
+                    'landing_container_error_' . $container,
+                    sprintf(
+                        'متن وارد شده در کانتینر %s باید حداکثر 42 کاراکتر باشد (تعداد کاراکترهای وارد شده: %d).',
+                        str_replace('landing_container_', '', $container),
+                        $char_count
+                    ),
+                    45
+                );
             } else {
                 update_post_meta($post_id, '_' . $container, $text);
             }
         }
     }
-    
+
     if ($has_error) {
         set_transient('landing_containers_validation_error', 'برخی فیلدها ذخیره نشدند. لطفا خطاهای مربوط به تعداد کاراکترها را بررسی کنید.', 45);
     }
@@ -848,7 +931,8 @@ function save_my_landing_metaboxes($post_id) {
 add_action('save_post', 'save_my_landing_metaboxes');
 
 // Display admin notices for container errors
-function display_landing_container_errors() {
+function display_landing_container_errors()
+{
     // Display general validation error
     if ($error = get_transient('landing_containers_validation_error')) {
         ?>
@@ -858,7 +942,7 @@ function display_landing_container_errors() {
         <?php
         delete_transient('landing_containers_validation_error');
     }
-    
+
     // Display individual container errors
     for ($i = 1; $i <= 4; $i++) {
         $container_key = 'landing_container_' . $i;
@@ -875,38 +959,39 @@ function display_landing_container_errors() {
 add_action('admin_notices', 'display_landing_container_errors');
 
 // Add character counter to textareas
-function add_container_character_counter() {
+function add_container_character_counter()
+{
     global $post;
-    
+
     if ($post && $post->post_type === 'page' && $post->post_name === 'landing') {
         ?>
         <script>
-        jQuery(document).ready(function($) {
-            // Add character counter for each container
-            for (var i = 1; i <= 4; i++) {
-                var textarea = $('#landing_container_' + i);
-                var counter = $('<div class="character-counter" style="text-align: left; font-size: 12px; color: #666; margin-top: 5px;"></div>');
-                textarea.after(counter);
-                
-                // Update counter on input
-                textarea.on('input', function() {
-                    var text = $(this).val();
-                    var charCount = text.length;
-                    var counter = $(this).next('.character-counter');
-                    
-                    counter.text('تعداد کاراکترها: ' + charCount + ' (حداکثر 42 کاراکتر مجاز است)');
-                    
-                    if (charCount > 42) {
-                        counter.css('color', 'red');
-                    } else {
-                        counter.css('color', 'green');
-                    }
-                });
-                
-                // Trigger input event to update counter initially
-                textarea.trigger('input');
-            }
-        });
+            jQuery(document).ready(function ($) {
+                // Add character counter for each container
+                for (var i = 1; i <= 4; i++) {
+                    var textarea = $('#landing_container_' + i);
+                    var counter = $('<div class="character-counter" style="text-align: left; font-size: 12px; color: #666; margin-top: 5px;"></div>');
+                    textarea.after(counter);
+
+                    // Update counter on input
+                    textarea.on('input', function () {
+                        var text = $(this).val();
+                        var charCount = text.length;
+                        var counter = $(this).next('.character-counter');
+
+                        counter.text('تعداد کاراکترها: ' + charCount + ' (حداکثر 42 کاراکتر مجاز است)');
+
+                        if (charCount > 42) {
+                            counter.css('color', 'red');
+                        } else {
+                            counter.css('color', 'green');
+                        }
+                    });
+
+                    // Trigger input event to update counter initially
+                    textarea.trigger('input');
+                }
+            });
         </script>
         <?php
     }
@@ -915,7 +1000,8 @@ add_action('admin_footer', 'add_container_character_counter');
 
 
 
-function my_landing_page_metabox() {
+function my_landing_page_metabox()
+{
     global $post;
 
     if ($post) {
@@ -933,7 +1019,8 @@ function my_landing_page_metabox() {
     }
 }
 add_action('add_meta_boxes', 'my_landing_page_metabox');
-function landing_page_metabox_callback($post) {
+function landing_page_metabox_callback($post)
+{
     wp_nonce_field('landing_metabox_nonce', 'landing_nonce');
 
     // دریافت مقادیر ذخیره شده
@@ -947,19 +1034,21 @@ function landing_page_metabox_callback($post) {
         <!-- فیلدهای اصلی -->
         <div class="landing-field-group">
             <h4>درباره صفحه طراحی سایت</h4>
-            <textarea name="landing_about_text" style="width: 100%; height: 100px;"><?php echo esc_textarea($about_text); ?></textarea>
+            <textarea name="landing_about_text"
+                style="width: 100%; height: 100px;"><?php echo esc_textarea($about_text); ?></textarea>
         </div>
 
         <div class="landing-field-group">
             <h4>محتوا</h4>
-            <textarea name="landing_content_text" style="width: 100%; height: 100px;"><?php echo esc_textarea($content_text); ?></textarea>
+            <textarea name="landing_content_text"
+                style="width: 100%; height: 100px;"><?php echo esc_textarea($content_text); ?></textarea>
         </div>
 
         <!-- کانتینرها -->
         <div class="landing-containers-wrapper">
             <h3>محتوای داخل این صفحه</h3>
             <button type="button" class="button add-container-btn">اضافه کردن کانتینر جدید</button>
-            
+
             <div class="landing-containers">
                 <?php if (!empty($containers_data)): ?>
                     <?php foreach ($containers_data as $index => $container): ?>
@@ -968,31 +1057,34 @@ function landing_page_metabox_callback($post) {
                                 <h4>کانتینر <?php echo $index + 1; ?></h4>
                                 <button type="button" class="button remove-container-btn">حذف کانتینر</button>
                             </div>
-                            
+
                             <div class="container-fields">
                                 <!-- هدر کانتینر -->
                                 <div class="landing-field-group">
                                     <h4>هدر (H4)</h4>
-                                    <input type="text" name="landing_containers[<?php echo $index; ?>][header]" 
-                                           value="<?php echo esc_attr($container['header'] ?? ''); ?>" style="width: 100%;">
+                                    <input type="text" name="landing_containers[<?php echo $index; ?>][header]"
+                                        value="<?php echo esc_attr($container['header'] ?? ''); ?>" style="width: 100%;">
                                 </div>
-                                
+
                                 <!-- آیتم‌ها (محتوا و لیست به ترتیب زمانی) -->
                                 <?php if (!empty($container['items'])): ?>
                                     <?php foreach ($container['items'] as $item_index => $item): ?>
                                         <div class="content-group" data-type="<?php echo esc_attr($item['type']); ?>">
-                                            <label><?php echo $item['type'] === 'content' ? 'محتوا' : 'لیست محتوا'; ?> <?php echo $item_index + 1; ?></label>
-                                            <textarea name="landing_containers[<?php echo $index; ?>][items][<?php echo $item_index; ?>][value]" 
-                                                      style="width: 100%; height: <?php echo $item['type'] === 'content' ? '100px' : '60px'; ?>;">
-                                                      <?php echo esc_textarea($item['value']); ?>
-                                            </textarea>
-                                            <input type="hidden" name="landing_containers[<?php echo $index; ?>][items][<?php echo $item_index; ?>][type]" 
-                                                   value="<?php echo esc_attr($item['type']); ?>">
+                                            <label><?php echo $item['type'] === 'content' ? 'محتوا' : 'لیست محتوا'; ?>
+                                                <?php echo $item_index + 1; ?></label>
+                                            <textarea
+                                                name="landing_containers[<?php echo $index; ?>][items][<?php echo $item_index; ?>][value]"
+                                                style="width: 100%; height: <?php echo $item['type'] === 'content' ? '100px' : '60px'; ?>;">
+                                                                          <?php echo esc_textarea($item['value']); ?>
+                                                                </textarea>
+                                            <input type="hidden"
+                                                name="landing_containers[<?php echo $index; ?>][items][<?php echo $item_index; ?>][type]"
+                                                value="<?php echo esc_attr($item['type']); ?>">
                                             <button type="button" class="button remove-content-btn">حذف آیتم</button>
                                         </div>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
-                                
+
                                 <!-- دکمه‌های افزودن -->
                                 <div class="container-actions">
                                     <button type="button" class="button add-content-btn">اضافه کردن محتوا</button>
@@ -1007,11 +1099,11 @@ function landing_page_metabox_callback($post) {
     </div>
 
     <script>
-    jQuery(document).ready(function($) {
-        // افزودن کانتینر جدید
-        $('.add-container-btn').on('click', function() {
-            var containerIndex = $('.landing-container').length;
-            var newContainer = `
+        jQuery(document).ready(function ($) {
+            // افزودن کانتینر جدید
+            $('.add-container-btn').on('click', function () {
+                var containerIndex = $('.landing-container').length;
+                var newContainer = `
                 <div class="landing-container" data-index="${containerIndex}">
                     <div class="container-header">
                         <h4>کانتینر ${containerIndex + 1}</h4>
@@ -1031,17 +1123,17 @@ function landing_page_metabox_callback($post) {
                     </div>
                 </div>
             `;
-            
-            $('.landing-containers').append(newContainer);
-        });
-        
-        // افزودن محتوای جدید
-        $(document).on('click', '.add-content-btn', function() {
-            var container = $(this).closest('.landing-container');
-            var containerIndex = container.data('index');
-            var itemCount = container.find('.content-group').length;
-            
-            var newContent = `
+
+                $('.landing-containers').append(newContainer);
+            });
+
+            // افزودن محتوای جدید
+            $(document).on('click', '.add-content-btn', function () {
+                var container = $(this).closest('.landing-container');
+                var containerIndex = container.data('index');
+                var itemCount = container.find('.content-group').length;
+
+                var newContent = `
                 <div class="content-group" data-type="content">
                     <label>محتوا ${itemCount + 1}</label>
                     <textarea name="landing_containers[${containerIndex}][items][${itemCount}][value]" style="width: 100%; height: 100px;"></textarea>
@@ -1049,17 +1141,17 @@ function landing_page_metabox_callback($post) {
                     <button type="button" class="button remove-content-btn">حذف آیتم</button>
                 </div>
             `;
-            
-            container.find('.container-actions').before(newContent);
-        });
-        
-        // افزودن لیست محتوای جدید
-        $(document).on('click', '.add-list-content-btn', function() {
-            var container = $(this).closest('.landing-container');
-            var containerIndex = container.data('index');
-            var itemCount = container.find('.content-group').length;
-            
-            var newListContent = `
+
+                container.find('.container-actions').before(newContent);
+            });
+
+            // افزودن لیست محتوای جدید
+            $(document).on('click', '.add-list-content-btn', function () {
+                var container = $(this).closest('.landing-container');
+                var containerIndex = container.data('index');
+                var itemCount = container.find('.content-group').length;
+
+                var newListContent = `
                 <div class="content-group" data-type="list">
                     <label>لیست محتوا ${itemCount + 1}</label>
                     <textarea name="landing_containers[${containerIndex}][items][${itemCount}][value]" style="width: 100%; height: 60px;"></textarea>
@@ -1067,118 +1159,129 @@ function landing_page_metabox_callback($post) {
                     <button type="button" class="button remove-content-btn">حذف آیتم</button>
                 </div>
             `;
-            
-            container.find('.container-actions').before(newListContent);
-        });
-        
-        // حذف کانتینر
-        $(document).on('click', '.remove-container-btn', function() {
-            if (confirm('آیا از حذف این کانتینر مطمئن هستید؟')) {
-                $(this).closest('.landing-container').remove();
-                updateContainerIndexes();
-            }
-        });
-        
-        // حذف آیتم
-        $(document).on('click', '.remove-content-btn', function() {
-            if (confirm('آیا از حذف این آیتم مطمئن هستید؟')) {
-                var contentGroup = $(this).closest('.content-group');
-                var container = contentGroup.closest('.landing-container');
-                contentGroup.remove();
-                updateItemIndexes(container);
-            }
-        });
-        
-        // به‌روزرسانی اندیس‌های کانتینرها
-        function updateContainerIndexes() {
-            $('.landing-container').each(function(index) {
-                $(this).attr('data-index', index);
-                $(this).find('.container-header h4').text(`کانتینر ${index + 1}`);
-                
-                $(this).find('[name^="landing_containers"]').each(function() {
-                    var name = $(this).attr('name');
-                    name = name.replace(/landing_containers\[\d+\]/, `landing_containers[${index}]`);
-                    $(this).attr('name', name);
+
+                container.find('.container-actions').before(newListContent);
+            });
+
+            // حذف کانتینر
+            $(document).on('click', '.remove-container-btn', function () {
+                if (confirm('آیا از حذف این کانتینر مطمئن هستید؟')) {
+                    $(this).closest('.landing-container').remove();
+                    updateContainerIndexes();
+                }
+            });
+
+            // حذف آیتم
+            $(document).on('click', '.remove-content-btn', function () {
+                if (confirm('آیا از حذف این آیتم مطمئن هستید؟')) {
+                    var contentGroup = $(this).closest('.content-group');
+                    var container = contentGroup.closest('.landing-container');
+                    contentGroup.remove();
+                    updateItemIndexes(container);
+                }
+            });
+
+            // به‌روزرسانی اندیس‌های کانتینرها
+            function updateContainerIndexes() {
+                $('.landing-container').each(function (index) {
+                    $(this).attr('data-index', index);
+                    $(this).find('.container-header h4').text(`کانتینر ${index + 1}`);
+
+                    $(this).find('[name^="landing_containers"]').each(function () {
+                        var name = $(this).attr('name');
+                        name = name.replace(/landing_containers\[\d+\]/, `landing_containers[${index}]`);
+                        $(this).attr('name', name);
+                    });
                 });
-            });
-        }
-        
-        // به‌روزرسانی اندیس‌های آیتم‌ها
-        function updateItemIndexes(container) {
-            container.find('.content-group').each(function(index) {
-                var type = $(this).data('type');
-                var label = type === 'content' ? 'محتوا' : 'لیست محتوا';
-                $(this).find('label').text(`${label} ${index + 1}`);
-                
-                $(this).find('textarea').attr('name', `landing_containers[${container.data('index')}][items][${index}][value]`);
-                $(this).find('input[type="hidden"]').attr('name', `landing_containers[${container.data('index')}][items][${index}][type]`);
-            });
-        }
-    });
+            }
+
+            // به‌روزرسانی اندیس‌های آیتم‌ها
+            function updateItemIndexes(container) {
+                container.find('.content-group').each(function (index) {
+                    var type = $(this).data('type');
+                    var label = type === 'content' ? 'محتوا' : 'لیست محتوا';
+                    $(this).find('label').text(`${label} ${index + 1}`);
+
+                    $(this).find('textarea').attr('name', `landing_containers[${container.data('index')}][items][${index}][value]`);
+                    $(this).find('input[type="hidden"]').attr('name', `landing_containers[${container.data('index')}][items][${index}][type]`);
+                });
+            }
+        });
     </script>
 
     <style>
-    .landing-metabox-container {
-        padding: 15px;
-    }
-    .landing-field-group {
-        margin-bottom: 20px;
-    }
-    .landing-containers-wrapper {
-        margin-top: 30px;
-        border-top: 1px solid #ddd;
-        padding-top: 20px;
-    }
-    .landing-container {
-        background: #f9f9f9;
-        padding: 15px;
-        margin-bottom: 20px;
-        border: 1px solid #ddd;
-        border-radius: 3px;
-    }
-    .container-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-    .container-header h4 {
-        margin: 0 15px 0 0;
-        flex: 1;
-        min-width: 100%;
-    }
-    .container-fields {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
-    .content-group {
-        background: #fff;
-        padding: 10px;
-        border: 1px solid #eee;
-        border-radius: 3px;
-    }
-    .content-group label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-    }
-    .content-group button {
-        margin-top: 5px;
-    }
-    .container-actions {
-        display: flex;
-        gap: 10px;
-        margin-top: 10px;
-        padding-top: 10px;
-        border-top: 1px dashed #ccc;
-    }
+        .landing-metabox-container {
+            padding: 15px;
+        }
+
+        .landing-field-group {
+            margin-bottom: 20px;
+        }
+
+        .landing-containers-wrapper {
+            margin-top: 30px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+
+        .landing-container {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        .container-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .container-header h4 {
+            margin: 0 15px 0 0;
+            flex: 1;
+            min-width: 100%;
+        }
+
+        .container-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .content-group {
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 3px;
+        }
+
+        .content-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .content-group button {
+            margin-top: 5px;
+        }
+
+        .container-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #ccc;
+        }
     </style>
     <?php
 }
 
-function save_landing_page_metabox($post_id) {
+function save_landing_page_metabox($post_id)
+{
     if (!isset($_POST['landing_nonce']) || !wp_verify_nonce($_POST['landing_nonce'], 'landing_metabox_nonce')) {
         return;
     }

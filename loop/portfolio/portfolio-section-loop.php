@@ -14,13 +14,25 @@ $current_portfolios = array_slice($portfolios, $start_index, $items_per_page);
 if (!empty($current_portfolios)): ?>
     <div class="portfolio-container">
         <?php foreach ($current_portfolios as $portfolio):
+            if (isset($portfolio_number)) {
+                $portfolio_number += 1;
+            } else {
+                $portfolio_number = 1;
+            }
             if (!empty($portfolio['name'])):
                 $main_image = !empty($portfolio['main_image']) ? esc_url($portfolio['main_image']) : '';
                 $desktop_image = !empty($portfolio['desktop_image']) ? esc_url($portfolio['desktop_image']) : '';
                 $mobile_image = !empty($portfolio['mobile_image']) ? esc_url($portfolio['mobile_image']) : '';
                 ?>
                 <!--************************* start example of portfolio section  *************************-->
-                <div class="example-of-portfolio-section">
+                <div class="example-of-portfolio-section <?php if ($portfolio['blue_effect'] == 'enabled') {
+                    echo 'example-of-portfolio-section-blue-color';
+                } ?>
+                    <?php
+                    if (isset($portfolio) && $portfolio_number == 2) {
+                        echo 'active';
+                    }
+                    ?> ">
                     <div class="container example-of-portfolio-container animated-section">
                         <div class="title">
                             <a href="" class="text">مشاهده نمونه کار</a>
@@ -57,7 +69,11 @@ if (!empty($current_portfolios)): ?>
                         </div>
                     </div>
                     <!--************************* start portfolio web design sample section *************************-->
-                    <div class="portfolio-web-design-sample-section animated-section">
+                    <div class="portfolio-web-design-sample-section animated-section <?php
+                    if (isset($portfolio) && $portfolio_number == 2) {
+                        echo 'active';
+                    }
+                    ?>">
                         <div class="container">
                             <div class="content-wrapper">
                                 <div class="row">
@@ -156,4 +172,3 @@ if (!empty($current_portfolios)): ?>
 <?php else: ?>
     <p>هیچ نمونه کاری یافت نشد.</p>
 <?php endif; ?>
-

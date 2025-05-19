@@ -7,6 +7,8 @@
         $about_page = get_page_by_path('about-us');
         $video_url = get_post_meta($about_page->ID, '_aboutus_video_url', true);
         $thumbnail_id = get_post_meta($about_page->ID, '_aboutus_video_thumbnail_id', true);
+        $info_img_id = get_post_meta($about_page->ID, '_aboutus_info_image_id', true);
+        $info_img_url = $thumbnail_id ? wp_get_attachment_url($info_img_id) : '';
         $thumbnail_url = $thumbnail_id ? wp_get_attachment_url($thumbnail_id) : '';
         ?>
         <!-- ویدیو -->
@@ -30,9 +32,7 @@
       <div class="right-side-information animated-section-left">
         <div class="d-flex wrapper">
           <div class="img-container">
-            <img
-              src="<?php echo get_template_directory_uri() . '/assets/img/img-david-lynch-01-184117216071-750x1000.jpgPortrait-min.jpg' ?>"
-              alt="" />
+            <img src="<?php echo $info_img_url ?>" alt="" />
           </div>
           <div class="inf-container">
             <?php

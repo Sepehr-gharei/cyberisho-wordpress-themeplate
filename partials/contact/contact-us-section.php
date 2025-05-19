@@ -4,7 +4,7 @@
         <div class="row">
           <div class="col-12 au-text">
             <small>CONTACT US</small>
-            <h2>تماس ما</h2>
+            <h2>تماس با ما</h2>
           </div>
           <div class="col-12 breadcrumb">
             <div class="d-flex">
@@ -20,7 +20,7 @@
                   <use href="#double-arrow-icon"></use>
                 </svg>
               </div>
-              <li class="breadcrumb-page"><a href="">تماس ما</a></li>
+              <li class="breadcrumb-page"><a href="">تماس با ما</a></li>
             </div>
           </div>
           <div class="col-12 about-us-text">

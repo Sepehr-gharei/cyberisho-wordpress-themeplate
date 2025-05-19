@@ -120,8 +120,7 @@ function theme_settings_footer_content_page()
                     <td>
                         <input type="text" name="footer_icon_1_image" id="footer_icon_1_image"
                             value="<?php echo esc_attr($footer_icon_1_image); ?>" class="regular-text">
-                        <input type="button" class="button upload-icon-image" value="آپلود تصویر"
-                            data-target="icon_1">
+                        <input type="button" class="button upload-icon-image" value="آپلود تصویر" data-target="icon_1">
                         <div class="image-preview icon-1-image-preview">
                             <?php if (!empty($footer_icon_1_image)): ?>
                                 <img src="<?php echo esc_url($footer_icon_1_image); ?>" style="max-width: 200px;">
@@ -134,8 +133,7 @@ function theme_settings_footer_content_page()
                     <td>
                         <input type="text" name="footer_icon_2_image" id="footer_icon_2_image"
                             value="<?php echo esc_attr($footer_icon_2_image); ?>" class="regular-text">
-                        <input type="button" class="button upload-icon-image" value="آپلود تصویر"
-                            data-target="icon_2">
+                        <input type="button" class="button upload-icon-image" value="آپلود تصویر" data-target="icon_2">
                         <div class="image-preview icon-2-image-preview">
                             <?php if (!empty($footer_icon_2_image)): ?>
                                 <img src="<?php echo esc_url($footer_icon_2_image); ?>" style="max-width: 200px;">
@@ -330,7 +328,7 @@ function theme_settings_site_info_page()
                 <?php endfor; ?>
             </table>
             <h3>برندها</h3>
-            <div id="brand-images-container" class="brand-images-container" >
+            <div id="brand-images-container" class="brand-images-container">
                 <?php foreach ($brand_images as $index => $image): ?>
                     <div class="brand-image-item" data-index="<?php echo $index; ?>">
                         <h4>عکس برند <?php echo $index + 1; ?>
@@ -342,9 +340,9 @@ function theme_settings_site_info_page()
                             <tr>
                                 <th><label>عکس برند</label></th>
                                 <td>
-                                    <input type="text" name="brand_image[<?php echo $index; ?>]" 
-                                        class="brand-image-url" value="<?php echo esc_attr($image); ?>" class="regular-text">
-                                    <input type="button" class="button upload-brand-image" value="آپلود تصویر" 
+                                    <input type="text" name="brand_image[<?php echo $index; ?>]" class="brand-image-url"
+                                        value="<?php echo esc_attr($image); ?>" class="regular-text">
+                                    <input type="button" class="button upload-brand-image" value="آپلود تصویر"
                                         data-target="brand_<?php echo $index; ?>">
                                     <div class="image-preview brand-image-preview-<?php echo $index; ?>">
                                         <?php if (!empty($image)): ?>
@@ -377,7 +375,7 @@ function theme_settings_site_info_page()
                 var container = button.closest('.brand-image-item');
                 var image_url_field = container.find('.brand-image-url');
                 var image_preview = container.find('.image-preview');
-                
+
                 var frame = wp.media({
                     title: 'انتخاب تصویر',
                     button: { text: 'استفاده از تصویر' },
@@ -449,6 +447,9 @@ function theme_settings_contact_page()
         update_option('social_whatsapp', sanitize_text_field($_POST['social_whatsapp']));
         update_option('social_instagram', sanitize_text_field($_POST['social_instagram']));
         update_option('social_telegram', sanitize_text_field($_POST['social_telegram']));
+        update_option('social_bay', sanitize_text_field($_POST['social_bay'])); // جدید
+        update_option('social_linkedin', sanitize_text_field($_POST['social_linkedin'])); // جدید
+        update_option('social_twitter', sanitize_text_field($_POST['social_twitter'])); // جدید
         update_option('contact_location', sanitize_text_field($_POST['contact_location']));
         ?>
         <div class="updated">
@@ -490,6 +491,21 @@ function theme_settings_contact_page()
                     <th><label for="social_telegram">تلگرام</label></th>
                     <td><input type="text" name="social_telegram" id="social_telegram"
                             value="<?php echo esc_attr(get_option('social_telegram')); ?>" class="regular-text"></td>
+                </tr>
+                <tr>
+                    <th><label for="social_bay">بیای</label></th>
+                    <td><input type="text" name="social_bay" id="social_bay"
+                            value="<?php echo esc_attr(get_option('social_bay')); ?>" class="regular-text"></td>
+                </tr>
+                <tr>
+                    <th><label for="social_linkedin">لینکدین</label></th>
+                    <td><input type="text" name="social_linkedin" id="social_linkedin"
+                            value="<?php echo esc_attr(get_option('social_linkedin')); ?>" class="regular-text"></td>
+                </tr>
+                <tr>
+                    <th><label for="social_twitter">توییتر</label></th>
+                    <td><input type="text" name="social_twitter" id="social_twitter"
+                            value="<?php echo esc_attr(get_option('social_twitter')); ?>" class="regular-text"></td>
                 </tr>
                 <tr>
                     <th><label for="contact_location">لوکیشن</label></th>
@@ -840,25 +856,29 @@ function theme_settings_landing_page()
                 <tr>
                     <th><label for="landing_initial_header">هدر اولیه</label></th>
                     <td>
-                        <textarea name="landing_initial_header" id="landing_initial_header" rows="3" class="large-text"><?php echo esc_textarea($initial_header); ?></textarea>
+                        <textarea name="landing_initial_header" id="landing_initial_header" rows="3"
+                            class="large-text"><?php echo esc_textarea($initial_header); ?></textarea>
                     </td>
                 </tr>
                 <tr>
                     <th><label for="landing_initial_content">محتوای اولیه</label></th>
                     <td>
-                        <textarea name="landing_initial_content" id="landing_initial_content" rows="5" class="large-text"><?php echo esc_textarea($initial_content); ?></textarea>
+                        <textarea name="landing_initial_content" id="landing_initial_content" rows="5"
+                            class="large-text"><?php echo esc_textarea($initial_content); ?></textarea>
                     </td>
                 </tr>
                 <tr>
                     <th><label for="landing_footer_header">هدر پاورقی</label></th>
                     <td>
-                        <textarea name="landing_footer_header" id="landing_footer_header" rows="3" class="large-text"><?php echo esc_textarea($footer_header); ?></textarea>
+                        <textarea name="landing_footer_header" id="landing_footer_header" rows="3"
+                            class="large-text"><?php echo esc_textarea($footer_header); ?></textarea>
                     </td>
                 </tr>
                 <tr>
                     <th><label for="landing_footer_content">محتوای پاورقی</label></th>
                     <td>
-                        <textarea name="landing_footer_content" id="landing_footer_content" rows="5" class="large-text"><?php echo esc_textarea($footer_content); ?></textarea>
+                        <textarea name="landing_footer_content" id="landing_footer_content" rows="5"
+                            class="large-text"><?php echo esc_textarea($footer_content); ?></textarea>
                     </td>
                 </tr>
             </table>
@@ -873,9 +893,10 @@ function theme_settings_landing_page()
                             <tr class="image-section">
                                 <th><label>عکس این قسمت</label></th>
                                 <td>
-                                    <input type="hidden" name="site_type[<?php echo $index; ?>][image]" 
-                                        class="site-image-url" value="<?php echo esc_attr($site['image']); ?>">
-                                    <input type="button" class="button upload-image-button" value="آپلود تصویر" data-target="site">
+                                    <input type="hidden" name="site_type[<?php echo $index; ?>][image]" class="site-image-url"
+                                        value="<?php echo esc_attr($site['image']); ?>">
+                                    <input type="button" class="button upload-image-button" value="آپلود تصویر"
+                                        data-target="site">
                                     <div class="image-preview site-image-preview">
                                         <?php if (!empty($site['image'])): ?>
                                             <img src="<?php echo esc_url($site['image']); ?>" style="max-width: 200px;">
@@ -886,33 +907,34 @@ function theme_settings_landing_page()
                             <tr>
                                 <th><label for="site_type_content_header_<?php echo $index; ?>">هدر محتوا</label></th>
                                 <td>
-                                    <textarea name="site_type[<?php echo $index; ?>][content_header]" 
-                                        id="site_type_content_header_<?php echo $index; ?>" rows="3" 
+                                    <textarea name="site_type[<?php echo $index; ?>][content_header]"
+                                        id="site_type_content_header_<?php echo $index; ?>" rows="3"
                                         class="large-text"><?php echo esc_textarea($site['content_header']); ?></textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <th><label for="site_type_content_<?php echo $index; ?>">محتوا</label></th>
                                 <td>
-                                    <textarea name="site_type[<?php echo $index; ?>][content]" 
-                                        id="site_type_content_<?php echo $index; ?>" rows="5" 
+                                    <textarea name="site_type[<?php echo $index; ?>][content]"
+                                        id="site_type_content_<?php echo $index; ?>" rows="5"
                                         class="large-text"><?php echo esc_textarea($site['content']); ?></textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <th><label for="site_type_feature_header_<?php echo $index; ?>">هدر ویژگی</label></th>
                                 <td>
-                                    <textarea name="site_type[<?php echo $index; ?>][feature_header]" 
-                                        id="site_type_feature_header_<?php echo $index; ?>" rows="3" 
+                                    <textarea name="site_type[<?php echo $index; ?>][feature_header]"
+                                        id="site_type_feature_header_<?php echo $index; ?>" rows="3"
                                         class="large-text"><?php echo esc_textarea($site['feature_header']); ?></textarea>
                                 </td>
                             </tr>
                             <?php for ($i = 1; $i <= 3; $i++): ?>
                                 <tr>
-                                    <th><label for="site_type_feature_<?php echo $i; ?>_<?php echo $index; ?>">ویژگی <?php echo $i; ?></label></th>
+                                    <th><label for="site_type_feature_<?php echo $i; ?>_<?php echo $index; ?>">ویژگی
+                                            <?php echo $i; ?></label></th>
                                     <td>
-                                        <textarea name="site_type[<?php echo $index; ?>][feature_<?php echo $i; ?>]" 
-                                            id="site_type_feature_<?php echo $i; ?>_<?php echo $index; ?>" rows="3" 
+                                        <textarea name="site_type[<?php echo $index; ?>][feature_<?php echo $i; ?>]"
+                                            id="site_type_feature_<?php echo $i; ?>_<?php echo $index; ?>" rows="3"
                                             class="large-text"><?php echo esc_textarea($site['feature_' . $i]); ?></textarea>
                                     </td>
                                 </tr>
@@ -929,7 +951,8 @@ function theme_settings_landing_page()
                 <tr>
                     <th><label for="landing_pricing_header">محتوای هدر</label></th>
                     <td>
-                        <textarea name="landing_pricing_header" id="landing_pricing_header" rows="3" class="large-text"><?php echo esc_textarea($pricing_header); ?></textarea>
+                        <textarea name="landing_pricing_header" id="landing_pricing_header" rows="3"
+                            class="large-text"><?php echo esc_textarea($pricing_header); ?></textarea>
                     </td>
                 </tr>
             </table>
@@ -944,24 +967,24 @@ function theme_settings_landing_page()
                             <tr>
                                 <th><label for="pricing_row_description_<?php echo $index; ?>">شرح خدمات</label></th>
                                 <td>
-                                    <textarea name="pricing_row[<?php echo $index; ?>][description]" 
-                                        id="pricing_row_description_<?php echo $index; ?>" rows="3" 
+                                    <textarea name="pricing_row[<?php echo $index; ?>][description]"
+                                        id="pricing_row_description_<?php echo $index; ?>" rows="3"
                                         class="large-text"><?php echo esc_textarea($row['description']); ?></textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <th><label for="pricing_row_duration_<?php echo $index; ?>">مدت زمان</label></th>
                                 <td>
-                                    <textarea name="pricing_row[<?php echo $index; ?>][duration]" 
-                                        id="pricing_row_duration_<?php echo $index; ?>" rows="3" 
+                                    <textarea name="pricing_row[<?php echo $index; ?>][duration]"
+                                        id="pricing_row_duration_<?php echo $index; ?>" rows="3"
                                         class="large-text"><?php echo esc_textarea($row['duration']); ?></textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <th><label for="pricing_row_price_<?php echo $index; ?>">قیمت</label></th>
                                 <td>
-                                    <textarea name="pricing_row[<?php echo $index; ?>][price]" 
-                                        id="pricing_row_price_<?php echo $index; ?>" rows="3" 
+                                    <textarea name="pricing_row[<?php echo $index; ?>][price]"
+                                        id="pricing_row_price_<?php echo $index; ?>" rows="3"
                                         class="large-text"><?php echo esc_textarea($row['price']); ?></textarea>
                                 </td>
                             </tr>
@@ -976,7 +999,8 @@ function theme_settings_landing_page()
                 <tr>
                     <th><label for="landing_pricing_footer">محتوای فوتر</label></th>
                     <td>
-                        <textarea name="landing_pricing_footer" id="landing_pricing_footer" rows="5" class="large-text"><?php echo esc_textarea($pricing_footer); ?></textarea>
+                        <textarea name="landing_pricing_footer" id="landing_pricing_footer" rows="5"
+                            class="large-text"><?php echo esc_textarea($pricing_footer); ?></textarea>
                     </td>
                 </tr>
             </table>
@@ -991,16 +1015,16 @@ function theme_settings_landing_page()
                             <tr>
                                 <th><label for="landing_page_faq_title_<?php echo $index; ?>">عنوان سوال</label></th>
                                 <td>
-                                    <input type="text" name="landing_page_faq_title_<?php echo $index; ?>" 
-                                        id="landing_page_faq_title_<?php echo $index; ?>" 
+                                    <input type="text" name="landing_page_faq_title_<?php echo $index; ?>"
+                                        id="landing_page_faq_title_<?php echo $index; ?>"
                                         value="<?php echo esc_attr($faq['title']); ?>" class="regular-text">
                                 </td>
                             </tr>
                             <tr>
                                 <th><label for="landing_page_faq_content_<?php echo $index; ?>">متن پاسخ</label></th>
                                 <td>
-                                    <textarea name="landing_page_faq_content_<?php echo $index; ?>" 
-                                        id="landing_page_faq_content_<?php echo $index; ?>" rows="5" 
+                                    <textarea name="landing_page_faq_content_<?php echo $index; ?>"
+                                        id="landing_page_faq_content_<?php echo $index; ?>" rows="5"
                                         class="large-text"><?php echo esc_textarea($faq['content']); ?></textarea>
                                 </td>
                             </tr>
@@ -1230,6 +1254,7 @@ function theme_settings_portfolio_page()
                     'main_image' => esc_url_raw($portfolio['main_image'] ?? ''),
                     'desktop_image' => esc_url_raw($portfolio['desktop_image']),
                     'mobile_image' => esc_url_raw($portfolio['mobile_image']),
+                    'blue_effect' => isset($portfolio['blue_effect']) ? sanitize_text_field($portfolio['blue_effect']) : 'disabled' // ذخیره افکت آبی
                 ];
             }
         }
@@ -1251,12 +1276,16 @@ function theme_settings_portfolio_page()
             'url' => '',
             'main_image' => '',
             'desktop_image' => '',
-            'mobile_image' => ''
+            'mobile_image' => '',
+            'blue_effect' => 'disabled' // مقدار پیش‌فرض
         ];
     } else {
         foreach ($portfolios as &$portfolio) {
             if (!isset($portfolio['main_image'])) {
                 $portfolio['main_image'] = '';
+            }
+            if (!isset($portfolio['blue_effect'])) {
+                $portfolio['blue_effect'] = 'disabled'; // مقدار پیش‌فرض برای نمونه‌کارهای موجود
             }
         }
         unset($portfolio);
@@ -1296,6 +1325,17 @@ function theme_settings_portfolio_page()
                                 <th><label>URL سایت</label></th>
                                 <td><input type="url" name="portfolio[<?php echo $index; ?>][url]"
                                         value="<?php echo esc_attr($portfolio['url']); ?>" class="regular-text"></td>
+                            </tr>
+                            <tr>
+                                <th><label>افکت آبی</label></th>
+                                <td>
+                                    <label><input type="radio" name="portfolio[<?php echo $index; ?>][blue_effect]"
+                                            value="enabled" <?php checked($portfolio['blue_effect'], 'enabled'); ?>>
+                                        فعال</label>
+                                    <label><input type="radio" name="portfolio[<?php echo $index; ?>][blue_effect]"
+                                            value="disabled" <?php checked($portfolio['blue_effect'], 'disabled'); ?>>
+                                        غیرفعال</label>
+                                </td>
                             </tr>
                             <tr class="image-section">
                                 <th><label>عکس اصلی</label></th>
@@ -1404,6 +1444,13 @@ function theme_settings_portfolio_page()
                                 <th><label>URL سایت</label></th>
                                 <td><input type="url" name="portfolio[${index}][url]" class="regular-text"></td>
                             </tr>
+                            <tr>
+                                <th><label>افکت آبی</label></th>
+                                <td>
+                                    <label><input type="radio" name="portfolio[${index}][blue_effect]" value="enabled"> فعال</label>
+                                    <label><input type="radio" name="portfolio[${index}][blue_effect]" value="disabled" checked> غیرفعال</label>
+                                </td>
+                            </tr>
                             <tr class="image-section">
                                 <th><label>عکس اصلی</label></th>
                                 <td>
@@ -1451,7 +1498,6 @@ function theme_settings_portfolio_page()
     </script>
     <?php
 }
-
 // بارگذاری استایل‌ها و اسکریپت‌ها
 add_action('admin_enqueue_scripts', 'theme_settings_enqueue_scripts');
 

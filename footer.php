@@ -18,7 +18,7 @@
         </button>
       </div>
     </div>
-    <div class="container col-12 col-md-9">
+    <div class="container col-12 col-md-9 col-xl-8">
       <div class="logo-section">
         <h2>
           <svg>
@@ -126,6 +126,7 @@ function register_portfolio_assets()
 }
 add_action('wp_enqueue_scripts', 'register_portfolio_assets');
 ?>
+
 </body>
 
 </html>

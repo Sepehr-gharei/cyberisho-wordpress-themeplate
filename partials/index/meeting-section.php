@@ -2,7 +2,7 @@
 <div class="meeting-section animated-section">
     <div class="container-fluid">
         <div class="row">
-            <div class="form-container">
+            <div class="metting-form-container">
                 <h3>درخاست ملاقات حضوری :</h3>
                 <input type="text" placeholder="نام شما" />
                 <input type="text" placeholder="شماره تماس" />

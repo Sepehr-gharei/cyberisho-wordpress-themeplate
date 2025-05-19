@@ -2,12 +2,6 @@
 <div class="map-location animated-section">
   <div class="container">
     <div class="image-container">
-
-
-
-
-
-
       <?php
       // داخل حلقه Loop یا قبل از Loop (اگر از the_content استفاده نکردی)
       $post_id = get_the_ID(); // شناسه صفحه فعلی
@@ -24,7 +18,7 @@
       <img src="<?php echo $image ?>" alt="">
     </div>
     <div class="wrapper">
-      <section class="col-8 col-sm-5 col-lg-3 d-flex">
+      <section class="col-8 col-sm-6 col-lg-4 d-flex">
         <div class="item">
           <a href="<?php echo $balad ?>">
             <svg width="187pt" height="187pt" viewBox="0 0 187 187" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -145,7 +139,7 @@
       </section>
     </div>
     <div class="more-information">
-      <div class="col-12 col-md-8 d-flex justify-content-center wrapper">
+      <div class="col-12 col-md-9 d-flex justify-content-center wrapper">
         <div class="col-12 col-md-10 col-xl-5 item d-flex right-side">
           <div class="icon">
             <svg width="567pt" height="579pt" viewBox="0 0 567 579" version="1.1" xmlns="http://www.w3.org/2000/svg">
