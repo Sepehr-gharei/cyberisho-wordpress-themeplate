@@ -1200,11 +1200,41 @@ header .sidebar ul li a:hover {
 .chart-container .left-side {
   padding: 0;
 }
-.chart-container .left-side img {
+.chart-container .left-side  .chart-section {
   width: 100%;
+  margin: 20px auto;
 }
-.chart-container .left-side img.large {
-  display: none;
+.chart-container .left-side  #myChart {
+  width: 100%;
+  height: 200px;
+  display: block;
+  overflow: visible;
+  font-family: peyda-regular;
+}
+.chart-container .left-side  .chart-point {
+  cursor: pointer;
+  transition: r 0.2s, fill 0.2s;
+}
+.chart-container .left-side  .chart-point:hover {
+  fill: var(--light-green-color);
+}
+.chart-container .left-side  .chart-point.clicked {
+  fill: var(--light-green-color);
+}
+.chart-container .left-side  .tooltip {
+  font-size: 16px;
+  text-anchor: middle;
+}
+.chart-container .left-side  .tooltip-bg {
+  fill: var(--background-color);
+  stroke: var(--text-color);
+}
+.chart-container .left-side  .tooltip-caret {
+  fill: var(--background-color);
+}
+.chart-container .left-side .tooltip-line {
+  stroke: var(--text-color);
+  stroke-width: 1;
 }
 /**************** end chart   ****************/
 /**************** start collapse and banner  ****************/
@@ -1927,8 +1957,9 @@ footer .samandehi-2 {
   footer .main-section .contact .footer {
     align-self: center;
   }
-  .chart-container .left-side img.large {
-    display: block;
+  .chart-container .left-side {
+    margin-top: 20px;
+    padding: 0 10%;
   }
   .chart-container .left-side img.small {
     display: none;
@@ -1976,13 +2007,6 @@ footer .samandehi-2 {
   }
 }
 @media (max-width: 576px) {
-  .chart-container .right-side p {
-    font-size: 18px;
-  }
-  .chart-container .right-side h3 {
-    font-size: 28px;
-    padding-top: 10px;
-  }
   .more-information .right-side-information img {
     height: 365px;
   }
@@ -2141,14 +2165,6 @@ footer .samandehi-2 {
   .more-information .right-side-information .wrapper,
   .more-information .left-side-information .wrapper {
     padding: 0 15px;
-  }
-}
-@media (max-width: 400px) {
-  .chart-container .right-side h3 {
-    font-size: 18px;
-  }
-  .chart-container .right-side p {
-    font-size: 12px;
   }
 }
 
@@ -3265,7 +3281,7 @@ footer .samandehi-2 {
 .accordion-fag .title-container h2 {
   font-size: 28px;
 }
-.accordion-fag-single-page .accordion-item:nth-child(2){
+.accordion-fag-single-page .accordion-item:nth-child(2) {
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;
 }
@@ -4249,11 +4265,11 @@ footer .samandehi-2 {
 
 @media (max-width: 768px) {
   .header-information .header-information-container .wrapper .text-field {
-    top: 315px;
+    top: 350px;
   }
 
   .header-information .header-information-container {
-    height: 455px;
+    height: 490px;
     border-radius: 0;
   }
   .header-information .header-information-container .city-bg {
@@ -6235,20 +6251,24 @@ webdesing-text-field-section {
   border-radius: 5px;
 }
 
-.pagination .next svg , .pagination .next-page svg {
+.pagination .next svg,
+.pagination .next-page svg {
   width: 15px;
   height: 15px;
   transform: rotate(-90deg);
 }
-.pagination .prev svg ,.pagination .prev-page svg {
+.pagination .prev svg,
+.pagination .prev-page svg {
   width: 15px;
   height: 15px;
   transform: rotate(90deg);
 }
-.pagination.reverse .next svg , .pagination.reverse .next-page svg{
+.pagination.reverse .next svg,
+.pagination.reverse .next-page svg {
   transform: rotate(90deg);
 }
-.pagination.reverse .prev svg , .pagination.reverse .prev-page svg {
+.pagination.reverse .prev svg,
+.pagination.reverse .prev-page svg {
   transform: rotate(-90deg);
 }
 @media (min-width: 1400px) {
@@ -7305,10 +7325,10 @@ webdesing-text-field-section {
   background-image: repeating-linear-gradient(
     to right,
     var(--light-white-border-color),
-    var(--light-white-border-color) 2px, /* عرض نقطه */
-    transparent 4px,                     /* شروع فاصله */
-    transparent 12px                      /* طول فاصله */
-  )
+    var(--light-white-border-color) 2px,
+    /* عرض نقطه */ transparent 4px,
+    /* شروع فاصله */ transparent 12px /* طول فاصله */
+  );
 }
 .about-this-page-section .about-this-page-container .about-this-page {
   background-color: var(--light-white-color);
@@ -7656,21 +7676,26 @@ webdesing-text-field-section {
 }
 
 @media (max-width: 1200px) {
-  .about-this-page-section .about-this-page-container .about-this-page .wrapper.share-socials .socials .icon {
+  .about-this-page-section
+    .about-this-page-container
+    .about-this-page
+    .wrapper.share-socials
+    .socials
+    .icon {
     width: 22px;
-}
-.single-belog-title-section .content-section .image-wrapper img {
-  border-radius: 20px;
-  max-height: 480px;
-  object-fit: cover;
-}
+  }
+  .single-belog-title-section .content-section .image-wrapper img {
+    border-radius: 20px;
+    max-height: 480px;
+    object-fit: cover;
+  }
 }
 @media (max-width: 992px) {
   .single-belog-title-section .content-section .image-wrapper img {
     border-radius: 20px;
     max-height: 360px;
     object-fit: cover;
-}
+  }
   .single-belog-title-section .content-section .text-field .body {
     justify-content: start;
 
@@ -7738,7 +7763,7 @@ webdesing-text-field-section {
     border-radius: 20px;
     max-height: 360px;
     object-fit: cover;
-}
+  }
   .single-belog-title-section .content-section .text-field .body {
     justify-content: center;
   }

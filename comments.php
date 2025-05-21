@@ -41,7 +41,6 @@
   ?>
 </div>
 
-
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const paginationContainer = document.querySelector('.comment-pagination');
@@ -56,10 +55,12 @@
       const link = e.target.closest('a');
       if (!link) return;
 
-      const page = link.getAttribute('href').match(/cpage=(\d+)/)[1];
+      const page = link.getAttribute('href').match(/cpage=(\d+)/)?.[1];
       const postId = <?php echo get_the_ID(); ?>;
 
-      fetchComments(postId, page);
+      if (page && postId) {
+        fetchComments(postId, page);
+      }
     });
 
     function fetchComments(postId, page) {
@@ -80,7 +81,7 @@
           if (data.success) {
             commentsContainer.innerHTML = data.data.comments_html;
             paginationContainer.innerHTML = data.data.pagination_html;
-            bindCommentInteractions();
+            bindCommentInteractions(); // دوباره باند کردن رویدادها
           } else {
             console.error('Error:', data.data);
           }
@@ -88,6 +89,72 @@
         .catch(error => console.error('AJAX Error:', error));
     }
 
-    // Rest of your JavaScript code...
+    function bindCommentInteractions() {
+      // باند کردن رویدادهای پاسخ
+      const replyLinks = document.querySelectorAll('.answer a[data-comment-id]');
+      const commentFormTitle = document.querySelector('.comment-form-title p');
+      const form = document.getElementById("custom-comment-form");
+
+      replyLinks.forEach(link => {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+          const commentId = this.getAttribute("data-comment-id");
+          const commentAuthor = this.getAttribute("data-comment-author");
+          document.getElementById("comment_parent").value = commentId;
+
+          // تغییر عنوان فرم برای نشان دادن پاسخ
+          commentFormTitle.textContent = `در حال پاسخ به ${commentAuthor}`;
+
+          // اسکرول به فرم و فوکوس روی textarea
+          form.scrollIntoView({ behavior: "smooth" });
+          document.getElementById("comment").focus();
+        });
+      });
+
+      // باند کردن رویدادهای لایک و دیسلایک با استفاده از jQuery
+      if (typeof jQuery !== 'undefined') {
+        jQuery(".like-button, .dislike-button").off('click').on("click", function (e) {
+          e.preventDefault();
+
+          const button = jQuery(this);
+          const commentId = button.data("comment-id");
+          const action = button.hasClass("like-button") ? "like" : "dislike";
+
+          // غیرفعال کردن دکمه تا دریافت پاسخ
+          button.prop("disabled", true);
+
+          jQuery.ajax({
+            url: like_dislike_ajax.ajax_url,
+            type: "POST",
+            data: {
+              action: "like_dislike",
+              security: like_dislike_ajax.nonce,
+              comment_id: commentId,
+              action_type: action,
+            },
+            success: function (response) {
+              if (response.success) {
+                // استخراج آیکون SVG از ساختار دکمه
+                const iconSvg = button.find('.icon svg')[0].outerHTML;
+                // جایگزینی کامل محتوای دکمه با تعداد جدید و آیکون
+                button.html(`<div class="icon">${response.data.count}${iconSvg}</div>`);
+              } else {
+                showCustomAlertRed(response.data || "خطای ناشناخته");
+              }
+            },
+            error: function () {
+              showCustomAlertRed("خطایی رخ داد. لطفاً دوباره تلاش کنید.");
+            },
+            complete: function () {
+              // فعال کردن مجدد دکمه
+              button.prop("disabled", false);
+            },
+          });
+        });
+      }
+    }
+
+    // باند کردن اولیه رویدادها هنگام لود صفحه
+    bindCommentInteractions();
   });
 </script>

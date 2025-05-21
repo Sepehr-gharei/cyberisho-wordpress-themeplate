@@ -676,9 +676,17 @@ function theme_settings_about_page()
 {
     if (isset($_POST['submit'])) {
         update_option('about_chart_title', sanitize_textarea_field($_POST['about_chart_title']));
-        update_option('about_chart_years', sanitize_textarea_field($_POST['about_chart_years']));
-        update_option('about_chart_desktop_image', esc_url_raw($_POST['about_chart_desktop_image']));
-        update_option('about_chart_mobile_image', esc_url_raw($_POST['about_chart_mobile_image']));
+        
+        $chart_items = [];
+        if (isset($_POST['chart_item'])) {
+            foreach ($_POST['chart_item'] as $index => $item) {
+                $chart_items[$index] = [
+                    'year' => sanitize_text_field($item['year']),
+                    'projects' => sanitize_textarea_field($item['projects']),
+                ];
+            }
+        }
+        update_option('about_chart_items', $chart_items);
         ?>
         <div class="updated">
             <p>تنظیمات نمودار در صفحه درباره ما ذخیره شد.</p>
@@ -687,9 +695,17 @@ function theme_settings_about_page()
     }
 
     $chart_title = get_option('about_chart_title', '');
-    $chart_years = get_option('about_chart_years', '');
-    $desktop_image = get_option('about_chart_desktop_image', '');
-    $mobile_image = get_option('about_chart_mobile_image', '');
+    $chart_items = get_option('about_chart_items', []);
+
+    // اگر هیچ آیتمی وجود نداشته باشد، 6 آیتم پیش‌فرض ایجاد می‌کنیم
+    if (empty($chart_items)) {
+        for ($i = 0; $i < 6; $i++) {
+            $chart_items[] = [
+                'year' => '',
+                'projects' => ''
+            ];
+        }
+    }
     ?>
     <div class="tab-content about-page">
         <h2>صفحه درباره ما</h2>
@@ -703,55 +719,89 @@ function theme_settings_about_page()
                             class="large-text"><?php echo esc_textarea($chart_title); ?></textarea>
                     </td>
                 </tr>
-                <tr>
-                    <th><label for="about_chart_years">سال‌های نمودار</label></th>
-                    <td>
-                        <textarea name="about_chart_years" id="about_chart_years" rows="5"
-                            class="large-text"><?php echo esc_textarea($chart_years); ?></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label>عکس نمودار در دسکتاپ</label></th>
-                    <td>
-                        <input type="text" name="about_chart_desktop_image" id="about_chart_desktop_image"
-                            value="<?php echo esc_attr($desktop_image); ?>" class="regular-text">
-                        <input type="button" class="button upload-chart-image" value="آپلود تصویر دسکتاپ"
-                            data-target="desktop">
-                    </td>
-                </tr>
-                <tr>
-                    <th><label>عکس نمودار در موبایل</label></th>
-                    <td>
-                        <input type="text" name="about_chart_mobile_image" id="about_chart_mobile_image"
-                            value="<?php echo esc_attr($mobile_image); ?>" class="regular-text">
-                        <input type="button" class="button upload-chart-image" value="آپلود تصویر موبایل"
-                            data-target="mobile">
-                    </td>
-                </tr>
             </table>
+            <h3>آیتم‌های نمودار</h3>
+            <div id="chart-items-container">
+                <?php foreach ($chart_items as $index => $item): ?>
+                    <div class="chart-item" data-index="<?php echo $index; ?>">
+                        <h4>آیتم نمودار <?php echo $index + 1; ?>
+                            <?php if (count($chart_items) > 1): ?>
+                                <button type="button" class="button remove-chart-item">حذف</button>
+                            <?php endif; ?>
+                        </h4>
+                        <table class="form-table">
+                            <tr>
+                                <th><label for="chart_item_year_<?php echo $index; ?>">سال نمودار</label></th>
+                                <td>
+                                    <input type="text" name="chart_item[<?php echo $index; ?>][year]"
+                                        id="chart_item_year_<?php echo $index; ?>"
+                                        value="<?php echo esc_attr($item['year']); ?>" class="regular-text">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="chart_item_projects_<?php echo $index; ?>">تعداد پروژه‌ها</label></th>
+                                <td>
+                                    <textarea name="chart_item[<?php echo $index; ?>][projects]"
+                                        id="chart_item_projects_<?php echo $index; ?>" rows="5"
+                                        class="large-text"><?php echo esc_textarea($item['projects']); ?></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <p>
+                <button type="button" class="button button-primary add-chart-item">افزودن آیتم نمودار جدید</button>
+            </p>
             <?php submit_button(); ?>
         </form>
     </div>
     <script>
         jQuery(document).ready(function ($) {
-            $(document).on('click', '.upload-chart-image', function (e) {
-                e.preventDefault();
-                var button = $(this);
-                var target = button.data('target');
-                var inputField = $('#about_chart_' + target + '_image');
+            $('.add-chart-item').on('click', function () {
+                var container = $('#chart-items-container');
+                var index = container.find('.chart-item').length;
+                var template = `
+                    <div class="chart-item" data-index="${index}">
+                        <h4>آیتم نمودار ${index + 1}
+                            <button type="button" class="button remove-chart-item">حذف</button>
+                        </h4>
+                        <table class="form-table">
+                            <tr>
+                                <th><label for="chart_item_year_${index}">سال نمودار</label></th>
+                                <td>
+                                    <input type="text" name="chart_item[${index}][year]" id="chart_item_year_${index}" class="regular-text">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><label for="chart_item_projects_${index}">تعداد پروژه‌ها</label></th>
+                                <td>
+                                    <textarea name="chart_item[${index}][projects]" id="chart_item_projects_${index}" rows="5" class="large-text"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>`;
+                container.append(template);
+            });
 
-                var frame = wp.media({
-                    title: 'انتخاب تصویر',
-                    button: { text: 'استفاده از تصویر' },
-                    multiple: false
-                });
-
-                frame.on('select', function () {
-                    var attachment = frame.state().get('selection').first().toJSON();
-                    inputField.val(attachment.url);
-                });
-
-                frame.open();
+            $(document).on('click', '.remove-chart-item', function () {
+                if ($('.chart-item').length > 1) {
+                    $(this).closest('.chart-item').remove();
+                    $('.chart-item').each(function (i) {
+                        $(this).attr('data-index', i);
+                        $(this).find('h4').text('آیتم نمودار ' + (i + 1));
+                        $(this).find('input, textarea').each(function () {
+                            var name = $(this).attr('name');
+                            var id = $(this).attr('id');
+                            if (name) {
+                                $(this).attr('name', name.replace(/chart_item\[\d+\]/, 'chart_item[' + i + ']'));
+                            }
+                            if (id) {
+                                $(this).attr('id', id.replace(/chart_item_(year|projects)_\d+/, 'chart_item_$1_' + i));
+                            }
+                        });
+                    });
+                }
             });
         });
     </script>

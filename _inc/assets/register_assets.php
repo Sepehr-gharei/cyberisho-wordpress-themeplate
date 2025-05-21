@@ -38,6 +38,8 @@ function register_assets()
     wp_enqueue_script('blog-title');
     wp_register_script('main', get_template_directory_uri() . '/assets/js/main.js', [], '1.0.0', true);
     wp_enqueue_script('main');
+    wp_register_script('chart', get_template_directory_uri() . '/assets/js/chart-container.js', [], '1.0.0', true);
+    wp_enqueue_script('chart');
 
 }
 add_action('wp_enqueue_scripts', 'register_assets');
