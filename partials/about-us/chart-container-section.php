@@ -3,13 +3,15 @@
   <div class="row">
     <div class="col-12 col-md-6 right-side">
       <?php
-      $chart_title = get_option('about_chart_title', '');
-      $chart_years = get_option('about_chart_years', '');
-      $desktop_image = get_option('about_chart_desktop_image', '');
-      $mobile_image = get_option('about_chart_mobile_image', '');
+      $theme_options = get_option('cyberisho_main_option', []);
+      $about_options = $theme_options['about'];
+
+      $chart_header = $about_options['about_chart_header'];
+      $chart_footer = $about_options['about_chart_footer'];
+
       ?>
-      <p><?php echo wp_kses_post($chart_title); ?></p>
-      <h3><?php echo wp_kses_post($chart_years); ?></h3>
+      <p><?php if(!empty($chart_header))echo wp_kses_post($chart_header); ?></p>
+      <h3><?php if(!empty($chart_footer))echo wp_kses_post($chart_footer); ?></h3>
     </div>
     <div class="col-12 col-md-6 left-side">
       <div class="chart-section">

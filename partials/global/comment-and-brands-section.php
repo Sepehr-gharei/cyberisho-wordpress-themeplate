@@ -1,33 +1,37 @@
 <!--************************* start comment and brands *************************-->
+<?php
+$theme_options = get_option('cyberisho_main_option', []);
+$site_info_options = $theme_options['site-info'];
+
+?>
 <div class="comment-and-brands animated-section">
     <div class="container">
         <div class="row">
             <div class="col-12 col-lg-8 brands-container">
-                <h2>نظرات مشتریان</h2>
-                <p>مشتریان ما چه برندهایی و چه کسانی هستن؟</p>
-                <p>در همکاری با ما چه تجربه ای دارند و نظرشان درباره ما چیست؟</p>
+                <h2><?php if(!empty($site_info_options['above_brands_header']))echo $site_info_options['above_brands_header']  ?></h2>
+                <p><?php if(!empty($site_info_options['above_brands_content_1']))echo $site_info_options['above_brands_content_1'] ?></p>
+                <p><?php if(!empty($site_info_options['above_brands_content_2']))echo $site_info_options['above_brands_content_2']  ?></p>
                 <div class="brands d-flex">
                     <?php
-                    // Retrieve brand images from the options
-                    $brand_images = get_option('brand_images', ['']);
+                    $brand_images = $site_info_options['brand_images'];
 
-                    // Check if there are images to display
-                    if (!empty($brand_images) && is_array($brand_images)): ?>
-                        <?php foreach ($brand_images as $index => $image_url):
-                            // Skip empty URLs
-                            if (!empty($image_url)): ?>
+                    if (!empty($brand_images) && is_array($brand_images)) {
+                        foreach ($brand_images as $brand) {
+                            if (!empty($brand['image'])) {
+                                ?>
                                 <div class="item">
                                     <div class="image-container">
-                                        <img src="<?php echo esc_url($image_url); ?>"
-                                            alt="برند <?php echo esc_attr($index + 1); ?>">
+                                        <img src="<?php echo esc_url($brand['image']); ?>" alt="برند">
                                     </div>
                                 </div>
-                            <?php endif;
-                        endforeach; ?>
-                    <?php endif; ?>
+                                <?php
+                            }
+                        }
+                    }
+                    ?>
                 </div>
                 <div class="bott-text">
-                    <a href="">+ شما هم میتوانید در کنار برترین برند ها به موفقیت برسید...</a>
+                    <p>+<?php if(!empty($site_info_options['above_brands_content_2']))echo $site_info_options['above_brands_content_2']  ?>...</p>
                 </div>
             </div>
             <div class="col-12 col-lg-4 comment">

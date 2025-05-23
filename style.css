@@ -3120,12 +3120,11 @@ footer .samandehi-2 {
 .comment-and-brands .brands-container p {
   color: var(--normal-text-color);
 }
-.comment-and-brands .brands-container .bott-text {
+.comment-and-brands .brands-container .bott-text p {
   margin-top: 20px;
-}
-.comment-and-brands .brands-container .bott-text a {
   color: var(--dark-blue-text-color);
 }
+
 .comment-and-brands .comment {
   padding: 0 65px;
 }
@@ -6592,7 +6591,10 @@ webdesing-text-field-section {
   position: relative;
   color: var(--dark-blue-text-color);
 }
+.belog-title-section .programming-fields .description .header p a {
+  color: var(--dark-blue-text-color);
 
+}
 .belog-title-section .programming-fields .description .header p span {
   position: relative;
 }

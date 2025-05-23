@@ -3,7 +3,7 @@
   <div class="container">
     <div class="row">
       <?php
-      get_template_part('loop/blog/blog-section-loop', 'blog-section-loop')
+          get_template_part('loop/blog/blog-section-loop', 'blog-section-loop')
         ?>
     </div>
   </div>

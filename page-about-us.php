@@ -32,7 +32,10 @@ get_footer();
             const rawData = [
                 { x: 0, y: 0, year: "", projects: "" },
                 <?php
-                $chart_items = get_option('about_chart_items', []);
+                $theme_options = get_option('cyberisho_main_option', []);
+                $about_options = $theme_options['about'];
+
+                $chart_items = $about_options['about_chart_items'];
                 if (count($chart_items) < 6) {
                     $chart_items = array_pad($chart_items, 6, ['year' => '', 'projects' => '']);
                 }
@@ -55,7 +58,7 @@ get_footer();
 
                     $pos = $positions[$i] ?? ['x' => 0, 'y' => 0]; // موقعیت فعلی
                     ?>
-                        { x: <?= $pos['x'] ?> / maxX, y: <?= $pos['y'] ?>, year: "<?= $year ?>", projects: "<?= $projects ?> پروژه" },
+                            { x: <?= $pos['x'] ?> / maxX, y: <?= $pos['y'] ?>, year: "<?= $year ?>", projects: "<?= $projects ?>" },
                 <?php endfor; ?>
             ];
 

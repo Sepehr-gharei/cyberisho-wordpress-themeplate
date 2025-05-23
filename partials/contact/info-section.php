@@ -1,5 +1,9 @@
 <!-- ************************* start info container   *************************-->
+<?php 
+  $theme_options = get_option('cyberisho_main_option', [] );
+  $contact_options = $theme_options['contact'];
 
+?>
 <div class="info-container animated-section">
   <div class="container">
     <div class="top-info">
@@ -74,7 +78,7 @@
             </div>
             <div class="text-field">
               <p>خط ویـژه</p>
-              <span><?php echo get_option('contact_hotline', ''); ?></span>
+              <span><?php if(!empty($contact_options['contact_hotline'])) echo $contact_options['contact_hotline']; ?></span>
             </div>
           </div>
           <div class="d-flex wrapper">
@@ -94,7 +98,7 @@
             </div>
             <div class="text-field">
               <p>تماس ضروری</p>
-              <span><?php echo get_option('contact_emergency', ''); ?></span>
+              <span><?php if(!empty($contact_options['contact_emergency'])) echo $contact_options['contact_emergency']; ?></span>
             </div>
           </div>
         </div>
@@ -110,12 +114,12 @@
             </div>
             <div class="text-field">
               <p>ایمیل</p>
-              <span><?php echo get_option('contact_email', ''); ?></span>
+              <span><?php if(!empty($contact_options['contact_email'])) echo $contact_options['contact_email'];  ?></span>
             </div>
           </div>
           <div class="d-flex wrapper-pages">
             <div class="icon">
-              <a href="<?php echo get_option('social_whatsapp', ''); ?>">
+              <a href="<?php if(!empty($contact_options['social_whatsapp'])) echo $contact_options['social_whatsapp']?>">
                 <svg width="196pt" height="196pt" viewBox="0 0 196 196" version="1.1"
                   xmlns="http://www.w3.org/2000/svg">
                   <g id="var(--dark-blue-color)">
@@ -616,7 +620,7 @@
               </a>
             </div>
             <div class="icon">
-              <a href="<?php echo get_option('social_instagram', ''); ?>">
+              <a href="<?php if(!empty($contact_options['social_instagram'])) echo $contact_options['social_instagram'] ?>">
                 <svg width="365pt" height="375pt" viewBox="0 0 365 375" version="1.1"
                   xmlns="http://www.w3.org/2000/svg">
                   <g id="var(--dark-blue-color)">
@@ -641,7 +645,7 @@
               </a>
             </div>
             <div class="icon">
-              <a href="<?php echo get_option('social_telegram', ''); ?>">
+              <a href="<?php if(!empty($contact_options['social_telegram'])) echo $contact_options['social_telegram'] ?>">
                 <svg width="256pt" height="256pt" viewBox="0 0 256 256" version="1.1"
                   xmlns="http://www.w3.org/2000/svg">
                   <g id="var(--dark-blue-color)">
@@ -675,7 +679,7 @@
               </svg>
             </div>
             <div>
-              <?php echo get_option('contact_location', ''); ?>
+              <?php if(!empty($contact_options['contact_location'])) echo $contact_options['contact_location'] ?>
             </div>
           </div>
         </div>

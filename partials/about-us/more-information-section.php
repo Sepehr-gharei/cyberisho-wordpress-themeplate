@@ -36,8 +36,12 @@
           </div>
           <div class="inf-container">
             <?php
-            $project_count = get_option('project_count', '');
-            $project_start_year = get_option('project_start_year', '');
+            $theme_options = get_option('cyberisho_main_option', []);
+            $site_info_options = $theme_options['site-info'];
+            $contact_options = $theme_options['contact'];
+
+            $project_count = $site_info_options['project_count'];
+            $project_start_year = $site_info_options['project_start_year'];
 
             if (!empty($project_count) || !empty($project_start_year)) {
               ?>
@@ -53,20 +57,20 @@
         <div class="d-flex wrapper">
           <div class="inf-top">
             <?php
-            $team_total = get_option('team_total', '');
-            $team_developer = get_option('team_developer', '');
-            $team_graphic = get_option('team_graphic', '');
-            $team_support = get_option('team_support', '');
-            $team_seo = get_option('team_seo', '');
+            $team_total = $site_info_options ['team_total'];
+            $team_1 = $site_info_options ['team_item_1'];
+            $team_2 = $site_info_options ['team_item_2'];
+            $team_3 = $site_info_options ['team_item_3'];
+            $team_4 = $site_info_options ['team_item_4'];
             ?>
 
-            <p>تیم <?php echo wp_kses_post($team_total); ?> نفره شامل</p>
+            <p><?php if(!empty($team_total)){echo wp_kses_post($team_total);}  ?> </p>
 
-            <li>+ <?php echo wp_kses_post($team_developer); ?> برنامه نویس</li>
-            <li>+ <?php echo wp_kses_post($team_graphic); ?>
-              گرافیست</li>
-            <li>+ <?php echo wp_kses_post($team_support); ?> پشتیبان</li>
-            <li>+ <?php echo wp_kses_post($team_seo); ?> سئوکار</li>
+            <li>+ <?php if(!empty($team_1))echo wp_kses_post($team_1); ?>  </li>
+            <li>+ <?php if(!empty($team_2))echo wp_kses_post($team_2); ?>
+              </li>
+            <li>+ <?php if(!empty($team_3))echo wp_kses_post($team_3); ?> </li>
+            <li>+ <?php if(!empty($team_4)) echo wp_kses_post($team_4); ?></li>
           </div>
           <div class="inf-bottom">
             <div>
@@ -75,8 +79,8 @@
               </svg>
             </div>
             <div>
-              <p> <?php echo get_option('contact_hotline', ''); ?></p>
-              <p><?php echo get_option('contact_emergency', ''); ?></p>
+              <p> <?php echo $contact_options['contact_hotline'];?></p>
+              <p><?php echo $contact_options['contact_emergency'];?></p>
             </div>
           </div>
         </div>

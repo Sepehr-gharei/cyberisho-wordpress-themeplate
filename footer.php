@@ -1,3 +1,8 @@
+<?php 
+$theme_options = get_option('cyberisho_main_option', [] );
+$footer_content_options = $theme_options['footer-content'];
+$contact_options = $theme_options['contact'];
+?>
 <footer class="animated-section">
   <div class="container-fluid">
     <div class="back-to-top-section">
@@ -29,11 +34,11 @@
       <div class="text-section">
         <?php
         // بازیابی مقادیر ذخیره‌شده
-        $footer_text = get_option('footer_text', '');
-        $footer_icon_1_image = get_option('footer_icon_1_image', '');
-        $footer_icon_2_image = get_option('footer_icon_2_image', '');
-        $footer_icon_1_url = get_option('footer_icon_1_url', '');
-        $footer_icon_2_url = get_option('footer_icon_2_url', '');
+        $footer_text = $footer_content_options['footer_text'];
+        $footer_icon_1_image = $footer_content_options['footer_icon_1_image'];
+        $footer_icon_2_image = $footer_content_options['footer_icon_2_image'];
+        $footer_icon_1_url = $footer_content_options['footer_icon_1_url'] ;
+        $footer_icon_2_url =$footer_content_options['footer_icon_2_url'] ;
         ?>
         <strong> <?php echo wp_kses_post($footer_text); ?></strong>
 
@@ -79,14 +84,14 @@
               </div>
               <div class="text">
                 <p>
-                  <?php echo get_option('contact_location', ''); ?>
+                  <?php echo $contact_options['contact_location']; ?>
                 </p>
               </div>
             </div>
             <div class="col-12 col-md-6 telephone">
               <div class="number">
-                <pre><?php echo get_option('contact_hotline', ''); ?></pre>
-                <pre><?php echo get_option('contact_emergency', ''); ?></pre>
+                <pre><?php echo $contact_options['contact_hotline'];?></pre>
+                <pre><?php echo $contact_options['contact_emergency'];?></pre>
               </div>
               <div>
                 <svg viewBox="0 0 458 458">
@@ -118,14 +123,7 @@
 </footer>
 <div class="bottom-line"></div>
 <?php wp_footer() ?>
-<?php
-function register_portfolio_assets()
-{
-  wp_register_script('portfolio', get_template_directory_uri() . '/assets/js/portfolio.js', [], '1.0.0', true);
-  wp_enqueue_script('portfolio');
-}
-add_action('wp_enqueue_scripts', 'register_portfolio_assets');
-?>
+
 
 </body>
 

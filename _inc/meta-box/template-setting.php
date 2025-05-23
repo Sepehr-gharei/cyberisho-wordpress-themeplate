@@ -1,1564 +1,1207 @@
 <?php
-// Adding custom theme settings menu
-add_action('admin_menu', 'custom_theme_settings_menu');
+class Admin_Helper
+{
+    public function cyberisho_Text($id, $title, $content, $width)
+    {
+        $field = "<div id='$id' class='cyberisho-field $width field-text'>"
+            . "<label for='$id'>$title</label>"
+            . "<input type='text' value='" . (!empty($content) ? esc_attr($content) : '') . "' name='$id' />"
+            . "</div>";
 
-if (!function_exists('custom_theme_settings_menu')) {
-    function custom_theme_settings_menu()
+        return $field;
+    }
+
+    public function cyberisho_Textarea($id, $title, $content, $width)
+    {
+        $field = "<div id='$id' class='cyberisho-field $width field-textarea'>"
+            . "<label for='$id'>$title</label>"
+            . "<textarea name='$id' rows='4' cols='50'>" . (!empty($content) ? esc_textarea($content) : '') . "</textarea>"
+            . "</div>";
+
+        return $field;
+    }
+
+    public function cyberisho_URL($id, $title, $content, $width)
+    {
+        $field = "<div id='$id' class='cyberisho-field $width field-url'>"
+            . "<label for='$id'>$title</label>"
+            . "<input type='url' value='" . (!empty($content) ? esc_url($content) : '') . "' name='$id' />"
+            . "</div>";
+
+        return $field;
+    }
+
+    public function cyberisho_Image_Uploader($id, $title, $content, $width)
+    {
+        $field = "<div id='$id' class='cyberisho-field $width field-image-uploader'>"
+            . "<label for='$id'>$title</label>"
+            . "<div class='flex align-items-center'>"
+            . "<button type='button' class='button field-upload-img' data-input-id='$id'>انتخاب تصویر</button>"
+            . "<input value='" . (!empty($content) ? esc_url($content) : '') . "' type='text' class='field-img-url' name='$id' readonly />"
+            . "<div class='field-img-container'>" . (!empty($content) ? '<img src="' . esc_url($content) . '" alt="' . esc_attr($title) . '" style="max-width: 100px; max-height: 100px;" />' : '') . "</div>"
+            . "<a class='field-delete-img" . (empty($content) ? ' hidden' : '') . "' href='#' data-input-id='$id'>حذف تصویر</a>"
+            . "</div>"
+            . "</div>";
+
+        return $field;
+    }
+
+    public function cyberisho_Multiple_Image_Uploader($id, $title, $content, $width)
+    {
+        $content = is_array($content) ? $content : explode(',', $content);
+        $field = "<div id='$id' class='cyberisho-field $width field-multiple-image-uploader'>"
+            . "<label for='$id'>$title</label>"
+            . "<div class='flex align-items-center flex-wrap'>"
+            . "<button type='button' class='button field-upload-img multiple' data-input-id='$id'>انتخاب تصاویر</button>"
+            . "<input value='" . (!empty($content) ? esc_attr(implode(',', $content)) : '') . "' type='text' class='field-img-ids' name='$id' readonly />"
+            . "<div class='field-img-container'>";
+        if (!empty($content) && is_array($content)) {
+            foreach ($content as $image_id) {
+                $image_url = wp_get_attachment_image_url($image_id, 'thumbnail');
+                if ($image_url) {
+                    $field .= "<div class='field-img-item' data-id='" . esc_attr($image_id) . "'><img src='" . esc_url($image_url) . "' alt='' style='max-width: 100px; max-height: 100px;' /><a href='#' class='field-delete-img' data-id='" . esc_attr($image_id) . "'>حذف</a></div>";
+                }
+            }
+        }
+        $field .= "</div>"
+            . "</div>"
+            . "</div>";
+
+        return $field;
+    }
+
+    public function cyberisho_Checkbox($id, $title, $content, $width)
+    {
+        $field = "<div id='$id' class='cyberisho-field $width field-checkbox'>"
+            . "<label for='$id'>$title</label>"
+            . "<div>"
+            . "<input type='checkbox' name='$id' " . ($content ? 'checked' : '') . " value='1' />"
+            . "<span class='btn-toggle'></span>"
+            . "</div>"
+            . "</div>";
+
+        return $field;
+    }
+
+    public function cyberisho_Select($id, $title, $content, $selected, $width)
+    {
+        $field = "<div id='$id' class='cyberisho-field $width field-select'>"
+            . "<label for='$id'>$title</label>"
+            . "<select class='cyberisho-select select-single' name='$id'>";
+        foreach ($content as $key => $value) {
+            $field .= "<option " . (strval($selected) === strval($key) ? 'selected' : '') . " value='" . esc_attr($key) . "'>" . esc_html($value) . "</option>";
+        }
+        $field .= "</select>"
+            . "</div>";
+
+        return $field;
+    }
+
+    public function cyberisho_Select2($id, $select_id, $title, $content, $selected, $width)
+    {
+        $field = "<div id='$id' class='cyberisho-field $width field-select2'>"
+            . "<label for='$id'>$title</label>"
+            . "<select class='cyberisho-select select-multiple' name='" . esc_attr($select_id) . "[]' multiple='multiple'>";
+        foreach ($content as $key => $value) {
+            $field .= "<option " . (is_array($selected) && in_array($key, $selected) ? 'selected' : '') . " value='" . esc_attr($key) . "'>" . esc_html($value) . "</option>";
+        }
+        $field .= "</select>"
+            . "</div>";
+
+        return $field;
+    }
+
+    public function cyberisho_Color($id, $title, $content, $width)
+    {
+        $field = "<div id='$id' class='cyberisho-field $width field-color'>"
+            . "<label for='$id'>$title</label>"
+            . "<input type='text' class='color-picker' data-alpha-color-type='hex' data-alpha-enabled='true' value='" . (!empty($content) ? esc_attr($content) : '#000') . "' name='$id' />"
+            . "</div>";
+
+        return $field;
+    }
+
+    public function cyberisho_Editor($id, $title, $content, $width)
+    {
+        $settings = array(
+            'textarea_name' => $id,
+            'wpautop' => false,
+            'textarea_rows' => 15,
+            'media_buttons' => false,
+            'drag_drop_upload' => false,
+            'editor_height' => 200,
+            'tinymce' => array('plugins' => 'fullscreen,wordpress,wplink,textcolor'),
+        );
+
+        ob_start();
+        echo "<div id='$id' class='cyberisho-field $width field-editor'>";
+        echo "<label for='$id'>$title</label>";
+        wp_editor(html_entity_decode(stripslashes($content)), $id, $settings);
+        echo "</div>";
+        return ob_get_clean();
+    }
+
+    public function cyberisho_Repeater($id, $title, $section, $btn, $settings, $default, $width)
+    {
+        $field = '';
+        $theme_options = get_option('cyberisho_main_option', []);
+        $field .= "<div id='$id' class='cyberisho-field field-repeater $width'>"
+            . "<label for='$id'>$title</label>"
+            . "<div class='main-repeater flex flex-wrap'>";
+        $get_option = (!empty($theme_options[$section]) ? $theme_options[$section] : '');
+        if (!empty($get_option[$id])) {
+            $i = -1;
+            foreach ($get_option[$id] as $repeater) {
+                $i++;
+                $field .= "<div id='" . esc_attr($id . "[" . $i . "]") . "' class='repeater-table $width'>"
+                    . "<div class='repeater-table-entry'>"
+                    . "<button type='button' class='button delete-repeater-row'>حذف</button>";
+                foreach ($settings as $key => $setting) {
+                    $parts = explode('[', $key);
+                    $lastPart = end($parts);
+                    $default_id = rtrim($lastPart, ']');
+                    $type = $setting['type'];
+                    $title = $setting['title'];
+                    $key = $id . '[' . $i . '][' . $default_id . ']';
+                    $w = '';
+                    $default = (!empty($get_option[$id][$i][$default_id]) ? $get_option[$id][$i][$default_id] : '');
+                    switch ($type) {
+                        case 'text':
+                            $field .= $this->cyberisho_Text($key, $title, $default, $w);
+                            break;
+                        case 'textarea':
+                            $field .= $this->cyberisho_Textarea($key, $title, $default, $w);
+                            break;
+                        case 'image-uploader':
+                            $field .= $this->cyberisho_Image_Uploader($key, $title, $default, $w);
+                            break;
+                    }
+                }
+                $field .= "</div>"
+                    . "</div>";
+            }
+        } else {
+            $field .= "<div id='" . esc_attr($id . "[0]") . "' class='repeater-table $width'>"
+                . "<div class='repeater-table-entry'>"
+                . "<button type='button' class='button delete-repeater-row'>حذف</button>";
+            foreach ($settings as $key => $setting) {
+                $parts = explode('[', $key);
+                $lastPart = end($parts);
+                $default_id = rtrim($lastPart, ']');
+                $type = $setting['type'];
+                $title = $setting['title'];
+                $key = $id . '[0][' . $default_id . ']';
+                $w = '';
+                $default = '';
+                switch ($type) {
+                    case 'text':
+                        $field .= $this->cyberisho_Text($key, $title, $default, $w);
+                        break;
+                    case 'textarea':
+                        $field .= $this->cyberisho_Textarea($key, $title, $default, $w);
+                        break;
+                    case 'image-uploader':
+                        $field .= $this->cyberisho_Image_Uploader($key, $title, $default, $w);
+                        break;
+                }
+            }
+            $field .= "</div>"
+                . "</div>";
+        }
+        $field .= "<button type='button' class='button w100 button-primary add-repeater-row' data-settings='" . esc_attr(json_encode($settings)) . "'>$btn</button>"
+            . "</div>"
+            . "</div>";
+
+        return $field;
+    }
+
+    public function cyberisho_Heading($id, $title)
+    {
+        $field = "<h3 id='$id' class='cyberisho-field w100 field-heading'>" . esc_html($title) . "</h3>";
+
+        return $field;
+    }
+
+    public function cyberisho_Get_Post_Type($post_type)
+    {
+        $posts = [];
+        $get_posts = get_posts(array('post_type' => $post_type, 'numberposts' => -1, 'post_status' => 'publish'));
+        if (!empty($get_posts)) {
+            foreach ($get_posts as $post) {
+                $posts[$post->ID] = $post->post_title;
+            }
+        }
+        return $posts;
+    }
+}
+
+class Main_Settings extends Admin_Helper
+{
+    protected function All_Settings()
+    {
+        $settings = [
+            'footer-content' => [
+                'menu' => 'محتواهای پاورچین',
+                'lable' => 'تنظیمات محتوای پاورچین',
+                'settings' => [
+                    'footer_text' => [
+                        'type' => 'textarea',
+                        'title' => 'متن پاورچین',
+                        'w' => 'w100',
+                    ],
+                    'footer_icon_1_image' => [
+                        'type' => 'image-uploader',
+                        'title' => 'عکس نماد اول',
+                        'w' => 'w50',
+                    ],
+                    'footer_icon_2_image' => [
+                        'type' => 'image-uploader',
+                        'title' => 'عکس نماد دوم',
+                        'w' => 'w50',
+                    ],
+                    'footer_icon_1_url' => [
+                        'type' => 'url',
+                        'title' => 'URL نماد اول',
+                        'w' => 'w50',
+                    ],
+                    'footer_icon_2_url' => [
+                        'type' => 'url',
+                        'title' => 'URL نماد دوم',
+                        'w' => 'w50',
+                    ],
+                ],
+            ],
+            'site-info' => [
+                'menu' => 'اطلاعات سایت',
+                'lable' => 'تنظیمات اطلاعات سایت',
+                'settings' => [
+                    'banner_header' => [
+                        'type' => 'textarea',
+                        'title' => 'هدر بنر',
+                        'w' => 'w100',
+                    ],
+                    'banner_content' => [
+                        'type' => 'textarea',
+                        'title' => 'محتوا بنر',
+                        'w' => 'w100',
+                    ],
+                    'project_count' => [
+                        'type' => 'text',
+                        'title' => 'تعداد پروژه‌ها',
+                        'w' => 'w50',
+                    ],
+                    'project_start_year' => [
+                        'type' => 'text',
+                        'title' => 'سال شروع پروژه‌ها',
+                        'w' => 'w50',
+                    ],
+                    'team_total' => [
+                        'type' => 'text',
+                        'title' => 'تعداد نفرات تیم',
+                        'w' => 'w50',
+                    ],
+                    'team_item_1' => [
+                        'type' => 'text',
+                        'title' => 'ایتم نفرات اول',
+                        'w' => 'w50',
+                    ],
+                    'team_item_2' => [
+                        'type' => 'text',
+                        'title' => 'ایتم نفرات دوم',
+                        'w' => 'w50',
+                    ],
+                    'team_item_3' => [
+                        'type' => 'text',
+                        'title' => 'ایتم نفرات سوم',
+                        'w' => 'w50',
+                    ],
+                    'team_item_4' => [
+                        'type' => 'text',
+                        'title' => 'ایتم نفرات چهارم',
+                        'w' => 'w50',
+                    ],
+                    'home_feature_1' => [
+                        'type' => 'textarea',
+                        'title' => 'ویژگی 1',
+                        'w' => 'w25',
+                    ],
+                    'home_feature_2' => [
+                        'type' => 'textarea',
+                        'title' => 'ویژگی 2',
+                        'w' => 'w25',
+                    ],
+                    'home_feature_3' => [
+                        'type' => 'textarea',
+                        'title' => 'ویژگی 3',
+                        'w' => 'w25',
+                    ],
+                    'home_feature_4' => [
+                        'type' => 'textarea',
+                        'title' => 'ویژگی 4',
+                        'w' => 'w25',
+                    ],
+                    'brand_images' => [
+                        'type' => 'repeater',
+                        'title' => 'عکس‌های برند',
+                        'section' => 'site-info',
+                        'btn' => 'افزودن عکس برند جدید',
+                        'w' => 'w100',
+                        'settings' => [
+                            'brand_images[0][image]' => [
+                                'type' => 'image-uploader',
+                                'title' => 'عکس برند',
+                            ],
+                        ],
+                    ],
+                    // بخش جدید: متن بالای عنوان
+                    'above_brands_text' => [
+                        'type' => 'heading',
+                        'title' => 'متن بالای عنوان',
+                        'w' => 'w100',
+                    ],
+                    'above_brands_header' => [
+                        'type' => 'textarea',
+                        'title' => 'هدر متن',
+                        'w' => 'w100',
+                    ],
+                    'above_brands_content_1' => [
+                        'type' => 'textarea',
+                        'title' => 'محتوای اول متن',
+                        'w' => 'w50',
+                    ],
+                    'above_brands_content_2' => [
+                        'type' => 'textarea',
+                        'title' => 'محتوای دوم متن',
+                        'w' => 'w50',
+                    ],
+                    // بخش جدید: متن پایین برندها
+                    'below_brands_text' => [
+                        'type' => 'heading',
+                        'title' => 'متن پایین برندها',
+                        'w' => 'w100',
+                    ],
+                    'below_brands_content' => [
+                        'type' => 'textarea',
+                        'title' => 'محتوای متن',
+                        'w' => 'w100',
+                    ],
+                ],
+            ],
+            'contact' => [
+                'menu' => 'اطلاعات تماس',
+                'lable' => 'تنظیمات اطلاعات تماس',
+                'settings' => [
+                    'contact_hotline' => [
+                        'type' => 'text',
+                        'title' => 'خط ویژه',
+                        'w' => 'w50',
+                    ],
+                    'contact_emergency' => [
+                        'type' => 'text',
+                        'title' => 'تماس ضروری',
+                        'w' => 'w50',
+                    ],
+                    'contact_email' => [
+                        'type' => 'text',
+                        'title' => 'ایمیل',
+                        'w' => 'w50',
+                    ],
+                    'social_whatsapp' => [
+                        'type' => 'url',
+                        'title' => 'واتساپ',
+                        'w' => 'w50',
+                    ],
+                    'social_instagram' => [
+                        'type' => 'url',
+                        'title' => 'اینستاگرام',
+                        'w' => 'w50',
+                    ],
+                    'social_telegram' => [
+                        'type' => 'url',
+                        'title' => 'تلگرام',
+                        'w' => 'w50',
+                    ],
+
+                    'social_linkedin' => [
+                        'type' => 'url',
+                        'title' => 'لینکدین',
+                        'w' => 'w50',
+                    ],
+                    'social_twitter' => [
+                        'type' => 'url',
+                        'title' => 'توییتر',
+                        'w' => 'w50',
+                    ],
+                    'contact_location' => [
+                        'type' => 'text',
+                        'title' => 'لوکیشن',
+                        'w' => 'w50',
+                    ],
+                ],
+            ],
+            'home' => [
+                'menu' => 'صفحه اصلی',
+                'lable' => 'تنظیمات صفحه اصلی',
+                'settings' => [
+                    'home_meeting_title' => [
+                        'type' => 'text',
+                        'title' => 'عنوان ملاقات',
+                        'w' => 'w50',
+                    ],
+                    'home_meeting_content' => [
+                        'type' => 'textarea',
+                        'title' => 'محتوای ملاقات',
+                        'w' => 'w50',
+                    ],
+                    'home_about_text' => [
+                        'type' => 'textarea',
+                        'title' => 'متن درباره ما',
+                        'w' => 'w100',
+                    ],
+                    'home_service_1_title' => [
+                        'type' => 'text',
+                        'title' => 'عنوان خدمت اول',
+                        'w' => 'w50',
+                    ],
+                    'home_service_1_content' => [
+                        'type' => 'textarea',
+                        'title' => 'محتوای خدمت اول',
+                        'w' => 'w50',
+                    ],
+                    'home_service_2_title' => [
+                        'type' => 'text',
+                        'title' => 'عنوان خدمت دوم',
+                        'w' => 'w50',
+                    ],
+                    'home_service_2_content' => [
+                        'type' => 'textarea',
+                        'title' => 'محتوای خدمت دوم',
+                        'w' => 'w50',
+                    ],
+                    'home_cyberwhy_1' => [
+                        'type' => 'text',
+                        'title' => 'چرا سایبری شو 1',
+                        'w' => 'w25',
+                    ],
+                    'home_cyberwhy_2' => [
+                        'type' => 'text',
+                        'title' => 'چرا سایبری شو 2',
+                        'w' => 'w25',
+                    ],
+                    'home_cyberwhy_3' => [
+                        'type' => 'text',
+                        'title' => 'چرا سایبری شو 3',
+                        'w' => 'w25',
+                    ],
+                    'home_cyberwhy_4' => [
+                        'type' => 'text',
+                        'title' => 'چرا سایبری شو 4',
+                        'w' => 'w25',
+                    ],
+                    'home_faq_items' => [
+                        'type' => 'repeater',
+                        'title' => 'سوالات متداول',
+                        'section' => 'home',
+                        'btn' => 'افزودن سوال جدید',
+                        'w' => 'w100',
+                        'settings' => [
+                            'home_faq_items[0][title]' => [
+                                'type' => 'text',
+                                'title' => 'عنوان سوال',
+                            ],
+                            'home_faq_items[0][content]' => [
+                                'type' => 'textarea',
+                                'title' => 'متن پاسخ',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'about' => [
+                'menu' => 'صفحه درباره ما',
+                'lable' => 'تنظیمات صفحه درباره ما',
+                'settings' => [
+                    'about_chart_title' => [
+                        'type' => 'textarea',
+                        'title' => 'عملکرد سایبریشو',
+                        'w' => 'w100',
+                    ],
+                    'about_chart_header' => [
+                        'type' => 'textarea',
+                        'title' => 'درباره نمودار هدر',
+                        'w' => 'w100',
+                    ],
+                    'about_chart_footer' => [
+                        'type' => 'textarea',
+                        'title' => 'درباره نمودار فوتر',
+                        'w' => 'w100',
+                    ],
+
+                    'about_chart_items' => [
+                        'type' => 'repeater',
+                        'title' => 'آیتم‌های نمودار',
+                        'section' => 'about',
+                        'btn' => 'افزودن آیتم نمودار جدید',
+                        'w' => 'w100',
+                        'settings' => [
+                            'about_chart_items[0][year]' => [
+                                'type' => 'text',
+                                'title' => 'سال نمودار',
+                            ],
+                            'about_chart_items[0][projects]' => [
+                                'type' => 'text',
+                                'title' => 'تعداد پروژه‌ها',
+                            ],
+                        ],
+                    ],
+
+                ],
+            ],
+            'landing' => [
+                'menu' => 'صفحه لندینگ',
+                'lable' => 'تنظیمات صفحه لندینگ',
+                'settings' => [
+                    'landing_initial_header' => [
+                        'type' => 'textarea',
+                        'title' => 'هدر اولیه',
+                        'w' => 'w50',
+                    ],
+                    'landing_initial_content' => [
+                        'type' => 'textarea',
+                        'title' => 'محتوای اولیه',
+                        'w' => 'w50',
+                    ],
+                    'landing_footer_header' => [
+                        'type' => 'textarea',
+                        'title' => 'هدر پاورقی',
+                        'w' => 'w50',
+                    ],
+                    'landing_footer_content' => [
+                        'type' => 'textarea',
+                        'title' => 'محتوای پاورقی',
+                        'w' => 'w50',
+                    ],
+                    'landing_pricing_header' => [
+                        'type' => 'textarea',
+                        'title' => 'محتوای هدر قیمت‌گذاری',
+                        'w' => 'w100',
+                    ],
+                    'landing_pricing_rows' => [
+                        'type' => 'repeater',
+                        'title' => 'سطرهای قیمت‌گذاری',
+                        'section' => 'landing',
+                        'btn' => 'افزودن سطر جدید',
+                        'w' => 'w100',
+                        'settings' => [
+                            'landing_pricing_rows[0][description]' => [
+                                'type' => 'textarea',
+                                'title' => 'شرح خدمات',
+                            ],
+                            'landing_pricing_rows[0][duration]' => [
+                                'type' => 'text',
+                                'title' => 'مدت زمان',
+                            ],
+                            'landing_pricing_rows[0][price]' => [
+                                'type' => 'text',
+                                'title' => 'قیمت',
+                            ],
+                        ],
+                    ],
+                    'landing_pricing_footer' => [
+                        'type' => 'textarea',
+                        'title' => 'محتوای فوتر قیمت‌گذاری',
+                        'w' => 'w100',
+                    ],
+                    'landing_site_types' => [
+                        'type' => 'repeater',
+                        'title' => 'انواع سایت',
+                        'section' => 'landing',
+                        'btn' => 'افزودن نوع سایت جدید',
+                        'w' => 'w100',
+                        'settings' => [
+                            'landing_site_types[0][image]' => [
+                                'type' => 'image-uploader',
+                                'title' => 'عکس',
+                            ],
+                            'landing_site_types[0][content_header]' => [
+                                'type' => 'textarea',
+                                'title' => 'هدر محتوا',
+                            ],
+                            'landing_site_types[0][content]' => [
+                                'type' => 'textarea',
+                                'title' => 'محتوا',
+                            ],
+                            'landing_site_types[0][feature_header]' => [
+                                'type' => 'textarea',
+                                'title' => 'هدر ویژگی',
+                            ],
+                            'landing_site_types[0][feature_1]' => [
+                                'type' => 'textarea',
+                                'title' => 'ویژگی 1',
+                            ],
+                            'landing_site_types[0][feature_2]' => [
+                                'type' => 'textarea',
+                                'title' => 'ویژگی 2',
+                            ],
+                            'landing_site_types[0][feature_3]' => [
+                                'type' => 'textarea',
+                                'title' => 'ویژگی 3',
+                            ],
+                        ],
+                    ],
+                    'landing_page_faqs' => [
+                        'type' => 'repeater',
+                        'title' => 'سوالات متداول',
+                        'section' => 'landing',
+                        'btn' => 'افزودن سوال جدید',
+                        'w' => 'w100',
+                        'settings' => [
+                            'landing_page_faqs[0][title]' => [
+                                'type' => 'text',
+                                'title' => 'عنوان سوال',
+                            ],
+                            'landing_page_faqs[0][content]' => [
+                                'type' => 'textarea',
+                                'title' => 'متن پاسخ',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'portfolio' => [
+                'menu' => 'صفحه نمونه کارها',
+                'lable' => 'تنظیمات صفحه نمونه کارها',
+                'settings' => [
+                    'theme_portfolios' => [
+                        'type' => 'repeater',
+                        'title' => 'نمونه کارها',
+                        'section' => 'portfolio',
+                        'btn' => 'افزودن نمونه کار جدید',
+                        'w' => 'w100',
+                        'settings' => [
+                            'theme_portfolios[0][name]' => [
+                                'type' => 'text',
+                                'title' => 'نام نمونه کار',
+                            ],
+                            'theme_portfolios[0][type]' => [
+                                'type' => 'text',
+                                'title' => 'نوع سایت',
+                            ],
+                            'theme_portfolios[0][duration]' => [
+                                'type' => 'text',
+                                'title' => 'مدت زمان انجام',
+                            ],
+                            'theme_portfolios[0][location]' => [
+                                'type' => 'text',
+                                'title' => 'موقعیت',
+                            ],
+                            'theme_portfolios[0][url]' => [
+                                'type' => 'url',
+                                'title' => 'URL سایت',
+                            ],
+                            'theme_portfolios[0][blue_effect]' => [
+                                'type' => 'select',
+                                'title' => 'افکت آبی',
+                                'content' => [
+                                    'enabled' => 'فعال',
+                                    'disabled' => 'غیرفعال',
+                                ],
+                                'default' => 'disabled',
+                            ],
+                            'theme_portfolios[0][main_image]' => [
+                                'type' => 'image-uploader',
+                                'title' => 'عکس اصلی',
+                            ],
+                            'theme_portfolios[0][desktop_image]' => [
+                                'type' => 'image-uploader',
+                                'title' => 'عکس دسکتاپ',
+                            ],
+                            'theme_portfolios[0][mobile_image]' => [
+                                'type' => 'image-uploader',
+                                'title' => 'عکس موبایل',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        return $settings;
+    }
+
+    protected function General_Settings($current_tab)
+    {
+        $all_settings = $this->All_Settings();
+        $theme_options = get_option('cyberisho_main_option', []);
+
+        foreach ($all_settings as $name => $section) {
+            $lable = $section['lable'];
+            $settings = $section['settings'];
+            $get_option = (!empty($theme_options[$name]) ? $theme_options[$name] : '');
+
+            if ($name == $current_tab) {
+                $output = "<div class='content-tab $name-options'>"
+                    . "<h2>" . esc_html($lable) . "</h2>";
+                $output .= settings_errors('cyberisho_messages', false, true) ? settings_errors('cyberisho_messages', false, true) : '';
+                $output .= "<form method='post' action='' class='cyberisho-form-setting flex flex-wrap'>";
+                $output .= wp_nonce_field('cyberisho_save_settings', 'cyberisho_nonce', true, false);
+                foreach ($settings as $id => $setting) {
+                    $type = $setting['type'];
+                    $title = $setting['title'];
+                    $width = (!empty($setting['w']) ? $setting['w'] : 'w100');
+                    $default = (!empty($get_option[$id]) ? $get_option[$id] : '');
+                    switch ($type) {
+                        case 'text':
+                            $output .= $this->cyberisho_Text($id, $title, $default, $width);
+                            break;
+                        case 'url':
+                            $output .= $this->cyberisho_URL($id, $title, $default, $width);
+                            break;
+                        case 'textarea':
+                            $output .= $this->cyberisho_Textarea($id, $title, $default, $width);
+                            break;
+                        case 'image-uploader':
+                            $output .= $this->cyberisho_Image_Uploader($id, $title, $default, $width);
+                            break;
+                        case 'gallery-uploader':
+                            $output .= $this->cyberisho_Multiple_Image_Uploader($id, $title, $default, $width);
+                            break;
+                        case 'checkbox':
+                            $output .= $this->cyberisho_Checkbox($id, $title, $default, $width);
+                            break;
+                        case 'select':
+                            $content = $setting['content'];
+                            $default_select = isset($setting['default']) ? $setting['default'] : '';
+                            $output .= $this->cyberisho_Select($id, $title, $content, $default, $width);
+                            break;
+                        case 'select2':
+                            $select_id = $setting['id'];
+                            $content = $setting['content'];
+                            $output .= $this->cyberisho_Select2($id, $select_id, $title, $content, $default, $width);
+                            break;
+                        case 'color':
+                            $output .= $this->cyberisho_Color($id, $title, $default, $width);
+                            break;
+                        case 'repeater':
+                            $btn = $setting['btn'];
+                            $repeater_settings = $setting['settings'];
+                            $section = $setting['section'];
+                            $output .= $this->cyberisho_Repeater($id, $title, $section, $btn, $repeater_settings, $default, $width);
+                            break;
+                        case 'heading':
+                            $output .= $this->cyberisho_Heading($id, $title);
+                            break;
+                        case 'editor':
+                            $output .= $this->cyberisho_Editor($id, $title, $default, $width);
+                            break;
+                    }
+                }
+                $output .= "<p><input type='submit' name='submit' class='button button-primary' value='ذخیره تغییرات'></p>"
+                    . "</form></div>";
+                return $output;
+            }
+        }
+        return '';
+    }
+
+    public function __construct()
+    {
+        add_action('admin_menu', [$this, 'custom_theme_settings_menu']);
+        add_action('admin_enqueue_scripts', [$this, 'theme_settings_enqueue_scripts']);
+        add_action('admin_init', [$this, 'save_theme_settings']);
+    }
+
+    public function custom_theme_settings_menu()
     {
         add_menu_page(
             'تنظیمات قالب',
             'تنظیمات قالب',
             'manage_options',
             'theme-settings',
-            'theme_settings_page',
+            [$this, 'theme_settings_page'],
             'dashicons-admin-generic',
             30
         );
     }
-}
 
-// Main theme settings page with tabs
-function theme_settings_page()
-{
-    $tabs = [
-        'footer-content' => 'محتواهای پاورچین', // تب جدید
-        'site-info' => 'اطلاعات سایت',
-        'contact' => 'اطلاعات تماس',
-        'home' => 'صفحه اصلی',
-        'about' => 'صفحه درباره ما',
-        'landing' => 'صفحه لندینگ',
-        'portfolio' => 'صفحه نمونه کارها'
-    ];
+    public function theme_settings_page()
+    {
+        $tabs = [
+            'footer-content' => 'محتواهای پاورچین',
+            'site-info' => 'اطلاعات سایت',
+            'contact' => 'اطلاعات تماس',
+            'home' => 'صفحه اصلی',
+            'about' => 'صفحه درباره ما',
+            'landing' => 'صفحه لندینگ',
+            'portfolio' => 'صفحه نمونه کارها'
+        ];
 
-    $current_tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'footer-content';
-
-    ?>
-    <div class="wrap">
-        <h1>تنظیمات قالب</h1>
-        <h2 class="nav-tab-wrapper">
-            <?php foreach ($tabs as $tab_slug => $tab_name): ?>
-                <a href="?page=theme-settings&tab=<?php echo esc_attr($tab_slug); ?>"
-                    class="nav-tab <?php echo $current_tab === $tab_slug ? 'nav-tab-active' : ''; ?>">
-                    <?php echo esc_html($tab_name); ?>
-                </a>
-            <?php endforeach; ?>
-        </h2>
-
-        <?php
-        switch ($current_tab) {
-            case 'footer-content':
-                theme_settings_footer_content_page();
-                break;
-            case 'site-info':
-                theme_settings_site_info_page();
-                break;
-            case 'contact':
-                theme_settings_contact_page();
-                break;
-            case 'home':
-                theme_settings_home_page();
-                break;
-            case 'about':
-                theme_settings_about_page();
-                break;
-            case 'landing':
-                theme_settings_landing_page();
-                break;
-            case 'portfolio':
-                theme_settings_portfolio_page();
-                break;
-            default:
-                theme_settings_footer_content_page();
-                break;
-        }
+        $current_tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'footer-content';
+        ob_start();
         ?>
-    </div>
-    <?php
-}
-
-// محتوای پاورچین (جدید)
-function theme_settings_footer_content_page()
-{
-    if (isset($_POST['submit'])) {
-        update_option('footer_text', sanitize_textarea_field($_POST['footer_text']));
-        update_option('footer_icon_1_image', esc_url_raw($_POST['footer_icon_1_image']));
-        update_option('footer_icon_2_image', esc_url_raw($_POST['footer_icon_2_image']));
-        update_option('footer_icon_1_url', sanitize_textarea_field($_POST['footer_icon_1_url']));
-        update_option('footer_icon_2_url', sanitize_textarea_field($_POST['footer_icon_2_url']));
-        ?>
-        <div class="updated">
-            <p>تنظیمات محتوای پاورچین ذخیره شد.</p>
-        </div>
-        <?php
-    }
-
-    $footer_text = get_option('footer_text', '');
-    $footer_icon_1_image = get_option('footer_icon_1_image', '');
-    $footer_icon_2_image = get_option('footer_icon_2_image', '');
-    $footer_icon_1_url = get_option('footer_icon_1_url', '');
-    $footer_icon_2_url = get_option('footer_icon_2_url', '');
-    ?>
-    <div class="tab-content footer-content">
-        <h2>محتواهای پاورچین</h2>
-
-        <form method="post" action="">
-            <h3>متن پاورچین</h3>
-            <table class="form-table">
-                <tr>
-                    <th><label for="footer_text">متن پاورچین</label></th>
-                    <td>
-                        <textarea name="footer_text" id="footer_text" rows="5"
-                            class="large-text"><?php echo esc_textarea($footer_text); ?></textarea>
-                    </td>
-                </tr>
-            </table>
-
-            <h3>عکس نمادهای سایت</h3>
-            <table class="form-table">
-                <tr>
-                    <th><label>عکس نماد اول</label></th>
-                    <td>
-                        <input type="text" name="footer_icon_1_image" id="footer_icon_1_image"
-                            value="<?php echo esc_attr($footer_icon_1_image); ?>" class="regular-text">
-                        <input type="button" class="button upload-icon-image" value="آپلود تصویر" data-target="icon_1">
-                        <div class="image-preview icon-1-image-preview">
-                            <?php if (!empty($footer_icon_1_image)): ?>
-                                <img src="<?php echo esc_url($footer_icon_1_image); ?>" style="max-width: 200px;">
-                            <?php endif; ?>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label>عکس نماد دوم</label></th>
-                    <td>
-                        <input type="text" name="footer_icon_2_image" id="footer_icon_2_image"
-                            value="<?php echo esc_attr($footer_icon_2_image); ?>" class="regular-text">
-                        <input type="button" class="button upload-icon-image" value="آپلود تصویر" data-target="icon_2">
-                        <div class="image-preview icon-2-image-preview">
-                            <?php if (!empty($footer_icon_2_image)): ?>
-                                <img src="<?php echo esc_url($footer_icon_2_image); ?>" style="max-width: 200px;">
-                            <?php endif; ?>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="footer_icon_1_url">URL نماد اول</label></th>
-                    <td>
-                        <textarea name="footer_icon_1_url" id="footer_icon_1_url" rows="3"
-                            class="large-text"><?php echo esc_textarea($footer_icon_1_url); ?></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="footer_icon_2_url">URL نماد دوم</label></th>
-                    <td>
-                        <textarea name="footer_icon_2_url" id="footer_icon_2_url" rows="3"
-                            class="large-text"><?php echo esc_textarea($footer_icon_2_url); ?></textarea>
-                    </td>
-                </tr>
-            </table>
-
-            <?php submit_button(); ?>
-        </form>
-    </div>
-
-    <script>
-        jQuery(document).ready(function ($) {
-            if (typeof wp === 'undefined' || typeof wp.media === 'undefined') {
-                console.error('wp.media is not loaded');
-                return;
-            }
-
-            $(document).on('click', '.upload-icon-image', function (e) {
-                e.preventDefault();
-                var button = $(this);
-                var target = button.data('target');
-                var inputField = $('#footer_' + target + '_image');
-                var previewField = $('.icon-' + target.replace('_', '-') + '-image-preview');
-
-                var frame = wp.media({
-                    title: 'انتخاب تصویر',
-                    button: { text: 'استفاده از تصویر' },
-                    multiple: false
-                });
-
-                frame.on('select', function () {
-                    var attachment = frame.state().get('selection').first().toJSON();
-                    inputField.val(attachment.url);
-                    previewField.html('<img src="' + attachment.url + '" style="max-width: 200px;">');
-                });
-
-                frame.open();
-            });
-        });
-    </script>
-    <?php
-}
-
-// اطلاعات سایت
-function theme_settings_site_info_page()
-{
-    if (isset($_POST['submit'])) {
-        update_option('banner_header', sanitize_textarea_field($_POST['banner_header']));
-        update_option('banner_content', sanitize_textarea_field($_POST['banner_content']));
-        update_option('project_count', sanitize_textarea_field($_POST['project_count']));
-        update_option('project_start_year', sanitize_textarea_field($_POST['project_start_year']));
-        update_option('team_total', sanitize_textarea_field($_POST['team_total']));
-        update_option('team_developer', sanitize_textarea_field($_POST['team_developer']));
-        update_option('team_graphic', sanitize_textarea_field($_POST['team_graphic']));
-        update_option('team_support', sanitize_textarea_field($_POST['team_support']));
-        update_option('team_seo', sanitize_textarea_field($_POST['team_seo']));
-        for ($i = 1; $i <= 4; $i++) {
-            update_option('home_feature_' . $i, sanitize_textarea_field($_POST['home_feature_' . $i]));
-        }
-        // Save brand images
-        $brand_images = [];
-        if (isset($_POST['brand_image'])) {
-            foreach ($_POST['brand_image'] as $index => $image) {
-                $brand_images[$index] = esc_url_raw($image);
-            }
-        }
-        update_option('brand_images', $brand_images);
-        ?>
-        <div class="updated">
-            <p>تنظیمات بنر، پروژه‌ها، تیم ما، ویژگی‌های سایت و برندها ذخیره شد.</p>
-        </div>
-        <?php
-    }
-
-    $banner_header = get_option('banner_header', '');
-    $banner_content = get_option('banner_content', '');
-    $project_count = get_option('project_count', '');
-    $project_start_year = get_option('project_start_year', '');
-    $team_total = get_option('team_total', '');
-    $team_developer = get_option('team_developer', '');
-    $team_graphic = get_option('team_graphic', '');
-    $team_support = get_option('team_support', '');
-    $team_seo = get_option('team_seo', '');
-    $features = [];
-    for ($i = 1; $i <= 4; $i++) {
-        $features[$i] = get_option('home_feature_' . $i, '');
-    }
-    $brand_images = get_option('brand_images', ['']); // Initialize with one empty brand image
-    ?>
-    <div class="tab-content site-information">
-        <h2>اطلاعات سایت</h2>
-        <form method="post" action="">
-            <h3>قسمت بنر شعار</h3>
-            <table class="form-table">
-                <tr>
-                    <th><label for="banner_header">هدر بنر</label></th>
-                    <td>
-                        <textarea name="banner_header" id="banner_header" rows="3"
-                            class="large-text"><?php echo esc_textarea($banner_header); ?></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="banner_content">محتوا بنر</label></th>
-                    <td>
-                        <textarea name="banner_content" id="banner_content" rows="5"
-                            class="large-text"><?php echo esc_textarea($banner_content); ?></textarea>
-                    </td>
-                </tr>
-            </table>
-            <h3>تعداد پروژه‌ها</h3>
-            <table class="form-table">
-                <tr>
-                    <th><label for="project_count">تعداد پروژه‌ها</label></th>
-                    <td>
-                        <textarea name="project_count" id="project_count" rows="2"
-                            class="large-text"><?php echo esc_textarea($project_count); ?></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="project_start_year">سال شروع پروژه‌ها</label></th>
-                    <td>
-                        <textarea name="project_start_year" id="project_start_year" rows="2"
-                            class="large-text"><?php echo esc_textarea($project_start_year); ?></textarea>
-                    </td>
-                </tr>
-            </table>
-            <h3>تیم ما</h3>
-            <table class="form-table">
-                <tr>
-                    <th><label for="team_total">تعداد نفرات تیم</label></th>
-                    <td>
-                        <textarea name="team_total" id="team_total" rows="2"
-                            class="large-text"><?php echo esc_textarea($team_total); ?></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="team_developer">تعداد برنامه‌نویس</label></th>
-                    <td>
-                        <textarea name="team_developer" id="team_developer" rows="2"
-                            class="large-text"><?php echo esc_textarea($team_developer); ?></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="team_graphic">تعداد گرافیست</label></th>
-                    <td>
-                        <textarea name="team_graphic" id="team_graphic" rows="2"
-                            class="large-text"><?php echo esc_textarea($team_graphic); ?></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="team_support">تعداد پشتیبان</label></th>
-                    <td>
-                        <textarea name="team_support" id="team_support" rows="2"
-                            class="large-text"><?php echo esc_textarea($team_support); ?></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="team_seo">تعداد سئوکار</label></th>
-                    <td>
-                        <textarea name="team_seo" id="team_seo" rows="2"
-                            class="large-text"><?php echo esc_textarea($team_seo); ?></textarea>
-                    </td>
-                </tr>
-            </table>
-            <h3>چهار ویژگی سایت</h3>
-            <table class="form-table">
-                <?php for ($i = 1; $i <= 4; $i++): ?>
-                    <tr>
-                        <th><label for="home_feature_<?php echo $i; ?>">ویژگی <?php echo $i; ?></label></th>
-                        <td>
-                            <textarea name="home_feature_<?php echo $i; ?>" id="home_feature_<?php echo $i; ?>" rows="3"
-                                class="large-text"><?php echo esc_textarea($features[$i]); ?></textarea>
-                        </td>
-                    </tr>
-                <?php endfor; ?>
-            </table>
-            <h3>برندها</h3>
-            <div id="brand-images-container" class="brand-images-container">
-                <?php foreach ($brand_images as $index => $image): ?>
-                    <div class="brand-image-item" data-index="<?php echo $index; ?>">
-                        <h4>عکس برند <?php echo $index + 1; ?>
-                            <?php if (count($brand_images) > 1): ?>
-                                <button type="button" class="button remove-brand-image">حذف</button>
-                            <?php endif; ?>
-                        </h4>
-                        <table class="form-table">
-                            <tr>
-                                <th><label>عکس برند</label></th>
-                                <td>
-                                    <input type="text" name="brand_image[<?php echo $index; ?>]" class="brand-image-url"
-                                        value="<?php echo esc_attr($image); ?>" class="regular-text">
-                                    <input type="button" class="button upload-brand-image" value="آپلود تصویر"
-                                        data-target="brand_<?php echo $index; ?>">
-                                    <div class="image-preview brand-image-preview-<?php echo $index; ?>">
-                                        <?php if (!empty($image)): ?>
-                                            <img src="<?php echo esc_url($image); ?>" style="max-width: 200px;">
-                                        <?php endif; ?>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+        <div class="wrap">
+            <h1>تنظیمات قالب</h1>
+            <h2 class="nav-tab-wrapper">
+                <?php foreach ($tabs as $tab_slug => $tab_name): ?>
+                    <a href="?page=theme-settings&tab=<?php echo esc_attr($tab_slug); ?>"
+                        class="nav-tab <?php echo $current_tab === $tab_slug ? 'nav-tab-active' : ''; ?>">
+                        <?php echo esc_html($tab_name); ?>
+                    </a>
                 <?php endforeach; ?>
-            </div>
-            <p>
-                <button type="button" class="button button-primary add-brand-image">افزودن عکس برند جدید</button>
-            </p>
-            <?php submit_button(); ?>
-        </form>
-    </div>
-    <script>
-        jQuery(document).ready(function ($) {
-            if (typeof wp === 'undefined' || typeof wp.media === 'undefined') {
-                console.error('wp.media is not loaded');
-                return;
-            }
-
-            $(document).on('click', '.upload-brand-image', function (e) {
-                e.preventDefault();
-                var button = $(this);
-                var target = button.data('target');
-                var container = button.closest('.brand-image-item');
-                var image_url_field = container.find('.brand-image-url');
-                var image_preview = container.find('.image-preview');
-
-                var frame = wp.media({
-                    title: 'انتخاب تصویر',
-                    button: { text: 'استفاده از تصویر' },
-                    multiple: false
-                });
-
-                frame.on('select', function () {
-                    var attachment = frame.state().get('selection').first().toJSON();
-                    image_url_field.val(attachment.url);
-                    image_preview.html('<img src="' + attachment.url + '" style="max-width: 200px;">');
-                });
-
-                frame.open();
-            });
-
-            $('.add-brand-image').on('click', function () {
-                var container = $('#brand-images-container');
-                var index = container.find('.brand-image-item').length;
-                var template = `
-                    <div class="brand-image-item" data-index="${index}">
-                        <h4>عکس برند ${index + 1}
-                            <button type="button" class="button remove-brand-image">حذف</button>
-                        </h4>
-                        <table class="form-table">
-                            <tr>
-                                <th><label>عکس برند</label></th>
-                                <td>
-                                    <input type="text" name="brand_image[${index}]" class="brand-image-url" class="regular-text">
-                                    <input type="button" class="button upload-brand-image" value="آپلود تصویر" data-target="brand_${index}">
-                                    <div class="image-preview brand-image-preview-${index}"></div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>`;
-                container.append(template);
-            });
-
-            $(document).on('click', '.remove-brand-image', function () {
-                if ($('.brand-image-item').length > 1) {
-                    $(this).closest('.brand-image-item').remove();
-                    $('.brand-image-item').each(function (i) {
-                        $(this).attr('data-index', i);
-                        $(this).find('h4').text('عکس برند ' + (i + 1));
-                        $(this).find('input, button').each(function () {
-                            var name = $(this).attr('name');
-                            var dataTarget = $(this).attr('data-target');
-                            if (name) {
-                                $(this).attr('name', name.replace(/brand_image\[\d+\]/, 'brand_image[' + i + ']'));
-                            }
-                            if (dataTarget) {
-                                $(this).attr('data-target', 'brand_' + i);
-                            }
-                        });
-                        $(this).find('.image-preview').attr('class', 'image-preview brand-image-preview-' + i);
-                    });
-                }
-            });
-        });
-    </script>
-    <?php
-}
-// اطلاعات تماس
-function theme_settings_contact_page()
-{
-    if (isset($_POST['submit'])) {
-        update_option('contact_hotline', sanitize_text_field($_POST['contact_hotline']));
-        update_option('contact_emergency', sanitize_text_field($_POST['contact_emergency']));
-        update_option('contact_email', sanitize_email($_POST['contact_email']));
-        update_option('social_whatsapp', sanitize_text_field($_POST['social_whatsapp']));
-        update_option('social_instagram', sanitize_text_field($_POST['social_instagram']));
-        update_option('social_telegram', sanitize_text_field($_POST['social_telegram']));
-        update_option('social_bay', sanitize_text_field($_POST['social_bay'])); // جدید
-        update_option('social_linkedin', sanitize_text_field($_POST['social_linkedin'])); // جدید
-        update_option('social_twitter', sanitize_text_field($_POST['social_twitter'])); // جدید
-        update_option('contact_location', sanitize_text_field($_POST['contact_location']));
-        ?>
-        <div class="updated">
-            <p>تنظیمات ذخیره شد.</p>
+            </h2>
+            <?php echo $this->General_Settings($current_tab); ?>
         </div>
         <?php
+        echo ob_get_clean();
     }
-    ?>
-    <div class="tab-content">
-        <h2>اطلاعات تماس</h2>
-        <form method="post" action="">
-            <table class="form-table">
-                <tr>
-                    <th><label for="contact_hotline">خط ویژه</label></th>
-                    <td><input type="text" name="contact_hotline" id="contact_hotline"
-                            value="<?php echo esc_attr(get_option('contact_hotline')); ?>" class="regular-text"></td>
-                </tr>
-                <tr>
-                    <th><label for="contact_emergency">تماس ضروری</label></th>
-                    <td><input type="text" name="contact_emergency" id="contact_emergency"
-                            value="<?php echo esc_attr(get_option('contact_emergency')); ?>" class="regular-text"></td>
-                </tr>
-                <tr>
-                    <th><label for="contact_email">ایمیل</label></th>
-                    <td><input type="email" name="contact_email" id="contact_email"
-                            value="<?php echo esc_attr(get_option('contact_email')); ?>" class="regular-text"></td>
-                </tr>
-                <tr>
-                    <th><label for="social_whatsapp">واتساپ</label></th>
-                    <td><input type="text" name="social_whatsapp" id="social_whatsapp"
-                            value="<?php echo esc_attr(get_option('social_whatsapp')); ?>" class="regular-text"></td>
-                </tr>
-                <tr>
-                    <th><label for="social_instagram">اینستاگرام</label></th>
-                    <td><input type="text" name="social_instagram" id="social_instagram"
-                            value="<?php echo esc_attr(get_option('social_instagram')); ?>" class="regular-text"></td>
-                </tr>
-                <tr>
-                    <th><label for="social_telegram">تلگرام</label></th>
-                    <td><input type="text" name="social_telegram" id="social_telegram"
-                            value="<?php echo esc_attr(get_option('social_telegram')); ?>" class="regular-text"></td>
-                </tr>
-                <tr>
-                    <th><label for="social_bay">بیای</label></th>
-                    <td><input type="text" name="social_bay" id="social_bay"
-                            value="<?php echo esc_attr(get_option('social_bay')); ?>" class="regular-text"></td>
-                </tr>
-                <tr>
-                    <th><label for="social_linkedin">لینکدین</label></th>
-                    <td><input type="text" name="social_linkedin" id="social_linkedin"
-                            value="<?php echo esc_attr(get_option('social_linkedin')); ?>" class="regular-text"></td>
-                </tr>
-                <tr>
-                    <th><label for="social_twitter">توییتر</label></th>
-                    <td><input type="text" name="social_twitter" id="social_twitter"
-                            value="<?php echo esc_attr(get_option('social_twitter')); ?>" class="regular-text"></td>
-                </tr>
-                <tr>
-                    <th><label for="contact_location">لوکیشن</label></th>
-                    <td><input type="text" name="contact_location" id="contact_location"
-                            value="<?php echo esc_attr(get_option('contact_location')); ?>" class="regular-text"></td>
-                </tr>
-            </table>
-            <?php submit_button(); ?>
-        </form>
-    </div>
-    <?php
-}
 
-// صفحه اصلی
-function theme_settings_home_page()
-{
-    if (isset($_POST['submit'])) {
-        update_option('home_meeting_title', sanitize_text_field($_POST['home_meeting_title']));
-        update_option('home_meeting_content', sanitize_textarea_field($_POST['home_meeting_content']));
-        update_option('home_service_1_title', sanitize_text_field($_POST['home_service_1_title']));
-        update_option('home_service_1_content', sanitize_textarea_field($_POST['home_service_1_content']));
-        update_option('home_service_2_title', sanitize_text_field($_POST['home_service_2_title']));
-        update_option('home_service_2_content', sanitize_textarea_field($_POST['home_service_2_content']));
-        for ($i = 1; $i <= 4; $i++) {
-            update_option('home_cyberwhy_' . $i, sanitize_text_field($_POST['home_cyberwhy_' . $i]));
+    public function theme_settings_enqueue_scripts($hook)
+    {
+        if ($hook !== 'toplevel_page_theme-settings') {
+            return;
         }
-        $faq_data = [];
-        if (isset($_POST['home_faq_title_0'])) {
-            for ($i = 0; isset($_POST['home_faq_title_' . $i]); $i++) {
-                $faq_data[] = [
-                    'title' => sanitize_text_field($_POST['home_faq_title_' . $i]),
-                    'content' => sanitize_textarea_field($_POST['home_faq_content_' . $i]),
-                ];
+
+        wp_enqueue_style(
+            'theme-settings',
+            get_template_directory_uri() . '/_inc/meta-box/css/style.css',
+            [],
+            '1.0.1',
+            'all'
+        );
+
+        wp_enqueue_style(
+            'wp-color-picker'
+        );
+
+        wp_enqueue_media();
+        wp_enqueue_script(
+            'theme-admin-js',
+            get_template_directory_uri() . '/_inc/meta-box/js/admin.js',
+            ['jquery', 'wp-color-picker'],
+            '1.0.1',
+            true
+        );
+
+        wp_localize_script(
+            'theme-admin-js',
+            'cyberisho_vars',
+            [
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'nonce' => wp_create_nonce('cyberisho_nonce'),
+            ]
+        );
+    }
+
+    public function save_theme_settings()
+    {
+        if (!isset($_POST['submit']) || !isset($_POST['cyberisho_nonce']) || !wp_verify_nonce($_POST['cyberisho_nonce'], 'cyberisho_save_settings')) {
+            return;
+        }
+
+        $current_tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'footer-content';
+        $theme_options = get_option('cyberisho_main_option', []);
+        $all_settings = $this->All_Settings();
+        $settings = $all_settings[$current_tab]['settings'];
+
+        $new_options = [];
+        foreach ($settings as $id => $setting) {
+            if (isset($_POST[$id])) {
+                $value = $this->sanitize_field($setting['type'], $_POST[$id]);
+                $new_options[$id] = $value;
             }
         }
-        update_option('home_faq_items', $faq_data);
-        ?>
-        <div class="updated">
-            <p>تنظیمات ذخیره شد.</p>
-        </div>
-        <?php
+
+        $theme_options[$current_tab] = $new_options;
+        update_option('cyberisho_main_option', $theme_options);
+
+        add_settings_error(
+            'cyberisho_messages',
+            'settings_updated',
+            __('تنظیمات با موفقیت ذخیره شد.', 'textdomain'),
+            'success'
+        );
     }
-    ?>
-    <div class="tab-content main-page">
-        <h2>صفحه اصلی</h2>
-        <form method="post" action="">
-            <h3>متن ملاقات</h3>
-            <table class="form-table">
-                <tr>
-                    <th><label for="home_meeting_title">عنوان</label></th>
-                    <td><input type="text" name="home_meeting_title" id="home_meeting_title"
-                            value="<?php echo esc_attr(get_option('home_meeting_title')); ?>" class="regular-text"></td>
-                </tr>
-                <tr>
-                    <th><label for="home_meeting_content">محتوا</label></th>
-                    <td><textarea name="home_meeting_content" id="home_meeting_content" rows="5"
-                            class="large-text"><?php echo esc_textarea(get_option('home_meeting_content')); ?></textarea>
-                    </td>
-                </tr>
-            </table>
-            <h3>خدمات ما</h3>
-            <h4>خدمت اول</h4>
-            <table class="form-table">
-                <tr>
-                    <th><label for="home_service_1_title">عنوان</label></th>
-                    <td><input type="text" name="home_service_1_title" id="home_service_1_title"
-                            value="<?php echo esc_attr(get_option('home_service_1_title')); ?>" class="regular-text"></td>
-                </tr>
-                <tr>
-                    <th><label for="home_service_1_content">محتوا</label></th>
-                    <td><textarea name="home_service_1_content" id="home_service_1_content" rows="5"
-                            class="large-text"><?php echo esc_textarea(get_option('home_service_1_content')); ?></textarea>
-                    </td>
-                </tr>
-            </table>
-            <h4>خدمت دوم</h4>
-            <table class="form-table">
-                <tr>
-                    <th><label for="home_service_2_title">عنوان</label></th>
-                    <td><input type="text" name="home_service_2_title" id="home_service_2_title"
-                            value="<?php echo esc_attr(get_option('home_service_2_title')); ?>" class="regular-text"></td>
-                </tr>
-                <tr>
-                    <th><label for="home_service_2_content">محتوا</label></th>
-                    <td><textarea name="home_service_2_content" id="home_service_2_content" rows="5"
-                            class="large-text"><?php echo esc_textarea(get_option('home_service_2_content')); ?></textarea>
-                    </td>
-                </tr>
-            </table>
-            <h3>چرا سایبری شو را انتخاب کنیم؟</h3>
-            <table class="form-table">
-                <?php for ($i = 1; $i <= 4; $i++): ?>
-                    <tr>
-                        <th><label for="home_cyberwhy_<?php echo $i; ?>">عنوان آیتم <?php echo $i; ?></label></th>
-                        <td>
-                            <input type="text" name="home_cyberwhy_<?php echo $i; ?>" id="home_cyberwhy_<?php echo $i; ?>"
-                                value="<?php echo esc_attr(get_option('home_cyberwhy_' . $i)); ?>" class="regular-text">
-                        </td>
-                    </tr>
-                <?php endfor; ?>
-            </table>
-            <h3>سوالات متداول</h3>
-            <div id="faq-container">
-                <?php
-                $faqs = get_option('home_faq_items', []);
-                if (!empty($faqs)) {
-                    foreach ($faqs as $index => $faq) {
-                        ?>
-                        <div class="faq-item" data-index="<?php echo $index; ?>">
-                            <h4>سوال <?php echo $index + 1; ?>
-                                <button type="button" class="button remove-faq">حذف</button>
-                            </h4>
-                            <table class="form-table">
-                                <tr>
-                                    <th><label for="home_faq_title_<?php echo $index; ?>">عنوان سوال</label></th>
-                                    <td>
-                                        <input type="text" name="home_faq_title_<?php echo $index; ?>"
-                                            value="<?php echo esc_attr($faq['title']); ?>" class="regular-text">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th><label for="home_faq_content_<?php echo $index; ?>">متن پاسخ</label></th>
-                                    <td>
-                                        <textarea name="home_faq_content_<?php echo $index; ?>" rows="5"
-                                            class="large-text"><?php echo esc_textarea($faq['content']); ?></textarea>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <?php
+
+    private function sanitize_field($type, $value)
+    {
+        switch ($type) {
+            case 'text':
+                return sanitize_text_field($value);
+            case 'url':
+                return esc_url_raw($value);
+            case 'textarea':
+                return sanitize_textarea_field($value);
+            case 'checkbox':
+                return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+            case 'select':
+                return sanitize_text_field($value);
+            case 'select2':
+                return is_array($value) ? array_map('sanitize_text_field', $value) : sanitize_text_field($value);
+            case 'color':
+                return sanitize_hex_color($value);
+            case 'repeater':
+                $sanitized = [];
+                if (is_array($value)) {
+                    foreach ($value as $index => $repeater_item) {
+                        foreach ($repeater_item as $key => $item_value) {
+                            $sanitized[$index][$key] = $this->sanitize_field_by_key($key, $item_value);
+                        }
                     }
-                } else {
-                    ?>
-                    <div class="faq-item" data-index="0">
-                        <h4>سوال 1
-                            <button type="button" class="button remove-faq">حذف</button>
-                        </h4>
-                        <table class="form-table">
-                            <tr>
-                                <th><label for="home_faq_title_0">عنوان سوال</label></th>
-                                <td>
-                                    <input type="text" name="home_faq_title_0" class="regular-text">
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="home_faq_content_0">متن پاسخ</label></th>
-                                <td>
-                                    <textarea name="home_faq_content_0" rows="5" class="large-text"></textarea>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <?php
                 }
-                ?>
-            </div>
-            <p>
-                <button type="button" class="button button-primary add-faq">افزودن سوال جدید</button>
-            </p>
-            <?php submit_button(); ?>
-        </form>
-    </div>
-    <?php
-}
-
-// صفحه درباره ما
-function theme_settings_about_page()
-{
-    if (isset($_POST['submit'])) {
-        update_option('about_chart_title', sanitize_textarea_field($_POST['about_chart_title']));
-        
-        $chart_items = [];
-        if (isset($_POST['chart_item'])) {
-            foreach ($_POST['chart_item'] as $index => $item) {
-                $chart_items[$index] = [
-                    'year' => sanitize_text_field($item['year']),
-                    'projects' => sanitize_textarea_field($item['projects']),
-                ];
-            }
+                return $sanitized;
+            case 'image-uploader':
+            case 'gallery-uploader':
+                return esc_url_raw($value);
+            case 'editor':
+                return wp_kses_post($value);
+            default:
+                return sanitize_text_field($value);
         }
-        update_option('about_chart_items', $chart_items);
-        ?>
-        <div class="updated">
-            <p>تنظیمات نمودار در صفحه درباره ما ذخیره شد.</p>
-        </div>
-        <?php
     }
 
-    $chart_title = get_option('about_chart_title', '');
-    $chart_items = get_option('about_chart_items', []);
+    private function sanitize_field_by_key($key, $value)
+    {
+        if (strpos($key, 'image') !== false || strpos($key, 'url') !== false) {
+            return esc_url_raw($value);
+        } elseif (strpos($key, 'content') !== false || strpos($key, 'description') !== false || strpos($key, 'header') !== false) {
+            return sanitize_textarea_field($value);
+        } else {
+            return sanitize_text_field($value);
+        }
+    }
+}
 
-    // اگر هیچ آیتمی وجود نداشته باشد، 6 آیتم پیش‌فرض ایجاد می‌کنیم
-    if (empty($chart_items)) {
-        for ($i = 0; $i < 6; $i++) {
-            $chart_items[] = [
-                'year' => '',
-                'projects' => ''
+new Main_Settings();
+
+// حذف تابع تکراری cyberisho_enqueue_admin_scripts
+// add_action('admin_enqueue_scripts', 'cyberisho_enqueue_admin_scripts'); // این خط حذف شد
+
+// ثبت تنظیمات Customizer
+function cyberisho_customize_register($wp_customize)
+{
+    // بخش فوتر
+    $wp_customize->add_section('footer_settings', [
+        'title' => __('تنظیمات فوتر', 'cyberisho'),
+        'priority' => 30,
+    ]);
+
+    $wp_customize->add_setting('footer_icon_1_image', [
+        'default' => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ]);
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'footer_icon_1_image', [
+        'label' => __('تصویر آیکون ۱', 'cyberisho'),
+        'section' => 'footer_settings',
+        'settings' => 'footer_icon_1_image',
+    ]));
+
+    $wp_customize->add_setting('footer_icon_2_image', [
+        'default' => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ]);
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'footer_icon_2_image', [
+        'label' => __('تصویر آیکون ۲', 'cyberisho'),
+        'section' => 'footer_settings',
+        'settings' => 'footer_icon_2_image',
+    ]));
+
+    $wp_customize->add_setting('footer_text', [
+        'default' => '',
+        'sanitize_callback' => 'wp_kses_post',
+    ]);
+    $wp_customize->add_control('footer_text', [
+        'label' => __('متن فوتر', 'cyberisho'),
+        'section' => 'footer_settings',
+        'type' => 'textarea',
+    ]);
+
+    // بخش اطلاعات سایت
+    $wp_customize->add_section('site_info', [
+        'title' => __('اطلاعات سایت', 'cyberisho'),
+        'priority' => 31,
+    ]);
+
+    $wp_customize->add_setting('site_logo', [
+        'default' => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ]);
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'site_logo', [
+        'label' => __('لوگوی سایت', 'cyberisho'),
+        'section' => 'site_info',
+        'settings' => 'site_logo',
+    ]));
+
+    // بخش صفحه لندینگ
+    $wp_customize->add_section('landing_page', [
+        'title' => __('صفحه لندینگ', 'cyberisho'),
+        'priority' => 32,
+    ]);
+
+    $wp_customize->add_setting('landing_banner_image', [
+        'default' => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ]);
+    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'landing_banner_image', [
+        'label' => __('تصویر بنر لندینگ', 'cyberisho'),
+        'section' => 'landing_page',
+        'settings' => 'landing_banner_image',
+    ]));
+
+    // بخش نمونه‌کارها
+    $wp_customize->add_section('portfolio_settings', [
+        'title' => __('نمونه‌کارها', 'cyberisho'),
+        'priority' => 33,
+    ]);
+
+    $wp_customize->add_setting('portfolio_items', [
+        'default' => '',
+        'sanitize_callback' => 'cyberisho_sanitize_repeater',
+    ]);
+    $wp_customize->add_control('portfolio_items', [
+        'label' => __('نمونه‌کارها', 'cyberisho'),
+        'section' => 'portfolio_settings',
+        'type' => 'textarea',
+    ]);
+
+    function cyberisho_customize_register($wp_customize)
+    {
+        // ... (بخش‌های دیگر بدون تغییر باقی می‌مانند)
+
+        // بخش درباره ما
+        $wp_customize->add_section('about_us', [
+            'title' => __('درباره ما', 'cyberisho'),
+            'priority' => 34,
+        ]);
+
+        $wp_customize->add_setting('about_us_image', [
+            'default' => '',
+            'sanitize_callback' => 'esc_url_raw',
+        ]);
+        $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'about_us_image', [
+            'label' => __('تصویر درباره ما', 'cyberisho'),
+            'section' => 'about_us',
+            'settings' => 'about_us_image',
+        ]));
+
+        $wp_customize->add_setting('about_chart_header', [
+            'default' => '',
+            'sanitize_callback' => 'wp_kses_post',
+        ]);
+        $wp_customize->add_control('about_chart_header', [
+            'label' => __('درباره نمودار هدر', 'cyberisho'),
+            'section' => 'about_us',
+            'type' => 'textarea',
+        ]);
+
+        $wp_customize->add_setting('about_chart_right_container', [
+            'default' => '',
+            'sanitize_callback' => 'wp_kses_post',
+        ]);
+
+
+        $wp_customize->add_setting('about_chart_footer', [
+            'default' => '',
+            'sanitize_callback' => 'wp_kses_post',
+        ]);
+        $wp_customize->add_control('about_chart_footer', [
+            'label' => __('درباره نمودار فوتر', 'cyberisho'),
+            'section' => 'about_us',
+            'type' => 'textarea',
+        ]);
+
+        $wp_customize->add_setting('chart_items_data', [
+            'default' => '',
+            'sanitize_callback' => 'cyberisho_sanitize_repeater',
+        ]);
+        $wp_customize->add_control('chart_items_data', [
+            'label' => __('آیتم‌های نمودار', 'cyberisho'),
+            'section' => 'about_us',
+            'type' => 'textarea',
+        ]);
+    }
+    // بخش برندها
+    $wp_customize->add_section('brands', [
+        'title' => __('برندها', 'cyberisho'),
+        'priority' => 35,
+    ]);
+
+    $wp_customize->add_setting('brands_items', [
+        'default' => '',
+        'sanitize_callback' => 'cyberisho_sanitize_repeater',
+    ]);
+    $wp_customize->add_control('brands_items', [
+        'label' => __('برندها', 'cyberisho'),
+        'section' => 'brands',
+        'type' => 'textarea',
+    ]);
+
+    // بخش سوالات
+    $wp_customize->add_section('faq', [
+        'title' => __('سوالات متداول', 'cyberisho'),
+        'priority' => 36,
+    ]);
+
+    $wp_customize->add_setting('faq_items', [
+        'default' => '',
+        'sanitize_callback' => 'cyberisho_sanitize_repeater',
+    ]);
+    $wp_customize->add_control('faq_items', [
+        'label' => __('سوالات متداول', 'cyberisho'),
+        'section' => 'faq',
+        'type' => 'textarea',
+    ]);
+
+    // بخش آیتم‌های نمودار
+    $wp_customize->add_section('chart_items', [
+        'title' => __('آیتم‌های نمودار', 'cyberisho'),
+        'priority' => 37,
+    ]);
+
+    $wp_customize->add_setting('chart_items_data', [
+        'default' => '',
+        'sanitize_callback' => 'cyberisho_sanitize_repeater',
+    ]);
+    $wp_customize->add_control('chart_items_data', [
+        'label' => __('آیتم‌های نمودار', 'cyberisho'),
+        'section' => 'chart_items',
+        'type' => 'textarea',
+    ]);
+
+    // بخش انواع سایت
+    $wp_customize->add_section('site_types', [
+        'title' => __('انواع سایت', 'cyberisho'),
+        'priority' => 38,
+    ]);
+
+    $wp_customize->add_setting('site_types_items', [
+        'default' => '',
+        'sanitize_callback' => 'cyberisho_sanitize_repeater',
+    ]);
+    $wp_customize->add_control('site_types_items', [
+        'label' => __('انواع سایت', 'cyberisho'),
+        'section' => 'site_types',
+        'type' => 'textarea',
+    ]);
+}
+add_action('customize_register', 'cyberisho_customize_register');
+
+function cyberisho_sanitize_repeater($input)
+{
+    if (empty($input)) {
+        return '';
+    }
+
+    $input = json_decode($input, true);
+    $sanitized = [];
+    if (is_array($input)) {
+        foreach ($input as $item) {
+            $sanitized[] = [
+                'image' => isset($item['image']) ? esc_url_raw($item['image']) : '',
+                'title' => isset($item['title']) ? sanitize_text_field($item['title']) : '',
+                'description' => isset($item['description']) ? wp_kses_post($item['description']) : '',
             ];
         }
     }
-    ?>
-    <div class="tab-content about-page">
-        <h2>صفحه درباره ما</h2>
-        <form method="post" action="">
-            <h3>نمودار</h3>
-            <table class="form-table">
-                <tr>
-                    <th><label for="about_chart_title">عملکرد سایبریشو</label></th>
-                    <td>
-                        <textarea name="about_chart_title" id="about_chart_title" rows="5"
-                            class="large-text"><?php echo esc_textarea($chart_title); ?></textarea>
-                    </td>
-                </tr>
-            </table>
-            <h3>آیتم‌های نمودار</h3>
-            <div id="chart-items-container">
-                <?php foreach ($chart_items as $index => $item): ?>
-                    <div class="chart-item" data-index="<?php echo $index; ?>">
-                        <h4>آیتم نمودار <?php echo $index + 1; ?>
-                            <?php if (count($chart_items) > 1): ?>
-                                <button type="button" class="button remove-chart-item">حذف</button>
-                            <?php endif; ?>
-                        </h4>
-                        <table class="form-table">
-                            <tr>
-                                <th><label for="chart_item_year_<?php echo $index; ?>">سال نمودار</label></th>
-                                <td>
-                                    <input type="text" name="chart_item[<?php echo $index; ?>][year]"
-                                        id="chart_item_year_<?php echo $index; ?>"
-                                        value="<?php echo esc_attr($item['year']); ?>" class="regular-text">
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="chart_item_projects_<?php echo $index; ?>">تعداد پروژه‌ها</label></th>
-                                <td>
-                                    <textarea name="chart_item[<?php echo $index; ?>][projects]"
-                                        id="chart_item_projects_<?php echo $index; ?>" rows="5"
-                                        class="large-text"><?php echo esc_textarea($item['projects']); ?></textarea>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-            <p>
-                <button type="button" class="button button-primary add-chart-item">افزودن آیتم نمودار جدید</button>
-            </p>
-            <?php submit_button(); ?>
-        </form>
-    </div>
-    <script>
-        jQuery(document).ready(function ($) {
-            $('.add-chart-item').on('click', function () {
-                var container = $('#chart-items-container');
-                var index = container.find('.chart-item').length;
-                var template = `
-                    <div class="chart-item" data-index="${index}">
-                        <h4>آیتم نمودار ${index + 1}
-                            <button type="button" class="button remove-chart-item">حذف</button>
-                        </h4>
-                        <table class="form-table">
-                            <tr>
-                                <th><label for="chart_item_year_${index}">سال نمودار</label></th>
-                                <td>
-                                    <input type="text" name="chart_item[${index}][year]" id="chart_item_year_${index}" class="regular-text">
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="chart_item_projects_${index}">تعداد پروژه‌ها</label></th>
-                                <td>
-                                    <textarea name="chart_item[${index}][projects]" id="chart_item_projects_${index}" rows="5" class="large-text"></textarea>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>`;
-                container.append(template);
-            });
-
-            $(document).on('click', '.remove-chart-item', function () {
-                if ($('.chart-item').length > 1) {
-                    $(this).closest('.chart-item').remove();
-                    $('.chart-item').each(function (i) {
-                        $(this).attr('data-index', i);
-                        $(this).find('h4').text('آیتم نمودار ' + (i + 1));
-                        $(this).find('input, textarea').each(function () {
-                            var name = $(this).attr('name');
-                            var id = $(this).attr('id');
-                            if (name) {
-                                $(this).attr('name', name.replace(/chart_item\[\d+\]/, 'chart_item[' + i + ']'));
-                            }
-                            if (id) {
-                                $(this).attr('id', id.replace(/chart_item_(year|projects)_\d+/, 'chart_item_$1_' + i));
-                            }
-                        });
-                    });
-                }
-            });
-        });
-    </script>
-    <?php
-}
-
-// صفحه لندینگ
-function theme_settings_landing_page()
-{
-    if (isset($_POST['submit'])) {
-        update_option('landing_initial_header', sanitize_textarea_field($_POST['landing_initial_header']));
-        update_option('landing_initial_content', sanitize_textarea_field($_POST['landing_initial_content']));
-        update_option('landing_footer_header', sanitize_textarea_field($_POST['landing_footer_header']));
-        update_option('landing_footer_content', sanitize_textarea_field($_POST['landing_footer_content']));
-        update_option('landing_pricing_header', sanitize_textarea_field($_POST['landing_pricing_header']));
-        $pricing_rows = [];
-        if (isset($_POST['pricing_row'])) {
-            foreach ($_POST['pricing_row'] as $index => $row) {
-                $pricing_rows[$index] = [
-                    'description' => sanitize_textarea_field($row['description']),
-                    'duration' => sanitize_textarea_field($row['duration']),
-                    'price' => sanitize_textarea_field($row['price']),
-                ];
-            }
-        }
-        update_option('landing_pricing_rows', $pricing_rows);
-        update_option('landing_pricing_footer', sanitize_textarea_field($_POST['landing_pricing_footer']));
-        $site_types = [];
-        if (isset($_POST['site_type'])) {
-            foreach ($_POST['site_type'] as $index => $site) {
-                $site_types[$index] = [
-                    'image' => esc_url_raw($site['image']),
-                    'content_header' => sanitize_textarea_field($site['content_header']),
-                    'content' => sanitize_textarea_field($site['content']),
-                    'feature_header' => sanitize_textarea_field($site['feature_header']),
-                    'feature_1' => sanitize_textarea_field($site['feature_1']),
-                    'feature_2' => sanitize_textarea_field($site['feature_2']),
-                    'feature_3' => sanitize_textarea_field($site['feature_3']),
-                ];
-            }
-        }
-        update_option('landing_site_types', $site_types);
-        $faq_data = [];
-        if (isset($_POST['landing_page_faq_title_0'])) {
-            for ($i = 0; isset($_POST['landing_page_faq_title_' . $i]); $i++) {
-                $faq_data[] = [
-                    'title' => sanitize_text_field($_POST['landing_page_faq_title_' . $i]),
-                    'content' => sanitize_textarea_field($_POST['landing_page_faq_content_' . $i]),
-                ];
-            }
-        }
-        update_option('landing_page_faqs', $faq_data);
-        ?>
-        <div class="updated">
-            <p>تنظیمات صفحه لندینگ ذخیره شد.</p>
-        </div>
-        <?php
-    }
-
-    $initial_header = get_option('landing_initial_header', '');
-    $initial_content = get_option('landing_initial_content', '');
-    $footer_header = get_option('landing_footer_header', '');
-    $footer_content = get_option('landing_footer_content', '');
-    $pricing_header = get_option('landing_pricing_header', '');
-    $pricing_rows = get_option('landing_pricing_rows', []);
-    $pricing_footer = get_option('landing_pricing_footer', '');
-    $site_types = get_option('landing_site_types', []);
-    $faqs = get_option('landing_page_faqs', []);
-
-    if (empty($site_types)) {
-        $site_types[] = [
-            'image' => '',
-            'content_header' => '',
-            'content' => '',
-            'feature_header' => '',
-            'feature_1' => '',
-            'feature_2' => '',
-            'feature_3' => ''
-        ];
-    }
-
-    if (empty($pricing_rows)) {
-        $pricing_rows[] = [
-            'description' => '',
-            'duration' => '',
-            'price' => ''
-        ];
-    }
-
-    if (empty($faqs)) {
-        $faqs[] = [
-            'title' => '',
-            'content' => ''
-        ];
-    }
-    ?>
-    <div class="tab-content landing-page">
-        <h2>صفحه لندینگ</h2>
-        <form method="post" action="">
-            <h3>هدر و محتوای اولیه</h3>
-            <table class="form-table">
-                <tr>
-                    <th><label for="landing_initial_header">هدر اولیه</label></th>
-                    <td>
-                        <textarea name="landing_initial_header" id="landing_initial_header" rows="3"
-                            class="large-text"><?php echo esc_textarea($initial_header); ?></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="landing_initial_content">محتوای اولیه</label></th>
-                    <td>
-                        <textarea name="landing_initial_content" id="landing_initial_content" rows="5"
-                            class="large-text"><?php echo esc_textarea($initial_content); ?></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="landing_footer_header">هدر پاورقی</label></th>
-                    <td>
-                        <textarea name="landing_footer_header" id="landing_footer_header" rows="3"
-                            class="large-text"><?php echo esc_textarea($footer_header); ?></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="landing_footer_content">محتوای پاورقی</label></th>
-                    <td>
-                        <textarea name="landing_footer_content" id="landing_footer_content" rows="5"
-                            class="large-text"><?php echo esc_textarea($footer_content); ?></textarea>
-                    </td>
-                </tr>
-            </table>
-            <h3>انواع سایت</h3>
-            <div id="site-types-container">
-                <?php foreach ($site_types as $index => $site): ?>
-                    <div class="site-type-item" data-index="<?php echo $index; ?>">
-                        <h4>نوع سایت <?php echo $index + 1; ?>
-                            <button type="button" class="button remove-site-type">حذف</button>
-                        </h4>
-                        <table class="form-table">
-                            <tr class="image-section">
-                                <th><label>عکس این قسمت</label></th>
-                                <td>
-                                    <input type="hidden" name="site_type[<?php echo $index; ?>][image]" class="site-image-url"
-                                        value="<?php echo esc_attr($site['image']); ?>">
-                                    <input type="button" class="button upload-image-button" value="آپلود تصویر"
-                                        data-target="site">
-                                    <div class="image-preview site-image-preview">
-                                        <?php if (!empty($site['image'])): ?>
-                                            <img src="<?php echo esc_url($site['image']); ?>" style="max-width: 200px;">
-                                        <?php endif; ?>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="site_type_content_header_<?php echo $index; ?>">هدر محتوا</label></th>
-                                <td>
-                                    <textarea name="site_type[<?php echo $index; ?>][content_header]"
-                                        id="site_type_content_header_<?php echo $index; ?>" rows="3"
-                                        class="large-text"><?php echo esc_textarea($site['content_header']); ?></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="site_type_content_<?php echo $index; ?>">محتوا</label></th>
-                                <td>
-                                    <textarea name="site_type[<?php echo $index; ?>][content]"
-                                        id="site_type_content_<?php echo $index; ?>" rows="5"
-                                        class="large-text"><?php echo esc_textarea($site['content']); ?></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="site_type_feature_header_<?php echo $index; ?>">هدر ویژگی</label></th>
-                                <td>
-                                    <textarea name="site_type[<?php echo $index; ?>][feature_header]"
-                                        id="site_type_feature_header_<?php echo $index; ?>" rows="3"
-                                        class="large-text"><?php echo esc_textarea($site['feature_header']); ?></textarea>
-                                </td>
-                            </tr>
-                            <?php for ($i = 1; $i <= 3; $i++): ?>
-                                <tr>
-                                    <th><label for="site_type_feature_<?php echo $i; ?>_<?php echo $index; ?>">ویژگی
-                                            <?php echo $i; ?></label></th>
-                                    <td>
-                                        <textarea name="site_type[<?php echo $index; ?>][feature_<?php echo $i; ?>]"
-                                            id="site_type_feature_<?php echo $i; ?>_<?php echo $index; ?>" rows="3"
-                                            class="large-text"><?php echo esc_textarea($site['feature_' . $i]); ?></textarea>
-                                    </td>
-                                </tr>
-                            <?php endfor; ?>
-                        </table>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-            <p>
-                <button type="button" class="button button-primary add-site-type">افزودن نوع سایت جدید</button>
-            </p>
-            <h3>قیمت و تعرفه‌های طراحی سایت</h3>
-            <table class="form-table">
-                <tr>
-                    <th><label for="landing_pricing_header">محتوای هدر</label></th>
-                    <td>
-                        <textarea name="landing_pricing_header" id="landing_pricing_header" rows="3"
-                            class="large-text"><?php echo esc_textarea($pricing_header); ?></textarea>
-                    </td>
-                </tr>
-            </table>
-            <h4>جدول</h4>
-            <div id="pricing-rows-container">
-                <?php foreach ($pricing_rows as $index => $row): ?>
-                    <div class="pricing-row-item" data-index="<?php echo $index; ?>">
-                        <h5>سطر <?php echo $index + 1; ?>
-                            <button type="button" class="button remove-pricing-row">حذف</button>
-                        </h5>
-                        <table class="form-table">
-                            <tr>
-                                <th><label for="pricing_row_description_<?php echo $index; ?>">شرح خدمات</label></th>
-                                <td>
-                                    <textarea name="pricing_row[<?php echo $index; ?>][description]"
-                                        id="pricing_row_description_<?php echo $index; ?>" rows="3"
-                                        class="large-text"><?php echo esc_textarea($row['description']); ?></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="pricing_row_duration_<?php echo $index; ?>">مدت زمان</label></th>
-                                <td>
-                                    <textarea name="pricing_row[<?php echo $index; ?>][duration]"
-                                        id="pricing_row_duration_<?php echo $index; ?>" rows="3"
-                                        class="large-text"><?php echo esc_textarea($row['duration']); ?></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="pricing_row_price_<?php echo $index; ?>">قیمت</label></th>
-                                <td>
-                                    <textarea name="pricing_row[<?php echo $index; ?>][price]"
-                                        id="pricing_row_price_<?php echo $index; ?>" rows="3"
-                                        class="large-text"><?php echo esc_textarea($row['price']); ?></textarea>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-            <p>
-                <button type="button" class="button button-primary add-pricing-row">افزودن سطر جدید</button>
-            </p>
-            <table class="form-table">
-                <tr>
-                    <th><label for="landing_pricing_footer">محتوای فوتر</label></th>
-                    <td>
-                        <textarea name="landing_pricing_footer" id="landing_pricing_footer" rows="5"
-                            class="large-text"><?php echo esc_textarea($pricing_footer); ?></textarea>
-                    </td>
-                </tr>
-            </table>
-            <h3>سوالات متداول</h3>
-            <div id="landing-faq-container">
-                <?php foreach ($faqs as $index => $faq): ?>
-                    <div class="faq-item" data-index="<?php echo $index; ?>">
-                        <h4>سوال <?php echo $index + 1; ?>
-                            <button type="button" class="button remove-landing-faq">حذف</button>
-                        </h4>
-                        <table class="form-table">
-                            <tr>
-                                <th><label for="landing_page_faq_title_<?php echo $index; ?>">عنوان سوال</label></th>
-                                <td>
-                                    <input type="text" name="landing_page_faq_title_<?php echo $index; ?>"
-                                        id="landing_page_faq_title_<?php echo $index; ?>"
-                                        value="<?php echo esc_attr($faq['title']); ?>" class="regular-text">
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="landing_page_faq_content_<?php echo $index; ?>">متن پاسخ</label></th>
-                                <td>
-                                    <textarea name="landing_page_faq_content_<?php echo $index; ?>"
-                                        id="landing_page_faq_content_<?php echo $index; ?>" rows="5"
-                                        class="large-text"><?php echo esc_textarea($faq['content']); ?></textarea>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-            <p>
-                <button type="button" class="button button-primary add-landing-faq">افزودن سوال جدید</button>
-            </p>
-            <?php submit_button(); ?>
-        </form>
-    </div>
-    <script>
-        jQuery(document).ready(function ($) {
-            if (typeof wp === 'undefined' || typeof wp.media === 'undefined') {
-                console.error('wp.media is not loaded');
-                return;
-            }
-            $(document).on('click', '.upload-image-button', function (e) {
-                e.preventDefault();
-                var button = $(this);
-                var target = button.data('target');
-                var container = button.closest('.site-type-item');
-                var image_url_field = container.find('.' + target + '-image-url');
-                var image_preview = container.find('.' + target + '-image-preview');
-                var frame = wp.media({
-                    title: 'انتخاب تصویر',
-                    button: { text: 'استفاده از تصویر' },
-                    multiple: false
-                });
-                frame.on('select', function () {
-                    var attachment = frame.state().get('selection').first().toJSON();
-                    image_url_field.val(attachment.url);
-                    image_preview.html('<img src="' + attachment.url + '" style="max-width: 200px;">');
-                });
-                frame.open();
-            });
-            $('.add-site-type').on('click', function () {
-                var container = $('#site-types-container');
-                var index = container.find('.site-type-item').length;
-                var template = `
-                    <div class="site-type-item" data-index="${index}">
-                        <h4>نوع سایت ${index + 1}
-                            <button type="button" class="button remove-site-type">حذف</button>
-                        </h4>
-                        <table class="form-table">
-                            <tr class="image-section">
-                                <th><label>عکس این قسمت</label></th>
-                                <td>
-                                    <input type="hidden" name="site_type[${index}][image]" class="site-image-url">
-                                    <input type="button" class="button upload-image-button" value="آپلود تصویر" data-target="site">
-                                    <div class="image-preview site-image-preview"></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="site_type_content_header_${index}">هدر محتوا</label></th>
-                                <td>
-                                    <textarea name="site_type[${index}][content_header]" id="site_type_content_header_${index}" rows="3" class="large-text"></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="site_type_content_${index}">محتوا</label></th>
-                                <td>
-                                    <textarea name="site_type[${index}][content]" id="site_type_content_${index}" rows="5" class="large-text"></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="site_type_feature_header_${index}">هدر ویژگی</label></th>
-                                <td>
-                                    <textarea name="site_type[${index}][feature_header]" id="site_type_feature_header_${index}" rows="3" class="large-text"></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="site_type_feature_1_${index}">ویژگی 1</label></th>
-                                <td>
-                                    <textarea name="site_type[${index}][feature_1]" id="site_type_feature_1_${index}" rows="3" class="large-text"></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="site_type_feature_2_${index}">ویژگی 2</label></th>
-                                <td>
-                                    <textarea name="site_type[${index}][feature_2]" id="site_type_feature_2_${index}" rows="3" class="large-text"></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="site_type_feature_3_${index}">ویژگی 3</label></th>
-                                <td>
-                                    <textarea name="site_type[${index}][feature_3]" id="site_type_feature_3_${index}" rows="3" class="large-text"></textarea>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>`;
-                container.append(template);
-            });
-            $(document).on('click', '.remove-site-type', function () {
-                if ($('.site-type-item').length > 1) {
-                    $(this).closest('.site-type-item').remove();
-                    $('.site-type-item').each(function (i) {
-                        $(this).attr('data-index', i);
-                        $(this).find('h4').text('نوع سایت ' + (i + 1));
-                        $(this).find('input, textarea, button').each(function () {
-                            var name = $(this).attr('name');
-                            var id = $(this).attr('id');
-                            if (name) {
-                                $(this).attr('name', name.replace(/site_type\[\d+\]/, 'site_type[' + i + ']'));
-                            }
-                            if (id) {
-                                $(this).attr('id', id.replace(/site_type_([a-z_]+)_(\d+)/, 'site_type_$1_' + i));
-                            }
-                        });
-                    });
-                }
-            });
-            $('.add-pricing-row').on('click', function () {
-                var container = $('#pricing-rows-container');
-                var index = container.find('.pricing-row-item').length;
-                var template = `
-                    <div class="pricing-row-item" data-index="${index}">
-                        <h5>سطر ${index + 1}
-                            <button type="button" class="button remove-pricing-row">حذف</button>
-                        </h5>
-                        <table class="form-table">
-                            <tr>
-                                <th><label for="pricing_row_description_${index}">شرح خدمات</label></th>
-                                <td>
-                                    <textarea name="pricing_row[${index}][description]" id="pricing_row_description_${index}" rows="3" class="large-text"></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="pricing_row_duration_${index}">مدت زمان</label></th>
-                                <td>
-                                    <textarea name="pricing_row[${index}][duration]" id="pricing_row_duration_${index}" rows="3" class="large-text"></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="pricing_row_price_${index}">قیمت</label></th>
-                                <td>
-                                    <textarea name="pricing_row[${index}][price]" id="pricing_row_price_${index}" rows="3" class="large-text"></textarea>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>`;
-                container.append(template);
-            });
-            $(document).on('click', '.remove-pricing-row', function () {
-                if ($('.pricing-row-item').length > 1) {
-                    $(this).closest('.pricing-row-item').remove();
-                    $('.pricing-row-item').each(function (i) {
-                        $(this).attr('data-index', i);
-                        $(this).find('h5').text('سطر ' + (i + 1));
-                        $(this).find('textarea').each(function () {
-                            var name = $(this).attr('name');
-                            var id = $(this).attr('id');
-                            if (name) {
-                                $(this).attr('name', name.replace(/pricing_row\[\d+\]/, 'pricing_row[' + i + ']'));
-                            }
-                            if (id) {
-                                $(this).attr('id', id.replace(/pricing_row_([a-z_]+)_(\d+)/, 'pricing_row_$1_' + i));
-                            }
-                        });
-                    });
-                }
-            });
-            $('.add-landing-faq').on('click', function () {
-                var container = $('#landing-faq-container');
-                var index = container.find('.faq-item').length;
-                var template = `
-                    <div class="faq-item" data-index="${index}">
-                        <h4>سوال ${index + 1}
-                            <button type="button" class="button remove-landing-faq">حذف</button>
-                        </h4>
-                        <table class="form-table">
-                            <tr>
-                                <th><label for="landing_page_faq_title_${index}">عنوان سوال</label></th>
-                                <td>
-                                    <input type="text" name="landing_page_faq_title_${index}" id="landing_page_faq_title_${index}" class="regular-text">
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><label for="landing_page_faq_content_${index}">متن پاسخ</label></th>
-                                <td>
-                                    <textarea name="landing_page_faq_content_${index}" id="landing_page_faq_content_${index}" rows="5" class="large-text"></textarea>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>`;
-                container.append(template);
-            });
-            $(document).on('click', '.remove-landing-faq', function () {
-                if ($('#landing-faq-container .faq-item').length > 1) {
-                    $(this).closest('.faq-item').remove();
-                    $('#landing-faq-container .faq-item').each(function (i) {
-                        $(this).attr('data-index', i);
-                        $(this).find('h4').text('سوال ' + (i + 1));
-                        $(this).find('input, textarea').each(function () {
-                            var name = $(this).attr('name');
-                            var id = $(this).attr('id');
-                            if (name) {
-                                $(this).attr('name', name.replace(/landing_page_faq_(title|content)_\d+/, 'landing_page_faq_$1_' + i));
-                            }
-                            if (id) {
-                                $(this).attr('id', id.replace(/landing_page_faq_(title|content)_\d+/, 'landing_page_faq_$1_' + i));
-                            }
-                        });
-                    });
-                }
-            });
-        });
-    </script>
-    <?php
-}
-
-// صفحه نمونه کارها
-function theme_settings_portfolio_page()
-{
-    if (isset($_POST['submit'])) {
-        $portfolios = [];
-        if (isset($_POST['portfolio'])) {
-            foreach ($_POST['portfolio'] as $index => $portfolio) {
-                $portfolios[$index] = [
-                    'name' => sanitize_text_field($portfolio['name']),
-                    'type' => sanitize_text_field($portfolio['type']),
-                    'duration' => sanitize_text_field($portfolio['duration']),
-                    'location' => sanitize_text_field($portfolio['location']),
-                    'url' => esc_url_raw($portfolio['url']),
-                    'main_image' => esc_url_raw($portfolio['main_image'] ?? ''),
-                    'desktop_image' => esc_url_raw($portfolio['desktop_image']),
-                    'mobile_image' => esc_url_raw($portfolio['mobile_image']),
-                    'blue_effect' => isset($portfolio['blue_effect']) ? sanitize_text_field($portfolio['blue_effect']) : 'disabled' // ذخیره افکت آبی
-                ];
-            }
-        }
-        update_option('theme_portfolios', $portfolios);
-        ?>
-        <div class="updated">
-            <p>نمونه کارها ذخیره شد.</p>
-        </div>
-        <?php
-    }
-
-    $portfolios = get_option('theme_portfolios', []);
-    if (empty($portfolios)) {
-        $portfolios[] = [
-            'name' => '',
-            'type' => '',
-            'duration' => '',
-            'location' => '',
-            'url' => '',
-            'main_image' => '',
-            'desktop_image' => '',
-            'mobile_image' => '',
-            'blue_effect' => 'disabled' // مقدار پیش‌فرض
-        ];
-    } else {
-        foreach ($portfolios as &$portfolio) {
-            if (!isset($portfolio['main_image'])) {
-                $portfolio['main_image'] = '';
-            }
-            if (!isset($portfolio['blue_effect'])) {
-                $portfolio['blue_effect'] = 'disabled'; // مقدار پیش‌فرض برای نمونه‌کارهای موجود
-            }
-        }
-        unset($portfolio);
-    }
-    ?>
-    <div class="tab-content landing-page">
-        <h2>صفحه نمونه کارها</h2>
-        <form method="post" action="">
-            <div id="portfolio-container">
-                <?php foreach ($portfolios as $index => $portfolio): ?>
-                    <div class="portfolio-item" data-index="<?php echo $index; ?>">
-                        <h3>نمونه کار <?php echo $index + 1; ?>
-                            <button type="button" class="button remove-portfolio">حذف</button>
-                        </h3>
-                        <table class="form-table">
-                            <tr>
-                                <th><label>نام نمونه کار</label></th>
-                                <td><input type="text" name="portfolio[<?php echo $index; ?>][name]"
-                                        value="<?php echo esc_attr($portfolio['name']); ?>" class="regular-text"></td>
-                            </tr>
-                            <tr>
-                                <th><label>نوع سایت</label></th>
-                                <td><input type="text" name="portfolio[<?php echo $index; ?>][type]"
-                                        value="<?php echo esc_attr($portfolio['type']); ?>" class="regular-text"></td>
-                            </tr>
-                            <tr>
-                                <th><label>مدت زمان انجام</label></th>
-                                <td><input type="text" name="portfolio[<?php echo $index; ?>][duration]"
-                                        value="<?php echo esc_attr($portfolio['duration']); ?>" class="regular-text"></td>
-                            </tr>
-                            <tr>
-                                <th><label>موقعیت</label></th>
-                                <td><input type="text" name="portfolio[<?php echo $index; ?>][location]"
-                                        value="<?php echo esc_attr($portfolio['location']); ?>" class="regular-text"></td>
-                            </tr>
-                            <tr>
-                                <th><label>URL سایت</label></th>
-                                <td><input type="url" name="portfolio[<?php echo $index; ?>][url]"
-                                        value="<?php echo esc_attr($portfolio['url']); ?>" class="regular-text"></td>
-                            </tr>
-                            <tr>
-                                <th><label>افکت آبی</label></th>
-                                <td>
-                                    <label><input type="radio" name="portfolio[<?php echo $index; ?>][blue_effect]"
-                                            value="enabled" <?php checked($portfolio['blue_effect'], 'enabled'); ?>>
-                                        فعال</label>
-                                    <label><input type="radio" name="portfolio[<?php echo $index; ?>][blue_effect]"
-                                            value="disabled" <?php checked($portfolio['blue_effect'], 'disabled'); ?>>
-                                        غیرفعال</label>
-                                </td>
-                            </tr>
-                            <tr class="image-section">
-                                <th><label>عکس اصلی</label></th>
-                                <td>
-                                    <input type="hidden" name="portfolio[<?php echo $index; ?>][main_image]"
-                                        class="main-image-url" value="<?php echo esc_attr($portfolio['main_image'] ?? ''); ?>">
-                                    <input type="button" class="button upload-image-button" value="آپلود تصویر"
-                                        data-target="main">
-                                    <div class="image-preview main-image-preview">
-                                        <?php if (!empty($portfolio['main_image'])): ?>
-                                            <img src="<?php echo esc_url($portfolio['main_image']); ?>" style="max-width: 200px;">
-                                        <?php endif; ?>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="image-section">
-                                <th><label>عکس دسکتاپ</label></th>
-                                <td>
-                                    <input type="hidden" name="portfolio[<?php echo $index; ?>][desktop_image]"
-                                        class="desktop-image-url" value="<?php echo esc_attr($portfolio['desktop_image']); ?>">
-                                    <input type="button" class="button upload-image-button" value="آپلود تصویر"
-                                        data-target="desktop">
-                                    <div class="image-preview desktop-image-preview">
-                                        <?php if ($portfolio['desktop_image']): ?>
-                                            <img src="<?php echo esc_url($portfolio['desktop_image']); ?>"
-                                                style="max-width: 200px;">
-                                        <?php endif; ?>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="image-section">
-                                <th><label>عکس موبایل</label></th>
-                                <td>
-                                    <input type="hidden" name="portfolio[<?php echo $index; ?>][mobile_image]"
-                                        class="mobile-image-url" value="<?php echo esc_attr($portfolio['mobile_image']); ?>">
-                                    <input type="button" class="button upload-image-button" value="آپلود تصویر"
-                                        data-target="mobile">
-                                    <div class="image-preview mobile-image-preview">
-                                        <?php if ($portfolio['mobile_image']): ?>
-                                            <img src="<?php echo esc_url($portfolio['mobile_image']); ?>" style="max-width: 200px;">
-                                        <?php endif; ?>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-            <p>
-                <button type="button" class="button add-portfolio">افزودن نمونه کار جدید</button>
-            </p>
-            <?php submit_button(); ?>
-        </form>
-    </div>
-    <script>
-        jQuery(document).ready(function ($) {
-            if (typeof wp === 'undefined' || typeof wp.media === 'undefined') {
-                console.error('wp.media is not loaded');
-                return;
-            }
-            $(document).on('click', '.upload-image-button', function (e) {
-                e.preventDefault();
-                var button = $(this);
-                var target = button.data('target');
-                var container = button.closest('.portfolio-item');
-                var image_url_field = container.find('.' + target + '-image-url');
-                var image_preview = container.find('.' + target + '-image-preview');
-                var frame = wp.media({
-                    title: 'انتخاب تصویر',
-                    button: { text: 'استفاده از تصویر' },
-                    multiple: false
-                });
-                frame.on('select', function () {
-                    var attachment = frame.state().get('selection').first().toJSON();
-                    image_url_field.val(attachment.url);
-                    image_preview.html('<img src="' + attachment.url + '" style="max-width: 200px;">');
-                });
-                frame.open();
-            });
-            $('.add-portfolio').on('click', function () {
-                var container = $('#portfolio-container');
-                var index = container.find('.portfolio-item').length;
-                var template = `
-                    <div class="portfolio-item" data-index="${index}">
-                        <h3>نمونه کار ${index + 1}
-                            <button type="button" class="button remove-portfolio">حذف</button>
-                        </h3>
-                        <table class="form-table">
-                            <tr>
-                                <th><label>نام نمونه کار</label></th>
-                                <td><input type="text" name="portfolio[${index}][name]" class="regular-text"></td>
-                            </tr>
-                            <tr>
-                                <th><label>نوع سایت</label></th>
-                                <td><input type="text" name="portfolio[${index}][type]" class="regular-text"></td>
-                            </tr>
-                            <tr>
-                                <th><label>مدت زمان انجام</label></th>
-                                <td><input type="text" name="portfolio[${index}][duration]" class="regular-text"></td>
-                            </tr>
-                            <tr>
-                                <th><label>موقعیت</label></th>
-                                <td><input type="text" name="portfolio[${index}][location]" class="regular-text"></td>
-                            </tr>
-                            <tr>
-                                <th><label>URL سایت</label></th>
-                                <td><input type="url" name="portfolio[${index}][url]" class="regular-text"></td>
-                            </tr>
-                            <tr>
-                                <th><label>افکت آبی</label></th>
-                                <td>
-                                    <label><input type="radio" name="portfolio[${index}][blue_effect]" value="enabled"> فعال</label>
-                                    <label><input type="radio" name="portfolio[${index}][blue_effect]" value="disabled" checked> غیرفعال</label>
-                                </td>
-                            </tr>
-                            <tr class="image-section">
-                                <th><label>عکس اصلی</label></th>
-                                <td>
-                                    <input type="hidden" name="portfolio[${index}][main_image]" class="main-image-url">
-                                    <input type="button" class="button upload-image-button" value="آپلود تصویر" data-target="main">
-                                    <div class="image-preview main-image-preview"></div>
-                                </td>
-                            </tr>
-                            <tr class="image-section">
-                                <th><label>عکس دسکتاپ</label></th>
-                                <td>
-                                    <input type="hidden" name="portfolio[${index}][desktop_image]" class="desktop-image-url">
-                                    <input type="button" class="button upload-image-button" value="آپلود تصویر" data-target="desktop">
-                                    <div class="image-preview desktop-image-preview"></div>
-                                </td>
-                            </tr>
-                            <tr class="image-section">
-                                <th><label>عکس موبایل</label></th>
-                                <td>
-                                    <input type="hidden" name="portfolio[${index}][mobile_image]" class="mobile-image-url">
-                                    <input type="button" class="button upload-image-button" value="آپلود تصویر" data-target="mobile">
-                                    <div class="image-preview mobile-image-preview"></div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>`;
-                container.append(template);
-            });
-            $(document).on('click', '.remove-portfolio', function () {
-                if ($('.portfolio-item').length > 1) {
-                    $(this).closest('.portfolio-item').remove();
-                    $('.portfolio-item').each(function (i) {
-                        $(this).attr('data-index', i);
-                        $(this).find('h3').text('نمونه کار ' + (i + 1));
-                        $(this).find('input, button').each(function () {
-                            var name = $(this).attr('name');
-                            if (name) {
-                                $(this).attr('name', name.replace(/portfolio\[\d+\]/, 'portfolio[' + i + ']'));
-                            }
-                        });
-                    });
-                }
-            });
-        });
-    </script>
-    <?php
-}
-// بارگذاری استایل‌ها و اسکریپت‌ها
-add_action('admin_enqueue_scripts', 'theme_settings_enqueue_scripts');
-
-function theme_settings_enqueue_scripts($hook)
-{
-    if ($hook !== 'toplevel_page_theme-settings') {
-        return;
-    }
-    wp_enqueue_style('theme-settings', get_template_directory_uri() . '/_inc/meta-box/css/style.css', [], '1.0');
-    wp_enqueue_media();
-    wp_enqueue_script('jquery');
-    wp_enqueue_script('theme-admin-js', get_template_directory_uri() . '/_inc/meta-box/js/admin.js', ['jquery'], null, true);
+    return json_encode($sanitized);
 }
 ?>

@@ -30,11 +30,11 @@
                 <h2>درباره ما</h2>
                 <p>
                     <?php
-                    $about_page = get_page_by_path('about-us'); // اگر اسلاگ صفحه about-us است
-                    $about_page_id = $about_page->ID;
-                    $meta_content = get_post_meta($about_page->ID, '_page_header_text_key', true);
+                    $theme_options = get_option('cyberisho_main_option', []);
+                    $home_options = $theme_options['home'];
+                    $meta_content = $home_options['home_about_text'];
                     $limited_content = mb_substr($meta_content, 0, 485, 'UTF-8'); // برش با پشتیبانی از UTF-8
-                    echo $limited_content . ' ...';
+                    echo $limited_content;
                     ?>
 
                 </p>

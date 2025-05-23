@@ -19,7 +19,7 @@
   </title>
 </head>
 
-<body dir="rtl">
+< dir="rtl">
   <svg style="display: none">
     <symbol id="favicon-logo-icon" viewBox="0 0 512 512">
       <g id="#2a00c4ff">
@@ -153,6 +153,7 @@
   </svg>
 
   <!--************************* start header *************************-->
+
   <header>
     <div class="top-line"></div>
     <nav class="large-responsive">
@@ -208,7 +209,11 @@
           <div class="col-2 contact">
             <a href="">
               <div class="d-flex wrapper">
-                <p dir="ltr" ><?php echo get_option('contact_hotline', ''); ?></p>
+                <?php
+                $theme_options = get_option('cyberisho_main_option', []);
+                $contact_options = $theme_options['contact'];
+                ?>
+                <p dir="ltr"><?php echo $contact_options['contact_hotline']; ?></p>
                 <svg>
                   <use href="#telephone-icon"></use>
                 </svg>

@@ -1,4 +1,7 @@
 <!--************************* start metting section *************************-->
+<?php 
+
+?>
 <div class="meeting-section animated-section">
     <div class="container-fluid">
         <div class="row">

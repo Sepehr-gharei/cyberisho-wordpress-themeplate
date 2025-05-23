@@ -179,3 +179,20 @@ function get_excerpt_article_title($text) {
 
     return $excerpt;
 }
+
+
+function get_excerpt_blog_item_title($text) {
+    if (!is_string($text)) {
+        return '';
+    }
+
+    // گرفتن 34 حرف اول متن ورودی به صورت ایمن
+    $excerpt = mb_substr($text, 0, 32, 'UTF-8');
+
+    // اضافه کردن "..." در صورتی که متن بیشتر از 34 حرف باشد
+    if (mb_strlen($text, 'UTF-8') > 32) {
+        $excerpt .= '…'; // یا '...' بسته به سبک مورد نظر
+    }
+
+    return $excerpt;
+}
