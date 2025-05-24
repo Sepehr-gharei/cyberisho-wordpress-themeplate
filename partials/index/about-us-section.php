@@ -1,4 +1,8 @@
 <!--************************* start about us *************************-->
+<?php
+  $theme_options = get_option('cyberisho_main_option', []);
+  $home_options = $theme_options['home'];
+  ?>
 <div class="about-us-section">
     <div class="container">
         <div class="row">
@@ -30,8 +34,7 @@
                 <h2>درباره ما</h2>
                 <p>
                     <?php
-                    $theme_options = get_option('cyberisho_main_option', []);
-                    $home_options = $theme_options['home'];
+                
                     $meta_content = $home_options['home_about_text'];
                     $limited_content = mb_substr($meta_content, 0, 485, 'UTF-8'); // برش با پشتیبانی از UTF-8
                     echo $limited_content;

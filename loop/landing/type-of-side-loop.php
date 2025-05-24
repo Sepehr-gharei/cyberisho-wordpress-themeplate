@@ -1,5 +1,8 @@
 <?php
-$site_types = get_option('landing_site_types', []);
+$theme_options = get_option('cyberisho_main_option', []);
+$landing_options = $theme_options['landing'];
+
+$site_types = $landing_options['landing_site_types'];
 
 // Get the 5 most recent site types (last 5 items in the array)
 $current_site_types = array_slice($site_types, -5, 5, true);

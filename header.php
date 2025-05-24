@@ -19,7 +19,7 @@
   </title>
 </head>
 
-< dir="rtl">
+<body dir="rtl">
   <svg style="display: none">
     <symbol id="favicon-logo-icon" viewBox="0 0 512 512">
       <g id="#2a00c4ff">

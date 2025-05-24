@@ -1,0 +1,80 @@
+.button.button-primary {
+  width: 100%;
+  margin: 20px 0;
+}
+.button.cyberisho-submit {
+  width: 100%;
+  color: white;
+  background: #0e7c0e;
+}
+.repeater-table-entry {
+  padding: 30px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 10px 0;
+  background-color: rgb(224, 224, 224);
+}
+.delete-repeater-row {
+  color: white;
+  font-size: 24px;
+  width: 100%;
+  border-radius: 22px;
+  border: none;
+  background: red;
+}
+.field-textarea,
+.field-text,
+.field-select,
+.field-url {
+  display: flex;
+  padding: 10px 0;
+  margin-left: 10px;
+  width: 45%;
+  flex-direction: column;
+}
+.field-textarea label,
+.field-text label,
+.field-select label,
+.field-url label {
+  color: blue;
+  margin: 20px 0 10px 0;
+  font-size: 20px;
+}
+
+.field-repeater {
+  display: flex;
+  flex-direction: column;
+}
+.field-repeater label {
+  margin: 20px 0;
+  color: blue;
+  font-size: 30px;
+}
+.repeater-table-entry .field-image-uploader {
+  padding: 20px 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.repeater-table-entry .field-image-uploader label {
+  color: blue;
+  margin: 20px 0 10px 0;
+  font-size: 20px;
+}
+.field-image-uploader .align-items-center button {
+  width: 15%;
+}
+.field-image-uploader .align-items-center input {
+  width: 50%;
+}
+.field-image-uploader .field-img-container img {
+  border-radius: 10px;
+  margin: 10px 0;
+  width: 502px;
+  object-fit: cover;
+  height: 200px;
+}
+h3.field-heading {
+  font-size: 26px;
+  color: rgb(87, 87, 185);
+}

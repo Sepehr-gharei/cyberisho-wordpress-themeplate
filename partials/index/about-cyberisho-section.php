@@ -2,6 +2,7 @@
 <?php
 $theme_options = get_option('cyberisho_main_option', []);
 $home_options = $theme_options['home'];
+
 ?>
 <div class="about-cyberisho">
   <div class="header">

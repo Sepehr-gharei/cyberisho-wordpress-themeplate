@@ -1,7 +1,8 @@
 <!--************************* start metting section *************************-->
-<?php 
-
-?>
+<?php
+  $theme_options = get_option('cyberisho_main_option', []);
+  $home_options = $theme_options['home'];
+  ?>
 <div class="meeting-section animated-section">
     <div class="container-fluid">
         <div class="row">
@@ -13,10 +14,10 @@
             </div>
             <div class="text-field">
                 <h3>
-                    <h2><?php echo get_option('home_meeting_title'); ?></h2>
+                    <h2><?php echo $home_options['home_meeting_title']; ?></h2>
                 </h3>
                 <p>
-                <p><?php echo get_option('home_meeting_content') ?></p>
+                <p><?php echo $home_options['home_meeting_content'];?></p>
                 </p>
             </div>
         </div>

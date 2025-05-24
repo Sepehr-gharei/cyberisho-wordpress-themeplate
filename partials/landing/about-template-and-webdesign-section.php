@@ -7,8 +7,11 @@
         <div class="container">
           <div class="wrapper">
             <?php
-            $initial_header = get_option('landing_footer_header', '');
-            $initial_content = get_option('landing_footer_content', '');
+            $theme_options = get_option('cyberisho_main_option', []);
+            $landing_options = $theme_options['landing'];
+
+            $initial_header = $landing_options['landing_footer_header'];
+            $initial_content = $landing_options['landing_footer_content'];
             ?>
 
 

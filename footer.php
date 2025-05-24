@@ -1,7 +1,9 @@
-<?php 
-$theme_options = get_option('cyberisho_main_option', [] );
-$footer_content_options = $theme_options['footer-content'];
+<?php
+$theme_options = get_option('cyberisho_main_option', []);
 $contact_options = $theme_options['contact'];
+$theme_options = get_option('cyberisho_main_option', []);
+$footer_content_options = $theme_options['footer-content'];
+
 ?>
 <footer class="animated-section">
   <div class="container-fluid">
@@ -37,8 +39,8 @@ $contact_options = $theme_options['contact'];
         $footer_text = $footer_content_options['footer_text'];
         $footer_icon_1_image = $footer_content_options['footer_icon_1_image'];
         $footer_icon_2_image = $footer_content_options['footer_icon_2_image'];
-        $footer_icon_1_url = $footer_content_options['footer_icon_1_url'] ;
-        $footer_icon_2_url =$footer_content_options['footer_icon_2_url'] ;
+        $footer_icon_1_url = $footer_content_options['footer_icon_1_url'];
+        $footer_icon_2_url = $footer_content_options['footer_icon_2_url'];
         ?>
         <strong> <?php echo wp_kses_post($footer_text); ?></strong>
 
@@ -90,8 +92,8 @@ $contact_options = $theme_options['contact'];
             </div>
             <div class="col-12 col-md-6 telephone">
               <div class="number">
-                <pre><?php echo $contact_options['contact_hotline'];?></pre>
-                <pre><?php echo $contact_options['contact_emergency'];?></pre>
+                <pre><?php echo $contact_options['contact_hotline']; ?></pre>
+                <pre><?php echo $contact_options['contact_emergency']; ?></pre>
               </div>
               <div>
                 <svg viewBox="0 0 458 458">

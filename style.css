@@ -4730,7 +4730,7 @@ footer .samandehi-2 {
   right: 16px;
 }
 .video-landing-section .left-info .item:last-child .text {
-  padding: 20px 30px 20px 40px;
+  padding: 20px 30px 20px 60px;
 }
 .video-landing-section .right-info .item span p {
   box-shadow: 0px 0px 0px 9px var(--dark-blue-color);
@@ -5067,11 +5067,6 @@ webdesing-text-field-section {
   padding: 50px 0;
 }
 
-.our-work-samples-section .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 15px;
-}
 
 .our-work-samples-section .title {
   margin-bottom: 40px;
@@ -5449,7 +5444,7 @@ webdesing-text-field-section {
     margin: 20px 0;
   }
   .video-landing-section .left-info .item:last-child .text {
-    padding: 20px 20px 20px 20px;
+    padding: 20px 20px 20px 40px;
   }
   .video-landing-section .video-wrapper {
     height: 330px;
@@ -5468,11 +5463,7 @@ webdesing-text-field-section {
     strong {
     font-size: 22px;
   }
-  .our-work-samples-section .container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 0 15px;
-  }
+
   .webdesing-price-section .wrapper-box .box {
     font-size: 14px;
   }

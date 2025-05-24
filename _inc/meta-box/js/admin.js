@@ -1,9 +1,9 @@
 jQuery(document).ready(function($) {
-    // آپلود تصویر تکی
+    // Single Image Upload
     $(document).on('click', '.field-upload-img:not(.multiple)', function(e) {
         e.preventDefault();
         var button = $(this);
-        var inputId = button.data('input-id');
+        var inputId = button.data('input-id') || button.closest('.cyberisho-field').find('input').attr('name');
         var input = $('input[name="' + inputId + '"]');
         var imgContainer = button.closest('.flex').find('.field-img-container');
         var deleteLink = button.closest('.flex').find('.field-delete-img');
@@ -24,11 +24,11 @@ jQuery(document).ready(function($) {
         frame.open();
     });
 
-    // حذف تصویر تکی
+    // Delete Single Image
     $(document).on('click', '.field-delete-img:not([data-id])', function(e) {
         e.preventDefault();
         var button = $(this);
-        var inputId = button.data('input-id');
+        var inputId = button.data('input-id') || button.closest('.cyberisho-field').find('input').attr('name');
         var input = $('input[name="' + inputId + '"]');
         var imgContainer = button.closest('.flex').find('.field-img-container');
 
@@ -37,11 +37,11 @@ jQuery(document).ready(function($) {
         button.addClass('hidden');
     });
 
-    // آپلود تصاویر چندگانه
+    // Multiple Image Upload
     $(document).on('click', '.field-upload-img.multiple', function(e) {
         e.preventDefault();
         var button = $(this);
-        var inputId = button.data('input-id');
+        var inputId = button.data('input-id') || button.closest('.cyberisho-field').find('input').attr('name');
         var input = $('input[name="' + inputId + '"]');
         var imgContainer = button.closest('.flex').find('.field-img-container');
 
@@ -66,12 +66,12 @@ jQuery(document).ready(function($) {
         frame.open();
     });
 
-    // حذف تصویر از گالری
+    // Delete Image from Gallery
     $(document).on('click', '.field-delete-img[data-id]', function(e) {
         e.preventDefault();
         var button = $(this);
         var imgItem = button.closest('.field-img-item');
-        var inputId = button.closest('.field-multiple-image-uploader').find('.field-upload-img').data('input-id');
+        var inputId = button.closest('.field-multiple-image-uploader').find('.field-upload-img').data('input-id') || button.closest('.cyberisho-field').find('input').attr('name');
         var input = $('input[name="' + inputId + '"]');
         var idToRemove = button.data('id');
         var ids = input.val().split(',').filter(function(id) {
@@ -82,13 +82,16 @@ jQuery(document).ready(function($) {
         imgItem.remove();
     });
 
-    // افزودن ردیف جدید به repeater
+    // Add Repeater Row for All Sections
     $(document).on('click', '.add-repeater-row', function(e) {
         e.preventDefault();
         var button = $(this);
         var repeater = button.closest('.field-repeater');
         var repeaterId = repeater.attr('id');
-        var settings = JSON.parse(button.attr('data-settings'));
+        var settings = button.data('settings');
+        if (typeof settings === 'string') {
+            settings = JSON.parse(settings);
+        }
         var count = repeater.find('.repeater-table').length;
 
         var html = '<div id="' + repeaterId + '[' + count + ']" class="repeater-table w100">' +
@@ -121,6 +124,14 @@ jQuery(document).ready(function($) {
                         '<div class="field-img-container"></div>' +
                         '<a class="field-delete-img hidden" href="#" data-input-id="' + fieldId + '">حذف تصویر</a>' +
                         '</div></div>';
+            } else if (type === 'select') {
+                html += '<div id="' + fieldId + '" class="cyberisho-field field-select">' +
+                        '<label for="' + fieldId + '">' + title + '</label>' +
+                        '<select class="cyberisho-select select-single" name="' + fieldId + '">';
+                $.each(setting.content, function(val, label) {
+                    html += '<option value="' + val + '">' + label + '</option>';
+                });
+                html += '</select></div>';
             }
         });
 
@@ -128,7 +139,7 @@ jQuery(document).ready(function($) {
         button.before(html);
     });
 
-    // حذف ردیف از repeater
+    // Delete Repeater Row
     $(document).on('click', '.delete-repeater-row', function(e) {
         e.preventDefault();
         var button = $(this);
@@ -136,10 +147,10 @@ jQuery(document).ready(function($) {
         repeaterTable.remove();
     });
 
-    // انتخاب رنگ
+    // Color Picker
     $('.color-picker').wpColorPicker();
 
-    // اطمینان از اینکه select2 کار می‌کند
+    // Select2 Initialization
     $('.select-multiple').select2({
         placeholder: 'انتخاب کنید',
         allowClear: true

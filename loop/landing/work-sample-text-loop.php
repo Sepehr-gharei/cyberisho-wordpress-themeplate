@@ -1,5 +1,7 @@
 <?php
-$portfolios = get_option('theme_portfolios', []);
+$theme_options = get_option('cyberisho_main_option', []);
+$portfolio_options = $theme_options['portfolio'];
+$portfolios = $portfolio_options['theme_portfolios'];
 $portfolios = array_slice($portfolios, 0, 5); // فقط ۵ آیتم اول
 $index = 0; // برای اضافه کردن کلاس active به اولین wrapper
 ?>

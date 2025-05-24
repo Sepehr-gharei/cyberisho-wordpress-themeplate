@@ -51,15 +51,15 @@ add_action('save_post', 'save_my_portfolio_metabox');
 */
 
 
-function remove_editor_from_pages()
-{
-    // فقط برای برگه‌ها
-    if (isset($_GET['post']) && get_post_type($_GET['post']) === 'page' || isset($_GET['post_type']) && $_GET['post_type'] === 'page') {
-        // حذف ویرایشگر پیش‌فرض
-        remove_post_type_support('page', 'editor');
-    }
-}
-add_action('admin_init', 'remove_editor_from_pages');
+// function remove_editor_from_pages()
+// {
+//     // فقط برای برگه‌ها
+//     if (isset($_GET['post']) && get_post_type($_GET['post']) === 'page' || isset($_GET['post_type']) && $_GET['post_type'] === 'page') {
+//         // حذف ویرایشگر پیش‌فرض
+//         remove_post_type_support('page', 'editor');
+//     }
+// }
+// add_action('admin_init', 'remove_editor_from_pages');
 
 //***************** افزودن متا باکس متن هدر برگه ها**********************
 //***************** افزودن متا باکس متن هدر برگه ها**********************
@@ -907,12 +907,12 @@ function save_my_landing_metaboxes($post_id)
             $text = sanitize_textarea_field($_POST[$container]);
             $char_count = mb_strlen($text, 'UTF-8');
 
-            if ($char_count > 42) {
+            if ($char_count > 43) {
                 $has_error = true;
                 set_transient(
                     'landing_container_error_' . $container,
                     sprintf(
-                        'متن وارد شده در کانتینر %s باید حداکثر 42 کاراکتر باشد (تعداد کاراکترهای وارد شده: %d).',
+                        'متن وارد شده در کانتینر %s باید حداکثر 43 کاراکتر باشد (تعداد کاراکترهای وارد شده: %d).',
                         str_replace('landing_container_', '', $container),
                         $char_count
                     ),
@@ -979,9 +979,9 @@ function add_container_character_counter()
                         var charCount = text.length;
                         var counter = $(this).next('.character-counter');
 
-                        counter.text('تعداد کاراکترها: ' + charCount + ' (حداکثر 42 کاراکتر مجاز است)');
+                        counter.text('تعداد کاراکترها: ' + charCount + ' (حداکثر 43 کاراکتر مجاز است)');
 
-                        if (charCount > 42) {
+                        if (charCount > 43) {
                             counter.css('color', 'red');
                         } else {
                             counter.css('color', 'green');

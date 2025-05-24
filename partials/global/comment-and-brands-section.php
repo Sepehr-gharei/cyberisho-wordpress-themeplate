@@ -1,9 +1,9 @@
 <!--************************* start comment and brands *************************-->
 <?php
-$theme_options = get_option('cyberisho_main_option', []);
-$site_info_options = $theme_options['site-info'];
+  $theme_options = get_option('cyberisho_main_option', []);
+  $site_info_options = $theme_options['site-info'];
 
-?>
+  ?>
 <div class="comment-and-brands animated-section">
     <div class="container">
         <div class="row">

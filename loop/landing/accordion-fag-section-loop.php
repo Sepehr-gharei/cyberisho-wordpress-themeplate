@@ -1,6 +1,12 @@
 <?php
+
+  $theme_options = get_option('cyberisho_main_option', []);
+
+  $home_options = $theme_options['home'];
+
+
 // دریافت داده‌ها از get_option
-$faq_items = get_option('home_faq_items', []);
+$faq_items = $home_options['home_faq_items'];
 
 // بررسی وجود داده
 if (!empty($faq_items) && is_array($faq_items)) {

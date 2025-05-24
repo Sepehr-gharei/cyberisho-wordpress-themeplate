@@ -1,6 +1,10 @@
 <?php
+
+  $theme_options = get_option('cyberisho_main_option', []);
+  $landing_options = $theme_options['landing'];
+
 // دریافت داده‌ها از get_option
-$faq_items = get_option('landing_page_faqs', []);
+$faq_items = $landing_options['landing_page_faqs'];
 
 // بررسی وجود داده
 if (!empty($faq_items) && is_array($faq_items)) {

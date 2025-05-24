@@ -1,128 +1,123 @@
 <?php
-class Admin_Helper
-{
-    public function cyberisho_Text($id, $title, $content, $width)
-    {
+
+class Admin_Helper {
+
+    public function cyberisho_Text($id, $title, $content, $width) {
         $field = "<div id='$id' class='cyberisho-field $width field-text'>"
             . "<label for='$id'>$title</label>"
-            . "<input type='text' value='" . (!empty($content) ? esc_attr($content) : '') . "' name='$id' />"
-            . "</div>";
+            . "<input type='text' value='". (!empty($content) ? esc_attr($content) : '') ."' name='$id' />"
+        . "</div>";
 
         return $field;
     }
 
-    public function cyberisho_Textarea($id, $title, $content, $width)
-    {
+    public function cyberisho_Textarea($id, $title, $content, $width) {
+        $escaped_content = !empty($content) ? esc_attr($content) : '';
+        $br_content = nl2br($escaped_content);
         $field = "<div id='$id' class='cyberisho-field $width field-textarea'>"
             . "<label for='$id'>$title</label>"
-            . "<textarea name='$id' rows='4' cols='50'>" . (!empty($content) ? esc_textarea($content) : '') . "</textarea>"
-            . "</div>";
+            . "<textarea name='$id' rows='4' cols='50'>". (!empty($content) ? esc_attr($content) : '') ."</textarea>"
+        . "</div>";
 
         return $field;
     }
 
-    public function cyberisho_URL($id, $title, $content, $width)
-    {
+    public function cyberisho_URL($id, $title, $content, $width) {
         $field = "<div id='$id' class='cyberisho-field $width field-url'>"
             . "<label for='$id'>$title</label>"
-            . "<input type='url' value='" . (!empty($content) ? esc_url($content) : '') . "' name='$id' />"
-            . "</div>";
+            . "<input type='text' value='". (!empty($content) ? esc_attr($content) : '') ."' name='$id' />"
+        . "</div>";
 
         return $field;
     }
 
-    public function cyberisho_Image_Uploader($id, $title, $content, $width)
-    {
+    public function cyberisho_Image_Uploader($id, $title, $content, $width) {
         $field = "<div id='$id' class='cyberisho-field $width field-image-uploader'>"
             . "<label for='$id'>$title</label>"
             . "<div class='flex align-items-center'>"
-            . "<button type='button' class='button field-upload-img' data-input-id='$id'>انتخاب تصویر</button>"
-            . "<input value='" . (!empty($content) ? esc_url($content) : '') . "' type='text' class='field-img-url' name='$id' readonly />"
-            . "<div class='field-img-container'>" . (!empty($content) ? '<img src="' . esc_url($content) . '" alt="' . esc_attr($title) . '" style="max-width: 100px; max-height: 100px;" />' : '') . "</div>"
-            . "<a class='field-delete-img" . (empty($content) ? ' hidden' : '') . "' href='#' data-input-id='$id'>حذف تصویر</a>"
+                . "<button class='button field-upload-img' id='chooseLogo'>انتخاب تصویر</button>"
+                . "<input value='". (!empty($content) ? esc_url($content) : '') ."' type='text' class='field-img-url' name='$id' />"
+                . "<div class='field-img-container'>". (!empty($content) ? '<img src="'. esc_url($content) .'" alt="'. $id . '">' : '') ."</div>"
+                . "<a class='field-delete-img". (empty($content) ? ' hidden' : '') ."' href='#'>حذف تصویر</a>"
             . "</div>"
-            . "</div>";
+        . "</div>";
 
         return $field;
     }
 
-    public function cyberisho_Multiple_Image_Uploader($id, $title, $content, $width)
-    {
-        $content = is_array($content) ? $content : explode(',', $content);
+    public function cyberisho_Multiple_Image_Uploader($id, $title, $content, $width) {
+        $content = explode(',', $content);
         $field = "<div id='$id' class='cyberisho-field $width field-multiple-image-uploader'>"
             . "<label for='$id'>$title</label>"
             . "<div class='flex align-items-center flex-wrap'>"
-            . "<button type='button' class='button field-upload-img multiple' data-input-id='$id'>انتخاب تصاویر</button>"
-            . "<input value='" . (!empty($content) ? esc_attr(implode(',', $content)) : '') . "' type='text' class='field-img-ids' name='$id' readonly />"
-            . "<div class='field-img-container'>";
-        if (!empty($content) && is_array($content)) {
-            foreach ($content as $image_id) {
-                $image_url = wp_get_attachment_image_url($image_id, 'thumbnail');
-                if ($image_url) {
-                    $field .= "<div class='field-img-item' data-id='" . esc_attr($image_id) . "'><img src='" . esc_url($image_url) . "' alt='' style='max-width: 100px; max-height: 100px;' /><a href='#' class='field-delete-img' data-id='" . esc_attr($image_id) . "'>حذف</a></div>";
+                . "<button class='button field-upload-img' id='chooseLogo'>انتخاب تصاویر</button>"
+                . "<input value='". (!empty($content) ? implode(',', $content) : '') ."' type='text' class='field-img-ids' name='$id' />"
+                . "<div class='field-img-container'>";
+                if (!empty($content) && is_array($content)) {
+                    foreach ($content as $image_id) {
+                        $image_url = wp_get_attachment_image_url($image_id, 'thumbnail');
+                        if ($image_url) {
+                            $field .= "<div class='field-img-item' data-id='$image_id'><img src='$image_url' alt=''></div>";
+                        }
+                    }
                 }
-            }
-        }
-        $field .= "</div>"
+                $field .= "</div>"
             . "</div>"
-            . "</div>";
-
+        . "</div>";
+    
         return $field;
     }
 
-    public function cyberisho_Checkbox($id, $title, $content, $width)
-    {
+    public function cyberisho_Checkbox($id, $title, $content, $width) {
         $field = "<div id='$id' class='cyberisho-field $width field-checkbox'>"
             . "<label for='$id'>$title</label>"
             . "<div>"
-            . "<input type='checkbox' name='$id' " . ($content ? 'checked' : '') . " value='1' />"
-            . "<span class='btn-toggle'></span>"
+                . "<input type='checkbox' name='$id' ". ($content == true ? ' checked' : '') ." >"
+                . "<span class='btn-toggle'></span>"
             . "</div>"
-            . "</div>";
+        . "</div>";
 
         return $field;
     }
 
-    public function cyberisho_Select($id, $title, $content, $selected, $width)
-    {
-        $field = "<div id='$id' class='cyberisho-field $width field-select'>"
+    public function cyberisho_Select($id, $title, $content, $selected, $width) {
+        $field = '';
+        $field .= "<div id='$id' class='cyberisho-field $width field-select'>"
             . "<label for='$id'>$title</label>"
             . "<select class='cyberisho-select select-single' name='$id'>";
-        foreach ($content as $key => $value) {
-            $field .= "<option " . (strval($selected) === strval($key) ? 'selected' : '') . " value='" . esc_attr($key) . "'>" . esc_html($value) . "</option>";
-        }
-        $field .= "</select>"
-            . "</div>";
+                foreach($content as $id => $value) {
+                    $field .= "<option ". ($selected == $id ? ' selected' : '') ." value='$id'>$value</option>";
+                }
+            $field .= "</select>"
+        . "</div>";
 
         return $field;
     }
 
-    public function cyberisho_Select2($id, $select_id, $title, $content, $selected, $width)
-    {
-        $field = "<div id='$id' class='cyberisho-field $width field-select2'>"
+    public function cyberisho_Select2($id, $select_id, $title, $content, $selected, $width) {
+        $field = '';
+        $field .= "<div id='$id' class='cyberisho-field $width field-select2'>"
             . "<label for='$id'>$title</label>"
-            . "<select class='cyberisho-select select-multiple' name='" . esc_attr($select_id) . "[]' multiple='multiple'>";
-        foreach ($content as $key => $value) {
-            $field .= "<option " . (is_array($selected) && in_array($key, $selected) ? 'selected' : '') . " value='" . esc_attr($key) . "'>" . esc_html($value) . "</option>";
-        }
-        $field .= "</select>"
-            . "</div>";
+            . "<select class='cyberisho-select select-multiple' name='$select_id' multiple='multiple'>";
+                foreach($content as $id => $value) {
+                    $field .= "<option ". (!empty($selected) && in_array($id, $selected) ? ' selected' : '') ." value='$id'>$value</option>";
+                }
+            $field .= "</select>"
+        . "</div>";
 
         return $field;
     }
 
-    public function cyberisho_Color($id, $title, $content, $width)
-    {
+    public function cyberisho_Color($id, $title, $content, $width) {
         $field = "<div id='$id' class='cyberisho-field $width field-color'>"
             . "<label for='$id'>$title</label>"
-            . "<input type='text' class='color-picker' data-alpha-color-type='hex' data-alpha-enabled='true' value='" . (!empty($content) ? esc_attr($content) : '#000') . "' name='$id' />"
-            . "</div>";
+            . "<input type='text' class='color-picker' data-alpha-color-type='hex' data-alpha-enabled='true' value='". (!empty($content) ? esc_attr($content) : '#000') ."' name='$id' />"
+        . "</div>";
 
         return $field;
     }
 
-    public function cyberisho_Editor($id, $title, $content, $width)
-    {
+    public function cyberisho_Editor($id, $title, $content, $width) {
         $settings = array(
             'textarea_name' => $id,
             'wpautop' => false,
@@ -132,30 +127,31 @@ class Admin_Helper
             'editor_height' => 200,
             'tinymce' => array('plugins' => 'fullscreen,wordpress,wplink,textcolor'),
         );
-
-        ob_start();
-        echo "<div id='$id' class='cyberisho-field $width field-editor'>";
-        echo "<label for='$id'>$title</label>";
-        wp_editor(html_entity_decode(stripslashes($content)), $id, $settings);
-        echo "</div>";
-        return ob_get_clean();
+    
+        $content = html_entity_decode($content);
+        $content = stripslashes($content);
+        return wp_editor($content, $id, $settings);
     }
 
-    public function cyberisho_Repeater($id, $title, $section, $btn, $settings, $default, $width)
-    {
+    public function cyberisho_Repeater($id, $title, $section, $btn, $settings, $default, $width) {
         $field = '';
         $theme_options = get_option('cyberisho_main_option', []);
-        $field .= "<div id='$id' class='cyberisho-field field-repeater $width'>"
+        
+        // Encode settings as JSON for the data-settings attribute
+        $json_settings = json_encode($settings, JSON_UNESCAPED_UNICODE);
+        
+        $field .= "<div id='$id' class='cyberisho-field field-repeater'>"
             . "<label for='$id'>$title</label>"
             . "<div class='main-repeater flex flex-wrap'>";
+        
         $get_option = (!empty($theme_options[$section]) ? $theme_options[$section] : '');
         if (!empty($get_option[$id])) {
             $i = -1;
             foreach ($get_option[$id] as $repeater) {
                 $i++;
-                $field .= "<div id='" . esc_attr($id . "[" . $i . "]") . "' class='repeater-table $width'>"
+                $field .= "<div id='". $id . "[" . $i . "]' class='repeater-table $width'>"
                     . "<div class='repeater-table-entry'>"
-                    . "<button type='button' class='button delete-repeater-row'>حذف</button>";
+                    . "<button class='delete-repeater-row'>حذف</button>";
                 foreach ($settings as $key => $setting) {
                     $parts = explode('[', $key);
                     $lastPart = end($parts);
@@ -175,70 +171,90 @@ class Admin_Helper
                         case 'image-uploader':
                             $field .= $this->cyberisho_Image_Uploader($key, $title, $default, $w);
                             break;
+                        case 'select':
+                            $field .= $this->cyberisho_Select($key, $title, $setting['content'], $default, $w);
+                            break;
                     }
                 }
                 $field .= "</div>"
                     . "</div>";
             }
         } else {
-            $field .= "<div id='" . esc_attr($id . "[0]") . "' class='repeater-table $width'>"
-                . "<div class='repeater-table-entry'>"
-                . "<button type='button' class='button delete-repeater-row'>حذف</button>";
-            foreach ($settings as $key => $setting) {
-                $parts = explode('[', $key);
-                $lastPart = end($parts);
-                $default_id = rtrim($lastPart, ']');
-                $type = $setting['type'];
-                $title = $setting['title'];
-                $key = $id . '[0][' . $default_id . ']';
-                $w = '';
-                $default = '';
-                switch ($type) {
-                    case 'text':
-                        $field .= $this->cyberisho_Text($key, $title, $default, $w);
-                        break;
-                    case 'textarea':
-                        $field .= $this->cyberisho_Textarea($key, $title, $default, $w);
-                        break;
-                    case 'image-uploader':
-                        $field .= $this->cyberisho_Image_Uploader($key, $title, $default, $w);
-                        break;
+            $field .= "<div id='". $id . "[0]' class='repeater-table $width'>"
+                . "<div class='repeater-table-entry'>";
+                foreach ($settings as $key => $setting) {
+                    $parts = explode('[', $key);
+                    $lastPart = end($parts);
+                    $default_id = rtrim($lastPart, ']');
+                    $type = $setting['type'];
+                    $title = $setting['title'];
+                    $field_id = $id . '[0][' . $default_id . ']';
+                    $w = '';
+                    $default = (!empty($get_option[$id][0][$default_id]) ? $get_option[$id][0][$default_id] : '');
+                    switch ($type) {
+                        case 'text':
+                            $field .= $this->cyberisho_Text($field_id, $title, $default, $w);
+                            break;
+                        case 'textarea':
+                            $field .= $this->cyberisho_Textarea($field_id, $title, $default, $w);
+                            break;
+                        case 'image-uploader':
+                            $field .= $this->cyberisho_Image_Uploader($field_id, $title, $default, $w);
+                            break;
+                        case 'select':
+                            $field .= $this->cyberisho_Select($field_id, $title, $setting['content'], $default, $w);
+                            break;
+                    }
                 }
-            }
-            $field .= "</div>"
-                . "</div>";
+                $field .= "</div>"
+                    . "</div>";
         }
-        $field .= "<button type='button' class='button w100 button-primary add-repeater-row' data-settings='" . esc_attr(json_encode($settings)) . "'>$btn</button>"
+        
+        // Add the data-settings attribute to the button
+        $field .= "<button class='button w100 button-primary add-repeater-row' data-settings='" . esc_attr($json_settings) . "'>$btn</button>"
             . "</div>"
-            . "</div>";
+        . "</div>";
 
         return $field;
     }
 
-    public function cyberisho_Heading($id, $title)
-    {
-        $field = "<h3 id='$id' class='cyberisho-field w100 field-heading'>" . esc_html($title) . "</h3>";
+    public function cyberisho_Heading($id, $title) {
+        $field = "<h3 id='$id' class='cyberisho-field w100 field-heading'>$title</h3>";
 
         return $field;
     }
 
-    public function cyberisho_Get_Post_Type($post_type)
-    {
+
+    public function cyberisho_Get_Post_Type($post_type) {
+        // Initialize an empty array to store post IDs and titles
         $posts = [];
-        $get_posts = get_posts(array('post_type' => $post_type, 'numberposts' => -1, 'post_status' => 'publish'));
+
+        // Validate the post_type parameter
+        if (empty($post_type) || !is_string($post_type)) {
+            return $posts; // Return empty array if post_type is invalid
+        }
+
+        // Fetch published posts of the specified post type
+        $get_posts = get_posts(array(
+            'post_type'   => $post_type,
+            'numberposts' => -1, // Retrieve all posts
+            'post_status' => 'publish',
+        ));
+
+        // Check if posts were found
         if (!empty($get_posts)) {
             foreach ($get_posts as $post) {
                 $posts[$post->ID] = $post->post_title;
             }
         }
+
         return $posts;
     }
 }
 
-class Main_Settings extends Admin_Helper
-{
-    protected function All_Settings()
-    {
+class Main_Settings extends Admin_Helper {
+
+    protected function All_Settings() {
         $settings = [
             'footer-content' => [
                 'menu' => 'محتواهای پاورچین',
@@ -353,7 +369,6 @@ class Main_Settings extends Admin_Helper
                             ],
                         ],
                     ],
-                    // بخش جدید: متن بالای عنوان
                     'above_brands_text' => [
                         'type' => 'heading',
                         'title' => 'متن بالای عنوان',
@@ -374,7 +389,6 @@ class Main_Settings extends Admin_Helper
                         'title' => 'محتوای دوم متن',
                         'w' => 'w50',
                     ],
-                    // بخش جدید: متن پایین برندها
                     'below_brands_text' => [
                         'type' => 'heading',
                         'title' => 'متن پایین برندها',
@@ -421,7 +435,6 @@ class Main_Settings extends Admin_Helper
                         'title' => 'تلگرام',
                         'w' => 'w50',
                     ],
-
                     'social_linkedin' => [
                         'type' => 'url',
                         'title' => 'لینکدین',
@@ -536,7 +549,6 @@ class Main_Settings extends Admin_Helper
                         'title' => 'درباره نمودار فوتر',
                         'w' => 'w100',
                     ],
-
                     'about_chart_items' => [
                         'type' => 'repeater',
                         'title' => 'آیتم‌های نمودار',
@@ -554,7 +566,6 @@ class Main_Settings extends Admin_Helper
                             ],
                         ],
                     ],
-
                 ],
             ],
             'landing' => [
@@ -562,54 +573,31 @@ class Main_Settings extends Admin_Helper
                 'lable' => 'تنظیمات صفحه لندینگ',
                 'settings' => [
                     'landing_initial_header' => [
-                        'type' => 'textarea',
-                        'title' => 'هدر اولیه',
+                        'type' => 'text',
+                        'title' => 'هدر اولیه قبل از انواع سایت ها',
                         'w' => 'w50',
                     ],
+                    'heading_landing_initial_content-2' => [
+                        'type' => 'heading',
+                        'title' => 'محتوای اولیه قبل از انواع سایت ها',
+                    ],
                     'landing_initial_content' => [
-                        'type' => 'textarea',
+                        'type' => 'editor',
                         'title' => 'محتوای اولیه',
                         'w' => 'w50',
                     ],
                     'landing_footer_header' => [
-                        'type' => 'textarea',
-                        'title' => 'هدر پاورقی',
+                        'type' => 'text',
+                        'title' => 'هدر پاورقی بعد از انواع سایت ها',
                         'w' => 'w50',
+                    ],
+                    'heading_landing_footer_content' => [
+                        'type' => 'heading',
+                        'title' => 'محتوای پاورقی بعد از انواع سایت ها',
                     ],
                     'landing_footer_content' => [
-                        'type' => 'textarea',
-                        'title' => 'محتوای پاورقی',
-                        'w' => 'w50',
-                    ],
-                    'landing_pricing_header' => [
-                        'type' => 'textarea',
-                        'title' => 'محتوای هدر قیمت‌گذاری',
-                        'w' => 'w100',
-                    ],
-                    'landing_pricing_rows' => [
-                        'type' => 'repeater',
-                        'title' => 'سطرهای قیمت‌گذاری',
-                        'section' => 'landing',
-                        'btn' => 'افزودن سطر جدید',
-                        'w' => 'w100',
-                        'settings' => [
-                            'landing_pricing_rows[0][description]' => [
-                                'type' => 'textarea',
-                                'title' => 'شرح خدمات',
-                            ],
-                            'landing_pricing_rows[0][duration]' => [
-                                'type' => 'text',
-                                'title' => 'مدت زمان',
-                            ],
-                            'landing_pricing_rows[0][price]' => [
-                                'type' => 'text',
-                                'title' => 'قیمت',
-                            ],
-                        ],
-                    ],
-                    'landing_pricing_footer' => [
-                        'type' => 'textarea',
-                        'title' => 'محتوای فوتر قیمت‌گذاری',
+                        'type' => 'editor',
+                        'title' => 'متن محتوای پاورقی',
                         'w' => 'w100',
                     ],
                     'landing_site_types' => [
@@ -648,6 +636,45 @@ class Main_Settings extends Admin_Helper
                                 'title' => 'ویژگی 3',
                             ],
                         ],
+                    ],
+                    'heading_landing_pricing_header' => [
+                        'type' => 'heading',
+                        'title' => 'محتوای هدر قیمت‌گذاری',
+                    ],
+                    'landing_pricing_header' => [
+                        'type' => 'editor',
+                        'title' => 'متن محتوای هدر قیمت‌گذاری',
+                        'w' => 'w100',
+                    ],
+                    'landing_pricing_rows' => [
+                        'type' => 'repeater',
+                        'title' => 'سطرهای قیمت‌گذاری',
+                        'section' => 'landing',
+                        'btn' => 'افزودن سطر جدید',
+                        'w' => 'w100',
+                        'settings' => [
+                            'landing_pricing_rows[0][description]' => [
+                                'type' => 'text',
+                                'title' => 'شرح خدمات',
+                            ],
+                            'landing_pricing_rows[0][duration]' => [
+                                'type' => 'text',
+                                'title' => 'مدت زمان',
+                            ],
+                            'landing_pricing_rows[0][price]' => [
+                                'type' => 'text',
+                                'title' => 'قیمت',
+                            ],
+                        ],
+                    ],
+                    'heading_landing_pricing_footer' => [
+                        'type' => 'heading',
+                        'title' => 'محتوای فوتر قیمت‌گذاری',
+                    ],
+                    'landing_pricing_footer' => [
+                        'type' => 'editor',
+                        'title' => 'محتوای فوتر قیمت‌گذاری',
+                        'w' => 'w100',
                     ],
                     'landing_page_faqs' => [
                         'type' => 'repeater',
@@ -696,7 +723,7 @@ class Main_Settings extends Admin_Helper
                                 'title' => 'موقعیت',
                             ],
                             'theme_portfolios[0][url]' => [
-                                'type' => 'url',
+                                'type' => 'text',
                                 'title' => 'URL سایت',
                             ],
                             'theme_portfolios[0][blue_effect]' => [
@@ -729,8 +756,7 @@ class Main_Settings extends Admin_Helper
         return $settings;
     }
 
-    protected function General_Settings($current_tab)
-    {
+    protected function General_Settings($current_tab) {
         $all_settings = $this->All_Settings();
         $theme_options = get_option('cyberisho_main_option', []);
 
@@ -740,11 +766,9 @@ class Main_Settings extends Admin_Helper
             $get_option = (!empty($theme_options[$name]) ? $theme_options[$name] : '');
 
             if ($name == $current_tab) {
-                $output = "<div class='content-tab $name-options'>"
-                    . "<h2>" . esc_html($lable) . "</h2>";
-                $output .= settings_errors('cyberisho_messages', false, true) ? settings_errors('cyberisho_messages', false, true) : '';
-                $output .= "<form method='post' action='' class='cyberisho-form-setting flex flex-wrap'>";
-                $output .= wp_nonce_field('cyberisho_save_settings', 'cyberisho_nonce', true, false);
+                echo "<div class='content-tab $name-options'>"
+                    . "<h2>$lable</h2>"
+                    . "<div class='cyberisho-form-setting flex flex-wrap'>";
                 foreach ($settings as $id => $setting) {
                     $type = $setting['type'];
                     $title = $setting['title'];
@@ -752,456 +776,241 @@ class Main_Settings extends Admin_Helper
                     $default = (!empty($get_option[$id]) ? $get_option[$id] : '');
                     switch ($type) {
                         case 'text':
-                            $output .= $this->cyberisho_Text($id, $title, $default, $width);
+                            echo $this->cyberisho_Text($id, $title, $default, $width);
                             break;
                         case 'url':
-                            $output .= $this->cyberisho_URL($id, $title, $default, $width);
+                            echo $this->cyberisho_URL($id, $title, $default, $width);
                             break;
                         case 'textarea':
-                            $output .= $this->cyberisho_Textarea($id, $title, $default, $width);
+                            echo $this->cyberisho_Textarea($id, $title, $default, $width);
                             break;
                         case 'image-uploader':
-                            $output .= $this->cyberisho_Image_Uploader($id, $title, $default, $width);
+                            echo $this->cyberisho_Image_Uploader($id, $title, $default, $width);
                             break;
                         case 'gallery-uploader':
-                            $output .= $this->cyberisho_Multiple_Image_Uploader($id, $title, $default, $width);
+                            echo $this->cyberisho_Multiple_Image_Uploader($id, $title, $default, $width);
                             break;
                         case 'checkbox':
-                            $output .= $this->cyberisho_Checkbox($id, $title, $default, $width);
+                            echo $this->cyberisho_Checkbox($id, $title, $default, $width);
                             break;
                         case 'select':
                             $content = $setting['content'];
-                            $default_select = isset($setting['default']) ? $setting['default'] : '';
-                            $output .= $this->cyberisho_Select($id, $title, $content, $default, $width);
+                            echo $this->cyberisho_Select($id, $title, $content, $default, $width);
                             break;
                         case 'select2':
                             $select_id = $setting['id'];
                             $content = $setting['content'];
-                            $output .= $this->cyberisho_Select2($id, $select_id, $title, $content, $default, $width);
+                            echo $this->cyberisho_Select2($id, $select_id, $title, $content, $default, $width);
                             break;
                         case 'color':
-                            $output .= $this->cyberisho_Color($id, $title, $default, $width);
+                            echo $this->cyberisho_Color($id, $title, $default, $width);
                             break;
                         case 'repeater':
                             $btn = $setting['btn'];
                             $repeater_settings = $setting['settings'];
                             $section = $setting['section'];
-                            $output .= $this->cyberisho_Repeater($id, $title, $section, $btn, $repeater_settings, $default, $width);
+                            echo $this->cyberisho_Repeater($id, $title, $section, $btn, $repeater_settings, $default, $width);
                             break;
                         case 'heading':
-                            $output .= $this->cyberisho_Heading($id, $title);
+                            echo $this->cyberisho_Heading($id, $title);
                             break;
                         case 'editor':
-                            $output .= $this->cyberisho_Editor($id, $title, $default, $width);
+                            echo $this->cyberisho_Editor($id, $title, $default, $width);
                             break;
                     }
                 }
-                $output .= "<p><input type='submit' name='submit' class='button button-primary' value='ذخیره تغییرات'></p>"
-                    . "</form></div>";
-                return $output;
+                echo "</div>"
+                    . "</div>";
             }
         }
-        return '';
+    }
+}
+
+class Theme_Settings extends Main_Settings {
+
+    public function __construct() {
+        add_action('admin_menu', array($this, 'add_theme_settings_page'));
+        add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
+        add_action('admin_head', [$this, 'admin_font']);
     }
 
-    public function __construct()
-    {
-        add_action('admin_menu', [$this, 'custom_theme_settings_menu']);
-        add_action('admin_enqueue_scripts', [$this, 'theme_settings_enqueue_scripts']);
-        add_action('admin_init', [$this, 'save_theme_settings']);
-    }
-
-    public function custom_theme_settings_menu()
-    {
+    public function add_theme_settings_page() {
         add_menu_page(
             'تنظیمات قالب',
             'تنظیمات قالب',
             'manage_options',
-            'theme-settings',
-            [$this, 'theme_settings_page'],
+            'cyberisho_theme_settings',
+            array($this, 'render_settings_page'),
             'dashicons-admin-generic',
             30
         );
     }
 
-    public function theme_settings_page()
-    {
-        $tabs = [
-            'footer-content' => 'محتواهای پاورچین',
-            'site-info' => 'اطلاعات سایت',
-            'contact' => 'اطلاعات تماس',
-            'home' => 'صفحه اصلی',
-            'about' => 'صفحه درباره ما',
-            'landing' => 'صفحه لندینگ',
-            'portfolio' => 'صفحه نمونه کارها'
-        ];
+    public function render_settings_page() {
+        $this->Save_Change();
+        echo FlashMessage::get();
+        $settings = $this->All_Settings();
+        $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'contact';
+        echo "<div class='wrap'>"
+            . "<nav class='nav-tab-wrapper'>";
+        foreach ($settings as $id => $menu) {
+            $menu_title = $menu['menu'];
+            $tab_url = admin_url('admin.php?page=cyberisho_theme_settings&tab=' . $id);
+            $active_class = ($active_tab == $id) ? ' nav-tab-active' : '';
+            echo "<a href='$tab_url' class='nav-tab$active_class'>$menu_title</a>";
+        }
+        echo "</nav>";
 
-        $current_tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'footer-content';
-        ob_start();
-        ?>
-        <div class="wrap">
-            <h1>تنظیمات قالب</h1>
-            <h2 class="nav-tab-wrapper">
-                <?php foreach ($tabs as $tab_slug => $tab_name): ?>
-                    <a href="?page=theme-settings&tab=<?php echo esc_attr($tab_slug); ?>"
-                        class="nav-tab <?php echo $current_tab === $tab_slug ? 'nav-tab-active' : ''; ?>">
-                        <?php echo esc_html($tab_name); ?>
-                    </a>
-                <?php endforeach; ?>
-            </h2>
-            <?php echo $this->General_Settings($current_tab); ?>
-        </div>
-        <?php
-        echo ob_get_clean();
+        echo "<main class='cyberisho-main-content-options'>"
+            . "<form action='' method='POST' id='setting-form'>";
+
+        echo "<input type='hidden' name='current_tab' value='$active_tab'>";
+        $this->General_Settings($active_tab);
+        echo "<div class='form-row'>"
+            . "<button type='submit' class='button cyberisho-submit' name='SaveSetting'>ذخیره تغییرات</button>"
+            . "</div>"
+            . "</form>"
+            . "</main>"
+            . "</div>";
     }
 
-    public function theme_settings_enqueue_scripts($hook)
-    {
-        if ($hook !== 'toplevel_page_theme-settings') {
-            return;
-        }
+    public function Save_Change() {
+        if (isset($_POST['SaveSetting'])) {
+            $current_tab = isset($_POST['current_tab']) ? $_POST['current_tab'] : 'contact';
+            if ($current_tab) {
+                $main_options = get_option('cyberisho_main_option', []);
 
-        wp_enqueue_style(
-            'theme-settings',
-            get_template_directory_uri() . '/_inc/meta-box/css/style.css',
-            [],
-            '1.0.1',
-            'all'
-        );
+                $all_settings = $this->All_Settings();
+                foreach ($all_settings[$current_tab]['settings'] as $id => $setting) {
+                    $type = $setting['type'];
+                    $field_value = isset($_POST[$id]) ? $_POST[$id] : '';
 
-        wp_enqueue_style(
-            'wp-color-picker'
-        );
+                    switch ($type) {
+                        case 'text':
+                        case 'select':
+                        case 'color':
+                        case 'gallery-uploader':
+                            $value = sanitize_text_field($field_value);
+                            break;
+                        case 'textarea':
+                            $value = sanitize_textarea_field($field_value);
+                            break;
+                        case 'select2':
+                            $value = $field_value;
+                            break;
+                        case 'image-uploader':
+                        case 'url':
+                            $value = sanitize_url($field_value);
+                            break;
+                        case 'checkbox':
+                            $value = isset($field_value);
+                            break;
+                        case 'repeater':
+                            $value = $field_value;
+                            break;
+                        case 'editor':
+                            $value = $this->Code_Validator($field_value);
+                            break;
+                    }
 
-        wp_enqueue_media();
-        wp_enqueue_script(
-            'theme-admin-js',
-            get_template_directory_uri() . '/_inc/meta-box/js/admin.js',
-            ['jquery', 'wp-color-picker'],
-            '1.0.1',
-            true
-        );
+                    $main_options[$current_tab][$id] = $value;
+                }
 
-        wp_localize_script(
-            'theme-admin-js',
-            'cyberisho_vars',
-            [
-                'ajax_url' => admin_url('admin-ajax.php'),
-                'nonce' => wp_create_nonce('cyberisho_nonce'),
-            ]
-        );
-    }
+                update_option('cyberisho_main_option', $main_options);
 
-    public function save_theme_settings()
-    {
-        if (!isset($_POST['submit']) || !isset($_POST['cyberisho_nonce']) || !wp_verify_nonce($_POST['cyberisho_nonce'], 'cyberisho_save_settings')) {
-            return;
-        }
-
-        $current_tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'footer-content';
-        $theme_options = get_option('cyberisho_main_option', []);
-        $all_settings = $this->All_Settings();
-        $settings = $all_settings[$current_tab]['settings'];
-
-        $new_options = [];
-        foreach ($settings as $id => $setting) {
-            if (isset($_POST[$id])) {
-                $value = $this->sanitize_field($setting['type'], $_POST[$id]);
-                $new_options[$id] = $value;
+                $this->start_session();
+                FlashMessage::add('تنظیمات با موفقیت ذخیره شد.');
+                $this->end_session();
             }
         }
-
-        $theme_options[$current_tab] = $new_options;
-        update_option('cyberisho_main_option', $theme_options);
-
-        add_settings_error(
-            'cyberisho_messages',
-            'settings_updated',
-            __('تنظیمات با موفقیت ذخیره شد.', 'textdomain'),
-            'success'
-        );
     }
 
-    private function sanitize_field($type, $value)
-    {
-        switch ($type) {
-            case 'text':
-                return sanitize_text_field($value);
-            case 'url':
-                return esc_url_raw($value);
-            case 'textarea':
-                return sanitize_textarea_field($value);
-            case 'checkbox':
-                return filter_var($value, FILTER_VALIDATE_BOOLEAN);
-            case 'select':
-                return sanitize_text_field($value);
-            case 'select2':
-                return is_array($value) ? array_map('sanitize_text_field', $value) : sanitize_text_field($value);
-            case 'color':
-                return sanitize_hex_color($value);
-            case 'repeater':
-                $sanitized = [];
-                if (is_array($value)) {
-                    foreach ($value as $index => $repeater_item) {
-                        foreach ($repeater_item as $key => $item_value) {
-                            $sanitized[$index][$key] = $this->sanitize_field_by_key($key, $item_value);
-                        }
-                    }
-                }
-                return $sanitized;
-            case 'image-uploader':
-            case 'gallery-uploader':
-                return esc_url_raw($value);
-            case 'editor':
-                return wp_kses_post($value);
-            default:
-                return sanitize_text_field($value);
+    public function enqueue_admin_scripts() {
+        wp_enqueue_style('style', get_template_directory_uri() . '/_inc/meta-box/css/style.css', [], '1.0.0');
+        wp_enqueue_media();
+        wp_enqueue_script('theme-settings-script', get_template_directory_uri() . '/_inc/meta-box/js/admin.js', array('jquery'), '1.0', true);
+        wp_enqueue_script('select2', get_template_directory_uri() . '/_inc/meta-box/js/select2.min.js', array('jquery'), '4.1.0', true);
+        wp_enqueue_style('wp-color-picker');
+        wp_enqueue_script('wp-color-picker-alpha', get_template_directory_uri() . '/_inc/meta-box/js/wp-color-picker-alpha.min.js', array('wp-color-picker'), '4.1.0', true);
+    }
+
+    private function Code_Validator($code) {
+        return str_replace(array('\'', '\"'), '"', $code);
+    }
+
+    public function start_session() {
+        if (!session_id()) {
+            session_start();
         }
     }
 
-    private function sanitize_field_by_key($key, $value)
-    {
-        if (strpos($key, 'image') !== false || strpos($key, 'url') !== false) {
-            return esc_url_raw($value);
-        } elseif (strpos($key, 'content') !== false || strpos($key, 'description') !== false || strpos($key, 'header') !== false) {
-            return sanitize_textarea_field($value);
-        } else {
-            return sanitize_text_field($value);
-        }
+    public function end_session() {
+        session_write_close();
+    }
+
+    public function admin_font() {
+        echo "<style type='text/css'>@font-face {font-family: 'YekanBakh';font-style: normal;font-weight: normal;src:  url('".get_template_directory_uri()."/assets/fonts/PeydaWeb-Regular.woff') format('woff'),   url('".get_template_directory_uri()."/assets/fonts/PeydaWeb-Regular.woff') format('woff2');}@font-face {font-family: 'YekanBakh';font-style: normal;font-weight: bold;src: url('".get_template_directory_uri()."/assets/fonts/PeydaWeb-Regular.woff') format('woff'),   url('".get_template_directory_uri()."/assets/fonts/PeydaWeb-Regular.woff') format('woff2'); }body.rtl, #wpadminbar *:not([class='ab-icon']), .wp-core-ui, .media-menu, .media-frame *, .media-modal *,.rtl h1, .rtl h2, .rtl h3, .rtl h4, .rtl h5, .rtl h6 {font-family:'YekanBakh' !important;}.php-error #adminmenuback, .php-error #adminmenuwrap {margin-top: 0 !important;}#sub-accordion-section-custom_codes textarea {direction: ltr;}</style>" . PHP_EOL;
     }
 }
 
-new Main_Settings();
+new Theme_Settings;
 
-// حذف تابع تکراری cyberisho_enqueue_admin_scripts
-// add_action('admin_enqueue_scripts', 'cyberisho_enqueue_admin_scripts'); // این خط حذف شد
+if (!defined('ABSPATH')) {
+    exit;
+} // Exit if accessed directly
 
-// ثبت تنظیمات Customizer
-function cyberisho_customize_register($wp_customize)
-{
-    // بخش فوتر
-    $wp_customize->add_section('footer_settings', [
-        'title' => __('تنظیمات فوتر', 'cyberisho'),
-        'priority' => 30,
-    ]);
+class FlashMessage {
 
-    $wp_customize->add_setting('footer_icon_1_image', [
-        'default' => '',
-        'sanitize_callback' => 'esc_url_raw',
-    ]);
-    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'footer_icon_1_image', [
-        'label' => __('تصویر آیکون ۱', 'cyberisho'),
-        'section' => 'footer_settings',
-        'settings' => 'footer_icon_1_image',
-    ]));
+    const SUCCESS = 1;
+    const ERROR = 2;
 
-    $wp_customize->add_setting('footer_icon_2_image', [
-        'default' => '',
-        'sanitize_callback' => 'esc_url_raw',
-    ]);
-    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'footer_icon_2_image', [
-        'label' => __('تصویر آیکون ۲', 'cyberisho'),
-        'section' => 'footer_settings',
-        'settings' => 'footer_icon_2_image',
-    ]));
-
-    $wp_customize->add_setting('footer_text', [
-        'default' => '',
-        'sanitize_callback' => 'wp_kses_post',
-    ]);
-    $wp_customize->add_control('footer_text', [
-        'label' => __('متن فوتر', 'cyberisho'),
-        'section' => 'footer_settings',
-        'type' => 'textarea',
-    ]);
-
-    // بخش اطلاعات سایت
-    $wp_customize->add_section('site_info', [
-        'title' => __('اطلاعات سایت', 'cyberisho'),
-        'priority' => 31,
-    ]);
-
-    $wp_customize->add_setting('site_logo', [
-        'default' => '',
-        'sanitize_callback' => 'esc_url_raw',
-    ]);
-    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'site_logo', [
-        'label' => __('لوگوی سایت', 'cyberisho'),
-        'section' => 'site_info',
-        'settings' => 'site_logo',
-    ]));
-
-    // بخش صفحه لندینگ
-    $wp_customize->add_section('landing_page', [
-        'title' => __('صفحه لندینگ', 'cyberisho'),
-        'priority' => 32,
-    ]);
-
-    $wp_customize->add_setting('landing_banner_image', [
-        'default' => '',
-        'sanitize_callback' => 'esc_url_raw',
-    ]);
-    $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'landing_banner_image', [
-        'label' => __('تصویر بنر لندینگ', 'cyberisho'),
-        'section' => 'landing_page',
-        'settings' => 'landing_banner_image',
-    ]));
-
-    // بخش نمونه‌کارها
-    $wp_customize->add_section('portfolio_settings', [
-        'title' => __('نمونه‌کارها', 'cyberisho'),
-        'priority' => 33,
-    ]);
-
-    $wp_customize->add_setting('portfolio_items', [
-        'default' => '',
-        'sanitize_callback' => 'cyberisho_sanitize_repeater',
-    ]);
-    $wp_customize->add_control('portfolio_items', [
-        'label' => __('نمونه‌کارها', 'cyberisho'),
-        'section' => 'portfolio_settings',
-        'type' => 'textarea',
-    ]);
-
-    function cyberisho_customize_register($wp_customize)
-    {
-        // ... (بخش‌های دیگر بدون تغییر باقی می‌مانند)
-
-        // بخش درباره ما
-        $wp_customize->add_section('about_us', [
-            'title' => __('درباره ما', 'cyberisho'),
-            'priority' => 34,
-        ]);
-
-        $wp_customize->add_setting('about_us_image', [
-            'default' => '',
-            'sanitize_callback' => 'esc_url_raw',
-        ]);
-        $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, 'about_us_image', [
-            'label' => __('تصویر درباره ما', 'cyberisho'),
-            'section' => 'about_us',
-            'settings' => 'about_us_image',
-        ]));
-
-        $wp_customize->add_setting('about_chart_header', [
-            'default' => '',
-            'sanitize_callback' => 'wp_kses_post',
-        ]);
-        $wp_customize->add_control('about_chart_header', [
-            'label' => __('درباره نمودار هدر', 'cyberisho'),
-            'section' => 'about_us',
-            'type' => 'textarea',
-        ]);
-
-        $wp_customize->add_setting('about_chart_right_container', [
-            'default' => '',
-            'sanitize_callback' => 'wp_kses_post',
-        ]);
-
-
-        $wp_customize->add_setting('about_chart_footer', [
-            'default' => '',
-            'sanitize_callback' => 'wp_kses_post',
-        ]);
-        $wp_customize->add_control('about_chart_footer', [
-            'label' => __('درباره نمودار فوتر', 'cyberisho'),
-            'section' => 'about_us',
-            'type' => 'textarea',
-        ]);
-
-        $wp_customize->add_setting('chart_items_data', [
-            'default' => '',
-            'sanitize_callback' => 'cyberisho_sanitize_repeater',
-        ]);
-        $wp_customize->add_control('chart_items_data', [
-            'label' => __('آیتم‌های نمودار', 'cyberisho'),
-            'section' => 'about_us',
-            'type' => 'textarea',
-        ]);
-    }
-    // بخش برندها
-    $wp_customize->add_section('brands', [
-        'title' => __('برندها', 'cyberisho'),
-        'priority' => 35,
-    ]);
-
-    $wp_customize->add_setting('brands_items', [
-        'default' => '',
-        'sanitize_callback' => 'cyberisho_sanitize_repeater',
-    ]);
-    $wp_customize->add_control('brands_items', [
-        'label' => __('برندها', 'cyberisho'),
-        'section' => 'brands',
-        'type' => 'textarea',
-    ]);
-
-    // بخش سوالات
-    $wp_customize->add_section('faq', [
-        'title' => __('سوالات متداول', 'cyberisho'),
-        'priority' => 36,
-    ]);
-
-    $wp_customize->add_setting('faq_items', [
-        'default' => '',
-        'sanitize_callback' => 'cyberisho_sanitize_repeater',
-    ]);
-    $wp_customize->add_control('faq_items', [
-        'label' => __('سوالات متداول', 'cyberisho'),
-        'section' => 'faq',
-        'type' => 'textarea',
-    ]);
-
-    // بخش آیتم‌های نمودار
-    $wp_customize->add_section('chart_items', [
-        'title' => __('آیتم‌های نمودار', 'cyberisho'),
-        'priority' => 37,
-    ]);
-
-    $wp_customize->add_setting('chart_items_data', [
-        'default' => '',
-        'sanitize_callback' => 'cyberisho_sanitize_repeater',
-    ]);
-    $wp_customize->add_control('chart_items_data', [
-        'label' => __('آیتم‌های نمودار', 'cyberisho'),
-        'section' => 'chart_items',
-        'type' => 'textarea',
-    ]);
-
-    // بخش انواع سایت
-    $wp_customize->add_section('site_types', [
-        'title' => __('انواع سایت', 'cyberisho'),
-        'priority' => 38,
-    ]);
-
-    $wp_customize->add_setting('site_types_items', [
-        'default' => '',
-        'sanitize_callback' => 'cyberisho_sanitize_repeater',
-    ]);
-    $wp_customize->add_control('site_types_items', [
-        'label' => __('انواع سایت', 'cyberisho'),
-        'section' => 'site_types',
-        'type' => 'textarea',
-    ]);
-}
-add_action('customize_register', 'cyberisho_customize_register');
-
-function cyberisho_sanitize_repeater($input)
-{
-    if (empty($input)) {
-        return '';
+    public static function add($message, $type = self::SUCCESS) {
+        $_SESSION['cyberisho_message'] = [
+            'message' => $message,
+            'type' => $type
+        ];
     }
 
-    $input = json_decode($input, true);
-    $sanitized = [];
-    if (is_array($input)) {
-        foreach ($input as $item) {
-            $sanitized[] = [
-                'image' => isset($item['image']) ? esc_url_raw($item['image']) : '',
-                'title' => isset($item['title']) ? sanitize_text_field($item['title']) : '',
-                'description' => isset($item['description']) ? wp_kses_post($item['description']) : '',
-            ];
+    public static function show() {
+        if (isset($_SESSION['cyberisho_message'])) {
+            $message = $_SESSION['cyberisho_message'];
+            if ($message['type'] = self::SUCCESS) {
+                echo "<div class='alert alert-success'>" . $message['message'] . "</div>";
+            } else {
+                echo "<div class='alert alert-danger'>" . $message['message'] . "</div>";
+            }
+
+            self::clear();
         }
     }
-    return json_encode($sanitized);
+
+    public static function get() {
+        $message_text = '';
+
+        if (isset($_SESSION['cyberisho_message'])) {
+            $message = $_SESSION['cyberisho_message'];
+            if ($message['type'] = self::SUCCESS) {
+                $message_text = "<div class='alert alert-success flex align-items-center'>"
+                    . "<svg width='60' height='60' viewBox='0 0 60 60' fill='none' xmlns='http://www.w3.org/2000/svg'>"
+                    . "<path fill-rule='evenodd' clip-rule='evenodd' d='M55 27.0548C55 28.0973 54.1525 28.9448 53.11 28.9448H53.0875V28.8998C52.0325 28.8998 51.1775 28.0473 51.175 26.9923V26.9873V20.6323C51.175 12.9998 47 8.82476 39.39 8.82476H20.64C13.025 8.82476 8.825 13.0248 8.825 20.6323V39.3823C8.825 46.9673 13.025 51.1673 20.6325 51.1673H39.3825C46.99 51.1673 51.1675 46.9673 51.1675 39.3823C51.1675 38.3273 52.0225 37.4698 53.08 37.4698C54.1375 37.4698 54.9925 38.3273 54.9925 39.3823C55 49.0198 49.02 54.9998 39.39 54.9998H20.6325C10.98 54.9998 5 49.0198 5 39.3898V20.6398C5 10.9798 10.98 4.99976 20.6325 4.99976H39.3825C48.975 4.99976 55 10.9798 55 20.6323V27.0548ZM27.034 33.2835L37.574 22.741C38.3065 22.0085 39.494 22.0085 40.2265 22.741C40.959 23.4735 40.959 24.661 40.2265 25.3935L28.359 37.261C28.0065 37.611 27.529 37.8085 27.034 37.8085C26.534 37.8085 26.059 37.611 25.7065 37.261L19.774 31.326C19.0415 30.5935 19.0415 29.406 19.774 28.6735C20.5065 27.941 21.694 27.941 22.4265 28.6735L27.034 33.2835Z' fill='#00C689'/>"
+                    . "</svg>"
+                    . $message['message'] . "</div>";
+            } else {
+                $message_text = "<div class='alert alert-danger flex align-items-center'>"
+                    . "<svg width='44' height='44' viewBox='0 0 44 44' fill='none' xmlns='http://www.w3.org/2000/svg'>"
+                    . "<path fill-rule='evenodd' clip-rule='evenodd' d='M41.6953 20.7523C42.5988 20.7523 43.3333 20.0178 43.3333 19.1143V13.5482C43.3333 5.18267 38.1117 0 29.7982 0H13.5482C5.18267 0 0 5.18267 0 13.5547V29.8047C0 38.1507 5.18267 43.3333 13.5482 43.3333H29.8047C38.1507 43.3333 43.3333 38.1507 43.3268 29.7982C43.3268 28.8838 42.5837 28.1407 41.6693 28.1407C40.7528 28.1407 40.0118 28.8838 40.0118 29.7982C40.0118 36.3718 36.3913 40.0118 29.7982 40.0118H13.5482C6.955 40.0118 3.315 36.3718 3.315 29.7982V13.5482C3.315 6.955 6.955 3.315 13.5547 3.315H29.8047C36.4 3.315 40.0183 6.93333 40.0183 13.5482V19.0558V19.0602C40.0205 19.9745 40.7615 20.7133 41.6758 20.7133V20.7523H41.6953ZM16.9321 24.1484L15.4501 25.6304C14.7892 26.2587 14.7524 27.3009 15.3677 27.9747L15.4154 28.0094C16.0481 28.642 17.0664 28.6594 17.7186 28.0484L19.1941 26.5729C19.8636 25.9489 19.9004 24.9002 19.2764 24.2285C18.6502 23.5612 17.6016 23.5222 16.9321 24.1484ZM28.4756 27.7405C27.8386 28.3753 26.8095 28.3883 26.1573 27.7665L26.075 27.6863L15.7183 17.3318C15.0856 16.6602 15.0726 15.6158 15.6901 14.9312C16.3228 14.2833 17.3585 14.2703 18.0063 14.903C18.0128 14.9073 18.0171 14.9116 18.0236 14.9181L22.0645 18.9611L25.7413 15.2822C26.4021 14.6517 27.4443 14.6581 28.0986 15.2973C28.2156 15.4143 28.3153 15.5465 28.3911 15.6938C28.766 16.346 28.6576 17.165 28.1268 17.698L24.4651 21.3575L28.4475 25.342C29.1191 25.9768 29.1451 27.0363 28.5081 27.7058C28.5032 27.7132 28.4969 27.7192 28.4903 27.7254C28.4854 27.7301 28.4803 27.7349 28.4756 27.7405Z' fill='#F15271'/>"
+                    . "</svg>"
+                    . $message['message'] . "</div>";
+            }
+
+            self::clear();
+        }
+
+        return $message_text;
+    }
+
+    public static function clear() {
+        unset($_SESSION['cyberisho_message']);
+    }
 }
 ?>

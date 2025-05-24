@@ -3,16 +3,13 @@
   <div class="container">
     <div class="title-wrapper">
       <h3>قیمت و تعرفه طراحی سایت</h3>
-
-
-
-
-
       <?php
       // Retrieve pricing section content
-      $pricing_header = get_option('landing_pricing_header', '');
-      $pricing_rows = get_option('landing_pricing_rows', []);
-      $pricing_footer = get_option('landing_pricing_footer', '');
+      $theme_options = get_option('cyberisho_main_option', []);
+      $landing_options = $theme_options['landing'];
+      $pricing_header = $landing_options['landing_pricing_header'];
+      $pricing_rows = $landing_options['landing_pricing_rows'];
+      $pricing_footer = $landing_options['landing_pricing_footer'];
       // Display pricing section
       ?>
       <p>

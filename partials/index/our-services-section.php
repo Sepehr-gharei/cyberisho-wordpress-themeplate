@@ -1,4 +1,8 @@
 <!--************************* start our services *************************-->
+<?php
+  $theme_options = get_option('cyberisho_main_option', []);
+  $home_options = $theme_options['home'];
+  ?>
 <div class="our-services">
     <div class="container-fluid">
         <div class="header">
@@ -49,10 +53,10 @@
                         </g>
                     </svg>
                 </div>
-                <strong><?php echo get_option('home_service_1_title'); ?></strong>
+                <strong><?php echo $home_options['home_service_1_title']; ?></strong>
                 <?php
                 ?>
-                <p><?php echo get_option('home_service_1_content'); ?></p>
+                <p><?php echo $home_options['home_service_1_content']; ?></p>
             </div>
             <div class="col-12 col-sm-6 wrapper animated-section-left">
                 <div class="icon">
@@ -78,8 +82,8 @@
                         </g>
                     </svg>
                 </div>
-                <strong><?php echo get_option('home_service_2_title'); ?></strong>
-                <p><?php echo get_option('home_service_2_content'); ?></p>
+                <strong><?php echo $home_options['home_service_2_title']; ?></strong>
+                <p><?php echo $home_options['home_service_2_content']; ?></p>
             </div>
         </section>
     </div>

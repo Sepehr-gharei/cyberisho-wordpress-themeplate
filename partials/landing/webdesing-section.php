@@ -41,11 +41,14 @@
             </div>
             <?php
 
+            $theme_options = get_option('cyberisho_main_option', []);
+            $site_info_options = $theme_options['site-info'];
+
 
             // دریافت ویژگی‌های سایت
             $site_features = [];
             for ($i = 1; $i <= 4; $i++) {
-                $site_features[$i] = get_option('home_feature_' . $i, '');
+                $site_features[$i] = $site_info_options["home_feature_$i"];
             }
             ?>
 

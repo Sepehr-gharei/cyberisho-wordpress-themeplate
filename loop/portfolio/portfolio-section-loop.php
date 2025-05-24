@@ -1,9 +1,10 @@
 <?php
-$portfolios = get_option('theme_portfolios', []);
+$theme_options = get_option('cyberisho_main_option', []);
+$portfolio_options = $theme_options['portfolio'];
+$portfolios = $portfolio_options['theme_portfolios'];
 $items_per_page = 4; // Number of items per page
 $total_items = count($portfolios); // Total number of portfolio items
 $total_pages = ceil($total_items / $items_per_page); // Calculate total pages
-
 // Get current page from query parameter, default to 1
 $current_page = isset($_GET['portfolio_page']) ? max(1, intval($_GET['portfolio_page'])) : 1;
 
@@ -14,11 +15,7 @@ $current_portfolios = array_slice($portfolios, $start_index, $items_per_page);
 if (!empty($current_portfolios)): ?>
     <div class="portfolio-container">
         <?php foreach ($current_portfolios as $portfolio):
-            if (isset($portfolio_number)) {
-                $portfolio_number += 1;
-            } else {
-                $portfolio_number = 1;
-            }
+           
             if (!empty($portfolio['name'])):
                 $main_image = !empty($portfolio['main_image']) ? esc_url($portfolio['main_image']) : '';
                 $desktop_image = !empty($portfolio['desktop_image']) ? esc_url($portfolio['desktop_image']) : '';
@@ -28,11 +25,7 @@ if (!empty($current_portfolios)): ?>
                 <div class="example-of-portfolio-section <?php if ($portfolio['blue_effect'] == 'enabled') {
                     echo 'example-of-portfolio-section-blue-color';
                 } ?>
-                    <?php
-                    if (isset($portfolio) && $portfolio_number == 2) {
-                        echo 'active';
-                    }
-                    ?> ">
+                  ">
                     <div class="container example-of-portfolio-container animated-section">
                         <div class="title">
                             <a href="" class="text">مشاهده نمونه کار</a>
@@ -69,11 +62,7 @@ if (!empty($current_portfolios)): ?>
                         </div>
                     </div>
                     <!--************************* start portfolio web design sample section *************************-->
-                    <div class="portfolio-web-design-sample-section animated-section <?php
-                    if (isset($portfolio) && $portfolio_number == 2) {
-                        echo 'active';
-                    }
-                    ?>">
+                    <div class="portfolio-web-design-sample-section animated-section">
                         <div class="container">
                             <div class="content-wrapper">
                                 <div class="row">

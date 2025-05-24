@@ -1,9 +1,8 @@
 <!-- ************************* start info container   *************************-->
-<?php 
-  $theme_options = get_option('cyberisho_main_option', [] );
+<?php
+  $theme_options = get_option('cyberisho_main_option', []);
   $contact_options = $theme_options['contact'];
-
-?>
+  ?>
 <div class="info-container animated-section">
   <div class="container">
     <div class="top-info">
