@@ -1,8 +1,9 @@
 <!--************************* start about us *************************-->
 <?php
-  $theme_options = get_option('cyberisho_main_option', []);
-  $home_options = $theme_options['home'];
-  ?>
+$theme_options = get_option('cyberisho_main_option', []);
+$home_options = $theme_options['home'];
+
+?>
 <div class="about-us-section">
     <div class="container">
         <div class="row">
@@ -34,7 +35,7 @@
                 <h2>درباره ما</h2>
                 <p>
                     <?php
-                
+
                     $meta_content = $home_options['home_about_text'];
                     $limited_content = mb_substr($meta_content, 0, 485, 'UTF-8'); // برش با پشتیبانی از UTF-8
                     echo $limited_content;
@@ -42,7 +43,15 @@
 
                 </p>
                 <div class="about-us-redirect">
-                    <a href="">درباره ما</a>
+                    <a href="
+                            <?php
+                            $page = get_page_by_path('about-us');
+                            if ($page) {
+                                $about_url = get_permalink($page->ID);
+                                echo $about_url;
+                            }
+                            ?>
+                    ">درباره ما</a>
                 </div>
             </div>
         </div>

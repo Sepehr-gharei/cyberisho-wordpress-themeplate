@@ -16,7 +16,15 @@
         </div>
     </div>
     <div class="footer-container">
-        <a href="">مشاهده همه</a>
+        <a href="
+          <?php
+          $page = get_page_by_path('blog');
+          if ($page) {
+              $about_url = get_permalink($page->ID);
+              echo $about_url;
+          }
+          ?>
+        ">مشاهده همه</a>
     </div>
 </div>
 <!--************************* end article slider *************************-->

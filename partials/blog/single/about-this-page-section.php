@@ -10,7 +10,7 @@
           <p>اشتراک گزاری</p>
           <div class="socials">
             <div class="icon whats-app">
-              <a href="">
+              <a href="#" onclick="shareToWhatsApp(event)">
                 <svg width="334pt" height="337pt" viewBox="0 0 334 337" version="1.1"
                   xmlns="http://www.w3.org/2000/svg">
                   <g id="#000000ff">
@@ -23,7 +23,7 @@
               </a>
             </div>
             <div class="icon telegram">
-              <a href="">
+              <a href="#" onclick="shareToTelegram(event)">
                 <svg width="256pt" height="256pt" viewBox="0 0 256 256" version="1.1"
                   xmlns="http://www.w3.org/2000/svg">
                   <g id="#000000ff">
@@ -36,7 +36,7 @@
               </a>
             </div>
             <div class="icon linkdin">
-              <a href="">
+              <a href="#" onclick="shareToLinkedIn(event)">
                 <svg width="612pt" height="612pt" viewBox="0 0 612 612" version="1.1"
                   xmlns="http://www.w3.org/2000/svg">
                   <g id="#000000ff">
@@ -48,7 +48,7 @@
               </a>
             </div>
             <div class="icon twitter">
-              <a href="">
+              <a href="#" onclick="shareToTwitter(event)">
                 <svg width="1251pt" height="1017pt" viewBox="0 0 1251 1017" version="1.1"
                   xmlns="http://www.w3.org/2000/svg">
                   <g id="#000000ff">
@@ -61,8 +61,8 @@
           </div>
         </div>
         <div class="page-address wrapper">
-          <div class="icon">
-
+         
+          <div class="icon" onclick="copyCurrentURL()" >
             <svg width="132pt" height="130pt" viewBox="0 0 132 130" version="1.1" xmlns="http://www.w3.org/2000/svg">
               <g id="#000000ff">
                 <path fill="var(--normal-text-color)" opacity="1.00"
@@ -74,7 +74,7 @@
               </g>
             </svg>
           </div>
-          <div class="address-text">
+          <div class="address-text" id="url-display">
             <p>
               <?php
               $current_url = home_url(add_query_arg([], $_SERVER['REQUEST_URI']));

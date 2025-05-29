@@ -7,23 +7,7 @@
         <small>BLOG</small>
         <h2>وبلاگ</h2>
       </div>
-      <div class="col-12 breadcrumb">
-        <div class="d-flex">
-          <li class="home-page">
-            <a href="">
-              <svg>
-                <use href="#house-icon"></use>
-              </svg>
-            </a>
-          </li>
-          <div class="arrow-icon">
-            <svg>
-              <use href="#double-arrow-icon"></use>
-            </svg>
-          </div>
-          <li class="breadcrumb-page"><a href="">وبلاک</a></li>
-        </div>
-      </div>
+      <?php custom_breadcrumb(); ?>
     </div>
     <div class="programming-fields">
       <div class="container">

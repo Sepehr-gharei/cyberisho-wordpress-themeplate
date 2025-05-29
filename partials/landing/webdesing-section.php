@@ -7,28 +7,11 @@
                     <small>WEB DESIGN</small>
                     <h2>طراحی وب سایت</h2>
                 </div>
-                <div class="breadcrumb">
-                    <div class="d-flex">
-                        <li class="home-page">
-                            <a href="">
-                                <svg>
-                                    <use href="#house-icon"></use>
-                                </svg>
-                            </a>
-                        </li>
-                        <div class="arrow-icon">
-                            <svg>
-                                <use href="#double-arrow-icon"></use>
-                            </svg>
-                        </div>
-                        <li class="breadcrumb-page"><a href="">طراحی وب سایت</a></li>
-                    </div>
-                </div>
+                <?php custom_breadcrumb(); ?>
                 <div class="webdesing-text-field">
                     <p id="main-text" class="main-text">
                         <?php
-                        $current_post_id = get_the_ID();
-                        $header_text = get_post_meta($current_post_id, '_page_header_text_key', true);
+                        $header_text = get_the_content();
                         if (!empty($header_text)) {
                             echo $header_text;
                         }
@@ -36,7 +19,15 @@
                     </p>
                 </div>
                 <div class="redirect-btn">
-                    <a href="">نمونه کار ها</a>
+                    <a href="
+                    <?php
+                    $page = get_page_by_path('portfolio');
+                    if ($page) {
+                        $about_url = get_permalink($page->ID);
+                        echo $about_url;
+                    }
+                    ?>
+                    ">نمونه کار ها</a>
                 </div>
             </div>
             <?php

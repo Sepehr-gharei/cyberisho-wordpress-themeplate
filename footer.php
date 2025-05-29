@@ -5,7 +5,7 @@ $theme_options = get_option('cyberisho_main_option', []);
 $footer_content_options = $theme_options['footer-content'];
 
 ?>
-<footer class="animated-section">
+<footer class="animated-section main-footer">
   <div class="container-fluid">
     <div class="back-to-top-section">
       <div class="scroll-to-top">
@@ -125,7 +125,6 @@ $footer_content_options = $theme_options['footer-content'];
 </footer>
 <div class="bottom-line"></div>
 <?php wp_footer() ?>
-
 
 </body>
 

@@ -9,10 +9,13 @@
           the_post();
           // دریافت داده‌های متاباکس
           $intro = get_post_meta(get_the_ID(), '_post_intro', true);
-          $sections = get_post_meta(get_the_ID(), '_post_sections', true);
-          if (!is_array($sections)) {
-            $sections = [];
+          $content = get_post_meta(get_the_ID(), '_post_content', true);
+          if (!empty($content)) {
+            $toc_data = generate_table_of_contents($content);
+            $toc = $toc_data['toc'];
+            $content = $toc_data['content'];
           }
+
           ?>
           <!-- نمایش مقدمه -->
           <?php if (!empty($intro)): ?>
@@ -25,40 +28,15 @@
           <?php endif; ?>
 
           <?php
-          $post_sections = get_post_meta(get_the_ID(), '_post_sections', true);
-          if (!empty($post_sections) && is_array($post_sections)) {
-            echo '<div class="list-content-wrapper normal-content-wrapper">';
-            echo '<h5>فهرست مطالب</h5>';
-            echo '<ul>';
-
-            foreach ($post_sections as $section) {
-              if (!empty($section['header_content'])) {
-                echo '<li>' . esc_html($section['header_content']) . '</li>';
-              }
-            }
-
-            echo '</ul>';
-            echo '</div>';
+          if (!empty($toc)) {
+            echo $toc; // فهرست مطالب
           }
           ?>
-
-          <!-- نمایش بخش‌ها -->
-          <?php foreach ($sections as $section):
-            $header_type = esc_html($section['header_type']);
-            $header_content = wp_kses_post($section['header_content']);
-            $paragraphs = isset($section['paragraphs']) ? $section['paragraphs'] : [];
-            ?>
-            <div class="normal-content-wrapper">
-              <<?php echo $header_type ?>><?php echo $header_content ?></<?php echo $header_type ?>>
-
-
-              <?php foreach ($paragraphs as $paragraph): ?>
-                <p><?php echo $paragraph ?></p>
-              <?php endforeach; ?>
-            </div>
-          <?php endforeach; ?>
-
           <?php
+          if (!empty($content)) {
+            echo $content;
+          }
+
         endwhile;
       endif;
       ?>

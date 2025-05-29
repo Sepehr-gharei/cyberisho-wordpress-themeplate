@@ -7,7 +7,7 @@
     <div class="panorama-slider">
       <div class="swiper">
         <div class="swiper-wrapper">
-          
+
           <?php
           get_template_part('loop/landing/article-slider-loop', 'article-slider-loop');
           ?>
@@ -17,7 +17,15 @@
     </div>
   </div>
   <div class="footer-container">
-    <a href="">مشاهده همه</a>
+    <a href="
+     <?php
+     $page = get_page_by_path('blog');
+     if ($page) {
+       $about_url = get_permalink($page->ID);
+       echo $about_url;
+     }
+     ?>
+    ">مشاهده همه</a>
   </div>
 </div>
 <!--************************* end article slider *************************-->

@@ -13,23 +13,7 @@
         ?></small>
         <h2><?php echo get_the_title() ?></h2>
       </div>
-      <div class="col-12 breadcrumb">
-        <div class="d-flex">
-          <li class="home-page">
-            <a href="">
-              <svg>
-                <use href="#house-icon"></use>
-              </svg>
-            </a>
-          </li>
-          <div class="arrow-icon">
-            <svg>
-              <use href="#double-arrow-icon"></use>
-            </svg>
-          </div>
-          <li class="breadcrumb-page"><a href="<?php the_permalink() ?>"><?php echo get_the_title() ?></a></li>
-        </div>
-      </div>
+      <?php custom_breadcrumb(); ?>
     </div>
     <div class="content-section">
       <div class="image-wrapper">

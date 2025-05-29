@@ -301,6 +301,16 @@ class Main_Settings extends Admin_Helper {
                         'title' => 'محتوا بنر',
                         'w' => 'w100',
                     ],
+                    'banner_header_contact' => [
+                        'type' => 'textarea',
+                        'title' => 'هدر بنر دوم (تماس با ما)',
+                        'w' => 'w100',
+                    ],
+                    'banner_content_contact' => [
+                        'type' => 'textarea',
+                        'title' => 'محتوای بنر دوم (تماس با ما)',
+                        'w' => 'w100',
+                    ],
                     'project_count' => [
                         'type' => 'text',
                         'title' => 'تعداد پروژه‌ها',
@@ -456,6 +466,21 @@ class Main_Settings extends Admin_Helper {
                 'menu' => 'صفحه اصلی',
                 'lable' => 'تنظیمات صفحه اصلی',
                 'settings' => [
+                    'home_header_title' => [
+                        'type' => 'text',
+                        'title' => 'عنوان تایتل هدر صفحه اصلی',
+                        'w' => 'w50',
+                    ],
+                    'home_header_title_content' => [
+                        'type' => 'text',
+                        'title' => 'محتوای تایتل هدر صفحه اصلی',
+                        'w' => 'w50',
+                    ],
+                    'home_header_image_content' => [
+                        'type' => 'image-uploader',
+                        'title' => 'عکس تایتل هدر صفحه اصلی',
+                        'w' => 'w50',
+                    ],
                     'home_meeting_title' => [
                         'type' => 'text',
                         'title' => 'عنوان ملاقات',

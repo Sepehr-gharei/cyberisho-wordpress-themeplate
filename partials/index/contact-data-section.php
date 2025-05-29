@@ -31,8 +31,13 @@
                     </svg>
                 </div>
                 <div class="col-8 text-field">
-                    <h3>آیا سوالی دارید ؟</h3>
-                    <p>با افتخار در تمام روزهای هفته پاسخگوی شما هستیم.</p>
+                    <?php 
+                    $theme_options = get_option('cyberisho_main_option', []);
+                    $site_info_options = $theme_options['site-info'];
+                  
+                    ?>
+                    <h3><?php echo $site_info_options['banner_header_contact']; ?></h3>
+                    <p><?php echo $site_info_options['banner_content_contact']; ?></p>
                 </div>
             </div>
             <div class="col-12 col-lg-4 contact-section">

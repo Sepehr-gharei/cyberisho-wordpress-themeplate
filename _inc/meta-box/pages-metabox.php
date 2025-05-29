@@ -1,82 +1,5 @@
 <?php
-/*
-function my_custom_portfolio_metabox()
-{
-    global $post;
 
-    if ($post) {
-        $page_slug = $post->post_name;
-        if ($page_slug === 'portfolio') {
-            add_meta_box(
-                'my_metabox_id', 
-                'متن درباره نمونه کار ها', 
-                'my_portfolio_metabox_callback', 
-                'page',
-                'normal',
-                'high'
-            );
-        }
-    }
-}
-add_action('add_meta_boxes', 'my_custom_portfolio_metabox');
-
-function my_portfolio_metabox_callback($post)
-{
-    $portfolip_text_field = get_post_meta($post->ID, '_portfolip_text_field', true);
-
-    wp_nonce_field('my_metabox_nonce', 'my_nonce');
-
-    ?>
-    <label for="portfolip_text_field">مقدار متن درباره نمونه کار ها:</label>
-    <textarea id="portfolip_text_field" name="portfolip_text_field"
-        style="width: 100%;"><?php echo esc_attr($portfolip_text_field); ?></textarea>
-    <?php
-}
-
-function save_my_portfolio_metabox($post_id)
-{
-    if (!isset($_POST['my_nonce']) || !wp_verify_nonce($_POST['my_nonce'], 'my_metabox_nonce')) {
-        return;
-    }
-
-    if (!current_user_can('edit_page', $post_id)) {
-        return;
-    }
-
-    if (isset($_POST['portfolip_text_field'])) {
-        update_post_meta($post_id, '_portfolip_text_field', sanitize_text_field($_POST['portfolip_text_field']));
-    }
-}
-add_action('save_post', 'save_my_portfolio_metabox');
-*/
-
-
-// function remove_editor_from_pages()
-// {
-//     // فقط برای برگه‌ها
-//     if (isset($_GET['post']) && get_post_type($_GET['post']) === 'page' || isset($_GET['post_type']) && $_GET['post_type'] === 'page') {
-//         // حذف ویرایشگر پیش‌فرض
-//         remove_post_type_support('page', 'editor');
-//     }
-// }
-// add_action('admin_init', 'remove_editor_from_pages');
-
-//***************** افزودن متا باکس متن هدر برگه ها**********************
-//***************** افزودن متا باکس متن هدر برگه ها**********************
-function add_page_header_meta_box()
-{
-    add_meta_box(
-        'page_header_meta_box',         // Unique ID
-        'متن هدر برگه',                 // Title
-        'render_page_header_meta_box',  // Callback function
-        'page',                         // Apply to 'page' post type
-        'normal',                       // Context
-        'high'                          // Priority
-    );
-}
-add_action('add_meta_boxes', 'add_page_header_meta_box');
-
-// رندر فیلدها در متا باکس
 function render_page_header_meta_box($post)
 {
     // Retrieve current value from database
@@ -1075,8 +998,8 @@ function landing_page_metabox_callback($post)
                                             <textarea
                                                 name="landing_containers[<?php echo $index; ?>][items][<?php echo $item_index; ?>][value]"
                                                 style="width: 100%; height: <?php echo $item['type'] === 'content' ? '100px' : '60px'; ?>;">
-                                                                          <?php echo esc_textarea($item['value']); ?>
-                                                                </textarea>
+                                                                                              <?php echo esc_textarea($item['value']); ?>
+                                                                                    </textarea>
                                             <input type="hidden"
                                                 name="landing_containers[<?php echo $index; ?>][items][<?php echo $item_index; ?>][type]"
                                                 value="<?php echo esc_attr($item['type']); ?>">

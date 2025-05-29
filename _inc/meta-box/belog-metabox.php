@@ -1,13 +1,13 @@
 <?php
+// حذف ویرایشگر پیش‌فرض برای پست‌ها
 function remove_editor_from_post() {
-    // فقط برای برگه‌ها
     if (isset($_GET['post']) && get_post_type($_GET['post']) === 'post' || isset($_GET['post_type']) && $_GET['post_type'] === 'post') {
-        // حذف ویرایشگر پیش‌فرض
         remove_post_type_support('post', 'editor');
     }
 }
 add_action('admin_init', 'remove_editor_from_post');
-// افزودن متاباکس به پست تایپ post
+
+// افزودن متاباکس برای محتوای وبلاگ
 function post_add_meta_box() {
     add_meta_box(
         'post_content_meta_box',
@@ -24,143 +24,75 @@ add_action('add_meta_boxes', 'post_add_meta_box');
 function post_content_meta_box_callback($post) {
     wp_nonce_field('post_content_meta_box', 'post_content_meta_box_nonce');
     $intro = get_post_meta($post->ID, '_post_intro', true);
-    $sections = get_post_meta($post->ID, '_post_sections', true);
-    if (!is_array($sections)) {
-        $sections = [];
-    }
+    $content = get_post_meta($post->ID, '_post_content', true);
     ?>
     <div class="post-metabox">
         <!-- مقدمه -->
         <div class="post-section">
             <label for="post_intro"><strong>مقدمه</strong></label><br>
-            <textarea id="post_intro" name="post_intro" rows="5" style="width:100%;"><?php echo esc_textarea($intro); ?></textarea>
-        </div>
-
-        <!-- کانتینرهای محتوا -->
-        <div id="post-sections-container">
             <?php
-            foreach ($sections as $index => $section) {
-                $header_type = esc_attr($section['header_type']);
-                $header_content = esc_textarea($section['header_content']);
-                $paragraphs = isset($section['paragraphs']) ? $section['paragraphs'] : [];
-                ?>
-                <div class="post-section-container" data-index="<?php echo $index; ?>">
-                    <div class="post-section-header">
-                        <strong><?php echo $header_type; ?></strong>
-                        <button type="button" class="button post-remove-section">حذف بخش</button>
-                    </div>
-                    <div class="post-section-content">
-                        <label for="post_section_<?php echo $index; ?>_header">هدر (<?php echo $header_type; ?>)</label><br>
-                        <textarea id="post_section_<?php echo $index; ?>_header" name="post_sections[<?php echo $index; ?>][header_content]" rows="3" style="width:100%;"><?php echo $header_content; ?></textarea>
-                        <input type="hidden" name="post_sections[<?php echo $index; ?>][header_type]" value="<?php echo $header_type; ?>">
-                        
-                        <!-- پاراگراف‌ها -->
-                        <div class="post-paragraphs-container">
-                            <?php
-                            foreach ($paragraphs as $p_index => $paragraph) {
-                                ?>
-                                <div class="post-paragraph">
-                                    <label for="post_section_<?php echo $index; ?>_paragraph_<?php echo $p_index; ?>">محتوا (p)</label><br>
-                                    <textarea id="post_section_<?php echo $index; ?>_paragraph_<?php echo $p_index; ?>" name="post_sections[<?php echo $index; ?>][paragraphs][<?php echo $p_index; ?>]" rows="4" style="width:100%;"><?php echo esc_textarea($paragraph); ?></textarea>
-                                    <button type="button" class="button post-remove-paragraph">حذف پاراگراف</button>
-                                </div>
-                                <?php
-                            }
-                            ?>
-                        </div>
-                        <button type="button" class="button post-add-paragraph">افزودن محتوا (p)</button>
-                    </div>
-                </div>
-                <?php
-            }
+            wp_editor(
+                wp_kses_post($intro),
+                'post_intro',
+                array(
+                    'textarea_name' => 'post_intro',
+                    'textarea_rows' => 5,
+                    'media_buttons' => true,
+                    'teeny' => false,
+                    'quicktags' => true,
+                )
+            );
             ?>
         </div>
 
-        <!-- دکمه‌های افزودن بخش جدید -->
-        <div class="post-add-section-buttons">
-            <button type="button" class="button post-add-section" data-header-type="h2">محتوا همراه با h2</button>
-            <button type="button" class="button post-add-section" data-header-type="h3">محتوا همراه با h3</button>
-            <button type="button" class="button post-add-section" data-header-type="h4">محتوا همراه با h4</button>
+        <!-- محتوای اصلی -->
+        <div class="post-section">
+            <label for="post_content"><strong>محتوای اصلی</strong></label><br>
+            <?php
+            wp_editor(
+                wp_kses_post($content),
+                'post_content',
+                array(
+                    'textarea_name' => 'post_content',
+                    'textarea_rows' => 10,
+                    'media_buttons' => true,
+                    'teeny' => false,
+                    'quicktags' => true,
+                )
+            );
+            ?>
         </div>
     </div>
 
     <style>
         .post-metabox { padding: 10px; }
         .post-section { margin-bottom: 20px; }
-        .post-section-container { border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; background: #f9f9f9; }
-        .post-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .post-section-content { margin-bottom: 10px; }
-        .post-paragraph { margin-bottom: 10px; }
-        .post-add-section-buttons { margin-top: 20px; }
-        .post-add-section-buttons button { margin-right: 10px; }
-        .post-remove-section, .post-remove-paragraph { background: #d63638; color: #fff; border-color: #d63638; }
-        .post-remove-section:hover, .post-remove-paragraph:hover { background: #b32d2e; border-color: #b32d2e; }
     </style>
 
     <script>
         jQuery(document).ready(function($) {
-            let sectionIndex = <?php echo count($sections); ?>;
+            // اطمینان از لود شدن Quicktags
+            if (typeof QTags !== 'undefined') {
+                // افزودن دکمه‌های Quicktags برای ویرایشگر مقدمه
+                QTags.addButton('h2_tag', 'h2', '<h2>', '</h2>', '', 'درج تگ h2', 101, 'post_intro');
+                QTags.addButton('h3_tag', 'h3', '<h3>', '</h3>', '', 'درج تگ h3', 102, 'post_intro');
+                QTags.addButton('h4_tag', 'h4', '<h4>', '</h4>', '', 'درج تگ h4', 103, 'post_intro');
+                QTags.addButton('p_tag', 'p', '<p>', '</p>', '', 'درج تگ p', 104, 'post_intro');
+                QTags.addButton('div_tag', 'div', '<div class="normal-content-wrapper">', '</div>', '', 'درج تگ div با کلاس normal-content-wrapper', 105, 'post_intro');
 
-            // افزودن بخش جدید
-            $('.post-add-section').on('click', function() {
-                const headerType = $(this).data('header-type');
-                const container = $('#post-sections-container');
-                const newSection = `
-                    <div class="post-section-container" data-index="${sectionIndex}">
-                        <div class="post-section-header">
-                            <strong>${headerType}</strong>
-                            <button type="button" class="button post-remove-section">حذف بخش</button>
-                        </div>
-                        <div class="post-section-content">
-                            <label for="post_section_${sectionIndex}_header">هدر (${headerType})</label><br>
-                            <textarea id="post_section_${sectionIndex}_header" name="post_sections[${sectionIndex}][header_content]" rows="3" style="width:100%;"></textarea>
-                            <input type="hidden" name="post_sections[${sectionIndex}][header_type]" value="${headerType}">
-                            <div class="post-paragraphs-container">
-                                <div class="post-paragraph">
-                                    <label for="post_section_${sectionIndex}_paragraph_0">محتوا (p)</label><br>
-                                    <textarea id="post_section_${sectionIndex}_paragraph_0" name="post_sections[${sectionIndex}][paragraphs][0]" rows="4" style="width:100%;"></textarea>
-                                    <button type="button" class="button post-remove-paragraph">حذف پاراگراف</button>
-                                </div>
-                            </div>
-                            <button type="button" class="button post-add-paragraph">افزودن محتوا (p)</button>
-                        </div>
-                    </div>
-                `;
-                container.append(newSection);
-                sectionIndex++;
-            });
-
-            // افزودن پاراگراف جدید
-            $(document).on('click', '.post-add-paragraph', function() {
-                const sectionContainer = $(this).closest('.post-section-container');
-                const sectionIndex = sectionContainer.data('index');
-                const paragraphsContainer = sectionContainer.find('.post-paragraphs-container');
-                const paragraphIndex = paragraphsContainer.find('.post-paragraph').length;
-                const newParagraph = `
-                    <div class="post-paragraph">
-                        <label for="post_section_${sectionIndex}_paragraph_${paragraphIndex}">محتوا (p)</label><br>
-                        <textarea id="post_section_${sectionIndex}_paragraph_${paragraphIndex}" name="post_sections[${sectionIndex}][paragraphs][${paragraphIndex}]" rows="4" style="width:100%;"></textarea>
-                        <button type="button" class="button post-remove-paragraph">حذف پاراگراف</button>
-                    </div>
-                `;
-                paragraphsContainer.append(newParagraph);
-            });
-
-            // حذف بخش
-            $(document).on('click', '.post-remove-section', function() {
-                $(this).closest('.post-section-container').remove();
-            });
-
-            // حذف پاراگراف
-            $(document).on('click', '.post-remove-paragraph', function() {
-                $(this).closest('.post-paragraph').remove();
-            });
+                // افزودن دکمه‌های Quicktags برای ویرایشگر محتوای اصلی
+                QTags.addButton('h2_tag_content', 'h2', '<h2>', '</h2>', '', 'درج تگ h2', 101, 'post_content');
+                QTags.addButton('h3_tag_content', 'h3', '<h3>', '</h3>', '', 'درج تگ h3', 102, 'post_content');
+                QTags.addButton('h4_tag_content', 'h4', '<h4>', '</h4>', '', 'درج تگ h4', 103, 'post_content');
+                QTags.addButton('p_tag_content', 'p', '<p>', '</p>', '', 'درج تگ p', 104, 'post_content');
+                QTags.addButton('div_tag_content', 'div', '<div class="normal-content-wrapper">', '</div>', '', 'درج تگ div با کلاس normal-content-wrapper', 105, 'post_content');
+            }
         });
     </script>
     <?php
 }
 
-// ذخیره داده‌های متاباکس
+// ذخیره داده‌های متاباکس محتوای وبلاگ
 function post_save_meta_box_data($post_id) {
     if (!isset($_POST['post_content_meta_box_nonce']) || !wp_verify_nonce($_POST['post_content_meta_box_nonce'], 'post_content_meta_box')) {
         return;
@@ -176,27 +108,24 @@ function post_save_meta_box_data($post_id) {
 
     // ذخیره مقدمه
     if (isset($_POST['post_intro'])) {
-        update_post_meta($post_id, '_post_intro', sanitize_textarea_field($_POST['post_intro']));
+        update_post_meta($post_id, '_post_intro', wp_kses_post($_POST['post_intro']));
+    } else {
+        delete_post_meta($post_id, '_post_intro');
     }
 
-    // ذخیره بخش‌ها
-    if (isset($_POST['post_sections'])) {
-        $sections = [];
-        foreach ($_POST['post_sections'] as $index => $section) {
-            $sections[$index] = [
-                'header_type' => sanitize_text_field($section['header_type']),
-                'header_content' => sanitize_textarea_field($section['header_content']),
-                'paragraphs' => isset($section['paragraphs']) ? array_map('sanitize_textarea_field', $section['paragraphs']) : [],
-            ];
-        }
-        update_post_meta($post_id, '_post_sections', $sections);
+    // ذخیره محتوای اصلی
+    if (isset($_POST['post_content'])) {
+        update_post_meta($post_id, '_post_content', wp_kses_post($_POST['post_content']));
     } else {
-        delete_post_meta($post_id, '_post_sections');
+        delete_post_meta($post_id, '_post_content');
     }
+
+    // حذف متای قدیمی _post_sections (برای اطمینان از پاکسازی داده‌های قدیمی)
+    delete_post_meta($post_id, '_post_sections');
 }
 add_action('save_post', 'post_save_meta_box_data');
 
-// افزودن متاباکس به پست‌تایپ post
+// افزودن متاباکس سوالات متداول
 function faq_metabox_add() {
     add_meta_box(
         'faq_metabox',
@@ -209,7 +138,7 @@ function faq_metabox_add() {
 }
 add_action('add_meta_boxes', 'faq_metabox_add');
 
-// رندر محتوای متاباکس
+// رندر محتوای متاباکس سوالات متداول
 function faq_metabox_callback($post) {
     wp_nonce_field('faq_metabox_nonce', 'faq_metabox_nonce_field');
     $faqs = get_post_meta($post->ID, '_faq_data', true);
@@ -263,7 +192,7 @@ function faq_metabox_callback($post) {
     <?php
 }
 
-// ذخیره داده‌های متاباکس
+// ذخیره داده‌های متاباکس سوالات متداول
 function faq_metabox_save($post_id) {
     if (!isset($_POST['faq_metabox_nonce_field']) || !wp_verify_nonce($_POST['faq_metabox_nonce_field'], 'faq_metabox_nonce')) {
         return;
@@ -286,58 +215,112 @@ function faq_metabox_save($post_id) {
 }
 add_action('save_post', 'faq_metabox_save');
 
-// اطمینان از وجود jQuery
-function faq_enqueue_scripts() {
-    wp_enqueue_script('jquery');
-}
-add_action('admin_enqueue_scripts', 'faq_enqueue_scripts');
-
-// افزودن متا باکس
+// افزودن متاباکس نام انگلیسی
 function add_english_name_meta_box() {
     add_meta_box(
-        'english_name_meta_box',       // ID منحصر به فرد متا باکس
-        'نام انگلیسی',                 // عنوان متا باکس
-        'render_english_name_meta_box',// تابعی که محتوای باکس را نمایش می‌دهد
-        'post',                        // نوع مطلب (post, page یا CPT)
-        'side',                        // موقعیت (side, normal, advanced)
-        'default'                      // اولویت نمایش
+        'english_name_meta_box',
+        'نام انگلیسی',
+        'render_english_name_meta_box',
+        'post',
+        'side',
+        'default'
     );
 }
 add_action('add_meta_boxes', 'add_english_name_meta_box');
 
-// نمایش فیلد در متا باکس
+// نمایش فیلد نام انگلیسی
 function render_english_name_meta_box($post) {
-    // امنیت: غربالگری و Nonce
-    wp_nonce_field(basename(__FILE__), 'english_name_nonce');
-
-    // دریافت مقدار قبلی ذخیره‌شده
+    wp_nonce_field('english_name_meta_box', 'english_name_nonce');
     $value = get_post_meta($post->ID, '_english_name_value_key', true);
-
-    echo '<label for="english_name_field">نام انگلیسی:</label>';
-    echo '<input type="text" id="english_name_field" name="english_name_field" value="' . esc_attr($value) . '" class="widefat" />';
+    ?>
+    <label for="english_name_field">نام انگلیسی:</label>
+    <input type="text" id="english_name_field" name="english_name_field" value="<?php echo esc_attr($value); ?>" class="widefat" />
+    <?php
 }
 
-// ذخیره داده‌ها
+// ذخیره داده‌های نام انگلیسی
 function save_english_name_meta_box_data($post_id) {
-    // بررسی nonce برای امنیت
-    if (!isset($_POST['english_name_nonce']) || !wp_verify_nonce($_POST['english_name_nonce'], basename(__FILE__))) {
+    if (!isset($_POST['english_name_nonce']) || !wp_verify_nonce($_POST['english_name_nonce'], 'english_name_meta_box')) {
         return;
     }
-
-    // بررسی اینکه آیا داده از طریق autosave نیست
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
         return;
     }
-
-    // بررسی مجوز کاربر
     if (!current_user_can('edit_post', $post_id)) {
         return;
     }
-
-    // ذخیره یا به‌روزرسانی داده
     if (isset($_POST['english_name_field'])) {
         $sanitized_value = sanitize_text_field($_POST['english_name_field']);
         update_post_meta($post_id, '_english_name_value_key', $sanitized_value);
     }
 }
 add_action('save_post', 'save_english_name_meta_box_data');
+
+// لود اسکریپت‌های مورد نیاز
+function post_enqueue_scripts() {
+    wp_enqueue_script('jquery');
+    wp_enqueue_editor();
+    wp_enqueue_script('wp-tinymce');
+    wp_enqueue_script('quicktags');
+}
+add_action('admin_enqueue_scripts', 'post_enqueue_scripts');
+
+// تابع برای استخراج سرتیترها و ایجاد فهرست مطالب
+function generate_table_of_contents($content) {
+    if (empty($content)) {
+        return '';
+    }
+
+    // استفاده از DOMDocument برای تجزیه HTML
+    $doc = new DOMDocument();
+    // تنظیم برای پشتیبانی از UTF-8
+    @$doc->loadHTML('<?xml encoding="UTF-8">' . $content); // @ برای سرکوب هشدارهای HTML نامعتبر
+    $headings = $doc->getElementsByTagName('*');
+    $toc = [];
+    $index = 0;
+
+    // استخراج تمام تگ‌های h (h2, h3, h4, h5, h6)
+    foreach ($headings as $heading) {
+        if (preg_match('/^h[2-6]$/i', $heading->tagName)) {
+            $text = trim($heading->textContent);
+            if (!empty($text)) {
+                // ایجاد یک ID منحصربه‌فرد برای سرتیتر
+                $id = 'heading-' . $index;
+                // افزودن ID به تگ سرتیتر در محتوا
+                $heading->setAttribute('id', $id);
+                $toc[] = [
+                    'tag' => $heading->tagName,
+                    'text' => $text,
+                    'id' => $id,
+                ];
+                $index++;
+            }
+        }
+    }
+
+    // اگر هیچ سرتیتری یافت نشد، خالی برگردان
+    if (empty($toc)) {
+        return '';
+    }
+
+    // ایجاد HTML فهرست مطالب
+    $output = '<div class="list-content-wrapper normal-content-wrapper">';
+    $output .= '<h5>فهرست مطالب</h5>';
+    $output .= '<ul>';
+    foreach ($toc as $item) {
+        $output .= '<li><a href="#' . esc_attr($item['id']) . '">' . esc_html($item['text']) . '</a></li>';
+    }
+    $output .= '</ul>';
+    $output .= '</div>';
+
+    // به‌روزرسانی محتوای اصلی با IDهای اضافه‌شده
+    $content = $doc->saveHTML($doc->getElementsByTagName('body')->item(0));
+    // حذف تگ‌های body اضافی
+    $content = preg_replace('/<body[^>]*>|<\/body>/i', '', $content);
+
+    return [
+        'toc' => $output,
+        'content' => $content,
+    ];
+}
+?>

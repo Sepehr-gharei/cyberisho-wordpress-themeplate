@@ -8,7 +8,7 @@ if ($loop->have_posts()):
         $loop->the_post();
         ?>
         <div class="swiper-slide">
-            <a href="" <?php the_permalink(); ?>">
+            <a href="<?php the_permalink(); ?>">
                 <?php if (has_post_thumbnail()): ?>
                     <?php the_post_thumbnail('post-thumbnail', array('class' => 'slide-image')); ?>
                 <?php else: ?>

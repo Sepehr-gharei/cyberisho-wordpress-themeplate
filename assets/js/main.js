@@ -495,3 +495,76 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+function getCurrentPageUrl() {
+  return window.location.href;
+}
+
+function shareToTelegram(event) {
+  event.preventDefault();
+  const url = encodeURIComponent(getCurrentPageUrl());
+  window.open(`https://t.me/share/url?url= ${url}`, "_blank");
+}
+
+function shareToWhatsApp(event) {
+  event.preventDefault();
+  const url = encodeURIComponent(getCurrentPageUrl());
+  window.open(`https://api.whatsapp.com/send?text= ${url}`, "_blank");
+}
+
+function shareToTwitter(event) {
+  event.preventDefault();
+  const url = encodeURIComponent(getCurrentPageUrl());
+  window.open(`https://twitter.com/intent/tweet?url= ${url}`, "_blank");
+}
+
+function shareToLinkedIn(event) {
+  event.preventDefault();
+  const url = encodeURIComponent(getCurrentPageUrl());
+  window.open(
+    `https://www.linkedin.com/shareArticle?mini=true&url= ${url}`,
+    "_blank"
+  );
+}
+
+function showCustomAlert(message) {
+  const alertBox = document.getElementById("customAlert");
+  const alertMessage = document.getElementById("alertMessage");
+
+  alertMessage.textContent = message;
+
+  alertBox.classList.remove("hidden");
+
+  setTimeout(() => {
+    alertBox.classList.add("hidden");
+  }, 3000);
+}
+
+function showCustomAlertRed(message) {
+  const alertBox = document.getElementById("customAlertRed");
+  const alertMessage = document.getElementById("alertMessageRed");
+
+  alertMessage.textContent = message;
+
+  alertBox.classList.remove("hidden");
+
+  setTimeout(() => {
+    alertBox.classList.add("hidden");
+  }, 3000);
+}
+
+function copyCurrentURL() {
+  const urlElement = document.getElementById("url-display");
+  const urlText = urlElement.innerText;
+
+  // استفاده از Clipboard API برای کپی کردن
+  navigator.clipboard
+    .writeText(urlText)
+    .then(() => {
+      showCustomAlert("آدرس با موفقیت کپی شد!");
+    })
+    .catch((err) => {
+      console.error("خطا در کپی کردن:", err);
+      showCustomAlertRed("خطا در کپی کردن آدرس.");
+    });
+}

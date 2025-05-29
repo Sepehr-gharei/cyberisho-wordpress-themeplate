@@ -1,40 +1,23 @@
-   <!-- ************************* start contact us container   *************************-->
-   <div class="contact-us-container animated-section">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 au-text">
-            <small>CONTACT US</small>
-            <h2>تماس با ما</h2>
-          </div>
-          <div class="col-12 breadcrumb">
-            <div class="d-flex">
-              <li class="home-page">
-                <a href="">
-                  <svg>
-                    <use href="#house-icon"></use>
-                  </svg>
-                </a>
-              </li>
-              <div class="arrow-icon">
-                <svg>
-                  <use href="#double-arrow-icon"></use>
-                </svg>
-              </div>
-              <li class="breadcrumb-page"><a href="">تماس با ما</a></li>
-            </div>
-          </div>
-          <div class="col-12 about-us-text">
-            <p id="main-text" class="main-text">
-            <?php
-          $current_post_id = get_the_ID();
-          $header_text = get_post_meta($current_post_id, '_page_header_text_key', true);
+<!-- ************************* start contact us container   *************************-->
+<div class="contact-us-container animated-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 au-text">
+        <small>CONTACT US</small>
+        <h2>تماس با ما</h2>
+      </div>
+      <?php custom_breadcrumb(); ?>
+      <div class="col-12 about-us-text">
+        <p id="main-text" class="main-text">
+          <?php
+          $header_text = get_the_content();
           if (!empty($header_text)) {
             echo $header_text;
           }
           ?>
-            </p>
-          </div>
-        </div>
+        </p>
       </div>
     </div>
-    <!-- ************************* end contact us container   *************************-->
+  </div>
+</div>
+<!-- ************************* end contact us container   *************************-->

@@ -4,9 +4,12 @@ function register_assets()
     /* **************************** start register CSS *****************************/
     wp_register_style('main-style', get_stylesheet_directory_uri() . '/style.css', [], '1.0.0');
     wp_enqueue_style('main-style');
+    if (is_page('landing-add')) {
+    wp_register_style('lading-add-style', get_stylesheet_directory_uri() . '/assets/css/landing-add.css', [], '1.0.0');
+    wp_enqueue_style('lading-add-style');
+    }
     /* **************************** end register CSS *****************************/
     /* **************************** start register JS *****************************/
-
     wp_deregister_script('jquery');
     wp_register_script(
         'jquery',
@@ -16,31 +19,35 @@ function register_assets()
         true
     );
     wp_enqueue_script('jquery');
-
-    wp_register_script('video-wrapper', get_template_directory_uri() . '/assets/js/video-wrapper.js', [], '1.0.0', true);
-    wp_enqueue_script('video-wrapper');
+    if (is_page('home') or is_page('landing') or is_page('about-us')) {
+        wp_register_script('video-wrapper', get_template_directory_uri() . '/assets/js/video-wrapper.js', [], '1.0.0', true);
+        wp_enqueue_script('video-wrapper');
+    }
     wp_register_script('load-animate', get_template_directory_uri() . '/assets/js/load-animate.js', [], '1.0.0', true);
     wp_enqueue_script('load-animate');
-    wp_register_script('portfolio', get_template_directory_uri() . '/assets/js/portfolio.js', [], '1.0.0', true);
-    wp_enqueue_script('portfolio');
-    wp_register_script('jquery-toc', get_template_directory_uri() . '/assets/js/jquery-toc.js', [], '1.0.0', true);
-    wp_enqueue_script('jquery-toc');
-    wp_enqueue_script('like-dislike-script', get_template_directory_uri() . '/assets/js/like-dislike.js', array('jquery'), null, true);
-    wp_localize_script('like-dislike-script', 'like_dislike_ajax', array(
-        'ajax_url' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('like_dislike_nonce')
-    ));
-    wp_enqueue_script('post-like-dislike', get_template_directory_uri() . '/assets/js/post-like-dislike.js', array('jquery'), null, true);
-    wp_localize_script('post-like-dislike', 'ajax_object', array(
-        'ajaxurl' => admin_url('admin-ajax.php')
-    ));
-    wp_register_script('blog-title', get_template_directory_uri() . '/assets/js/blog-title.js', [], '1.0.0', true);
-    wp_enqueue_script('blog-title');
+    if (is_single() or is_page('landing')) {
+        wp_register_script('jquery-toc', get_template_directory_uri() . '/assets/js/jquery-toc.js', [], '1.0.0', true);
+        wp_enqueue_script('jquery-toc');
+    }
+    if (is_single()) {
+        wp_enqueue_script('like-dislike-script', get_template_directory_uri() . '/assets/js/like-dislike.js', array('jquery'), null, true);
+        wp_localize_script('like-dislike-script', 'like_dislike_ajax', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('like_dislike_nonce')
+        ));
+        wp_enqueue_script('post-like-dislike', get_template_directory_uri() . '/assets/js/post-like-dislike.js', array('jquery'), null, true);
+        wp_localize_script('post-like-dislike', 'ajax_object', array(
+            'ajaxurl' => admin_url('admin-ajax.php')
+        ));
+    }
     wp_register_script('main', get_template_directory_uri() . '/assets/js/main.js', [], '1.0.0', true);
     wp_enqueue_script('main');
-    wp_register_script('chart', get_template_directory_uri() . '/assets/js/chart-container.js', [], '1.0.0', true);
-    wp_register_script('portfolio', get_template_directory_uri() . '/assets/js/portfolio.js', [], '1.0.0', true);
-    wp_enqueue_script('portfolio');
+    wp_register_script('meeting-form', get_template_directory_uri() . '/assets/js/meeting-form.js', [], '1.0.0', true);
+    wp_enqueue_script('meeting-form');
+    if (is_page('portfolio')) { // 'portfolio' باید slug یا ID صفحه باشد
+        wp_register_script('portfolio', get_template_directory_uri() . '/assets/js/portfolio.js', [], '1.0.0', true);
+        wp_enqueue_script('portfolio');
+    }
 
 }
 add_action('wp_enqueue_scripts', 'register_assets');
@@ -96,24 +103,3 @@ function cyberisho_add_ajax_url_to_form()
     <?php
 }
 add_action('wp_footer', 'cyberisho_add_ajax_url_to_form');
-
-function my_theme_enqueue_scripts()
-{
-    // ثبت و بارگذاری فایل جاوااسکریپت
-    wp_enqueue_script(
-        'custom-script',
-        get_template_directory_uri() . '/assets/js/copy-url.js',
-        array('jquery'), // وابستگی به jQuery
-        '1.0.0',
-        true
-    );
-
-    // ارسال متغیر ajaxurl به جاوااسکریپت
-    wp_localize_script(
-        'custom-script',
-        'my_ajax_object',
-        array('ajaxurl' => admin_url('admin-ajax.php'))
-    );
-}
-add_action('wp_enqueue_scripts', 'my_theme_enqueue_scripts');
-

@@ -23,9 +23,11 @@ if ($query->have_posts()):
                 // بررسی تکراری بودن دسته‌بندی
                 if (!in_array($category->term_id, $displayed_categories)) {
                     ?>
-                    <div class="item <?php echo $is_first ? 'active' : ''; ?>" id="item-<?php echo $item_count; ?>">
-                        <?php echo esc_html($category->name); ?>
-                    </div>
+                    <a href="<?php echo esc_url(get_category_link($category->term_id)); ?>">
+                        <div class="item <?php echo $is_first ? 'active' : ''; ?>" id="item-<?php echo $item_count; ?>">
+                            <?php echo esc_html($category->name); ?>
+                        </div>
+                    </a>
                     <?php
                     // افزودن دسته‌بندی به لیست چاپ‌شده‌ها
                     $displayed_categories[] = $category->term_id;

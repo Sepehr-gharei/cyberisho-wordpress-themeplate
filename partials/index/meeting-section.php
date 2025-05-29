@@ -6,12 +6,8 @@
 <div class="meeting-section animated-section">
     <div class="container-fluid">
         <div class="row">
-            <div class="metting-form-container">
-                <h3>درخاست ملاقات حضوری :</h3>
-                <input type="text" placeholder="نام شما" />
-                <input type="text" placeholder="شماره تماس" />
-                <input class="submit" type="submit" value="ثبت درخواست" />
-            </div>
+        <?php $form = new Form;
+            echo $form->meeting_form(); ?>
             <div class="text-field">
                 <h3>
                     <h2><?php echo $home_options['home_meeting_title']; ?></h2>
