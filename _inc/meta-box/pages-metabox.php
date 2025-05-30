@@ -542,6 +542,806 @@ add_action('save_post', 'save_my_contact_location_metabox');
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function my_landing_add_page_metabox()
+{
+    error_log('my_landing_add_page_metabox function called');
+    global $post;
+
+    if ($post && $post->post_name === 'landing-add') {
+        // Remove default editor
+        remove_post_type_support('page', 'editor');
+
+        add_meta_box(
+            'landing_add_page_metabox',
+            'محتوای هدر صفحه Landing Add',
+            'landing_add_page_metabox_callback',
+            'page',
+            'normal',
+            'high'
+        );
+    }
+}
+add_action('add_meta_boxes', 'my_landing_add_page_metabox');
+
+function landing_add_page_metabox_callback($post)
+{
+    wp_nonce_field('landing_add_metabox_nonce', 'landing_add_nonce');
+
+    // Retrieve saved values
+    $header_top_text = get_post_meta($post->ID, '_landing_add_header_top_text', true);
+    $header_title_text = get_post_meta($post->ID, '_landing_add_header_title_text', true);
+    $header_content = get_post_meta($post->ID, '_landing_add_header_content', true);
+    $video_id = get_post_meta($post->ID, '_landing_add_video_attachment_id', true);
+    $video_url = $video_id ? wp_get_attachment_url($video_id) : '';
+    $thumbnail_id = get_post_meta($post->ID, '_landing_add_thumbnail_attachment_id', true);
+    $thumbnail_url = $thumbnail_id ? wp_get_attachment_image_url($thumbnail_id, 'medium') : '';
+    $reasons_top_text = get_post_meta($post->ID, '_landing_add_reasons_top_text', true);
+    $reasons_header_text = get_post_meta($post->ID, '_landing_add_reasons_header_text', true);
+    $reasons = get_post_meta($post->ID, '_landing_add_reasons', true);
+    $reasons_data = !empty($reasons) ? json_decode($reasons, true) : array_fill(0, 3, ['header' => '', 'content' => '']);
+    $your_role_top_text = get_post_meta($post->ID, '_landing_add_your_role_top_text', true);
+    $your_role_title_text = get_post_meta($post->ID, '_landing_add_your_role_title_text', true);
+    $your_role_content = get_post_meta($post->ID, '_landing_add_your_role_content', true);
+    $cyberisho_top_text = get_post_meta($post->ID, '_landing_add_cyberisho_top_text', true);
+    $cyberisho_title_text = get_post_meta($post->ID, '_landing_add_cyberisho_title_text', true);
+    $cyberisho_reasons = get_post_meta($post->ID, '_landing_add_cyberisho_reasons', true);
+    $cyberisho_reasons_data = !empty($cyberisho_reasons) ? json_decode($cyberisho_reasons, true) : array_fill(0, 1, ['content' => '']);
+    $solutions_top_text = get_post_meta($post->ID, '_landing_add_solutions_top_text', true);
+    $solutions_header_text = get_post_meta($post->ID, '_landing_add_solutions_header_text', true);
+    $solutions_content = get_post_meta($post->ID, '_landing_add_solutions_content', true);
+    $dangers_top_text = get_post_meta($post->ID, '_landing_add_dangers_top_text', true);
+    $dangers_title_text = get_post_meta($post->ID, '_landing_add_dangers_title_text', true);
+    $dangers = get_post_meta($post->ID, '_landing_add_dangers', true);
+    $dangers_data = !empty($dangers) ? json_decode($dangers, true) : array_fill(0, 3, ['content' => '']);
+    $ad_header_text = get_post_meta($post->ID, '_landing_add_ad_header_text', true);
+    $ad_content = get_post_meta($post->ID, '_landing_add_ad_content', true);
+
+    ?>
+    <div class="landing-add-metabox-container">
+        <!-- Header Content Section -->
+        <div class="landing-field-group">
+            <h3>محتوای هدر صفحه Landing Add</h3>
+            <div class="field-group">
+                <label for="landing_add_header_top_text">متن بالایی</label>
+                <textarea name="landing_add_header_top_text" id="landing_add_header_top_text"
+                    style="width:100%; height:60px;">
+                    <?php echo esc_textarea($header_top_text); ?>
+                </textarea>
+            </div>
+            <div class="field-group">
+                <label for="landing_add_header_title_text">متن تایتل</label>
+                <textarea name="landing_add_header_title_text" id="landing_add_header_title_text"
+                    style="width:100%; height:60px;">
+                    <?php echo esc_textarea($header_title_text); ?>
+                </textarea>
+            </div>
+            <div class="field-group">
+                <label for="landing_add_header_content">متن محتوا</label>
+                <?php
+                wp_editor(
+                    wp_kses_post($header_content),
+                    'landing_add_header_content',
+                    array(
+                        'textarea_name' => 'landing_add_header_content',
+                        'textarea_rows' => 10,
+                        'media_buttons' => true,
+                        'teeny' => false,
+                        'quicktags' => array(
+                            'buttons' => 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close,p'
+                        )
+                    )
+                );
+                ?>
+            </div>
+        </div>
+
+        <!-- Reasons Section -->
+        <div class="landing-reasons-wrapper">
+            <h3>محتوای قسمت دلایل داشتن سایت</h3>
+            <div class="field-group">
+                <label for="landing_add_reasons_top_text">متن بالایی دلایل داشتن سایت</label>
+                <textarea name="landing_add_reasons_top_text" id="landing_add_reasons_top_text"
+                    style="width:100%; height:60px;">
+                    <?php echo esc_textarea($reasons_top_text); ?>
+                </textarea>
+            </div>
+            <div class="field-group">
+                <label for="landing_add_reasons_header_text">هدر دلایل سایت</label>
+                <textarea name="landing_add_reasons_header_text" id="landing_add_reasons_header_text"
+                    style="width:100%; height:60px;">
+                    <?php echo esc_textarea($reasons_header_text); ?>
+                </textarea>
+            </div>
+            <!-- Video Upload -->
+            <div class="field-group">
+                <label>ویدیو</label>
+                <div class="video-preview">
+                    <?php if ($video_url): ?>
+                        <video controls style="max-width:100%; margin-top:10px;">
+                            <source src=<?php echo esc_url($video_url); ?>" type="video/mp4">
+                            مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.
+                        </video>
+                    <?php endif; ?>
+                </div>
+                <input type="hidden" name="landing_add_video_attachment_id" id="landing_add_video_attachment_id"
+                    value="<?php echo esc_attr($video_id); ?>" />
+                <button type="button" class="button button-secondary" id="upload_video_button">
+                    <?php echo $video_id ? 'تغییر ویدیو' : 'انتخاب ویدیو'; ?>
+                </button>
+                <?php if ($video_id): ?>
+                    <button type="button" class="button button-secondary" id="remove_video_button"
+                        style="margin-top: 10px; color: red;">
+                        حذف ویدیو
+                    </button>
+                <?php endif; ?>
+            </div>
+            <!-- Thumbnail Upload -->
+            <div class="field-group">
+                <label>عکس تامبنیل</label>
+                <div class="thumbnail-preview">
+                    <?php if ($thumbnail_url): ?>
+                        <img src="<?php echo esc_url($thumbnail_url); ?>" alt="Thumbnail Preview"
+                            style="max-width: 100%; margin-top: 10px; border-radius: 8px;" />
+                    <?php endif; ?>
+                </div>
+                <input type="hidden" name="landing_add_thumbnail_attachment_id" id="landing_add_thumbnail_attachment_id"
+                    value="<?php echo esc_attr($thumbnail_id); ?>" />
+                <button type="button" class="button button-secondary" id="upload_thumbnail_button">
+                    <?php echo $thumbnail_id ? 'تغییر تصویر' : 'انتخاب تامبنیل'; ?>
+                </button>
+                <?php if ($thumbnail_id): ?>
+                    <button type="button" class="button button-secondary" id="remove_thumbnail_button"
+                        style="margin-top: 10px; color: red;">
+                        حذف تصویر
+                    </button>
+                <?php endif; ?>
+            </div>
+            <!-- Reasons -->
+            <?php for ($i = 0; $i < 3; $i++): ?>
+                <div class="reason-group">
+                    <h4>دلیل <?php echo $i + 1; ?></h4>
+                    <div class="field-group">
+                        <label for="landing_add_reasons_<?php echo $i; ?>_header">هدر دلیل</label>
+                        <textarea name="landing_add_reasons[<?php echo $i; ?>][header]"
+                            id="landing_add_reasons_<?php echo $i; ?>_header" style="width:100%; height:60px;">
+                            <?php echo esc_textarea($reasons_data[$i]['header'] ?? ''); ?>
+                        </textarea>
+                    </div>
+                    <div class="field-group">
+                        <label for="landing_add_reasons_<?php echo $i; ?>_content">محتوای دلیل</label>
+                        <?php
+                        wp_editor(
+                            wp_kses_post($reasons_data[$i]['content'] ?? ''),
+                            'landing_add_reasons_' . $i . '_content',
+                            array(
+                                'textarea_name' => 'landing_add_reasons[' . $i . '][content]',
+                                'textarea_rows' => 8,
+                                'media_buttons' => true,
+                                'teeny' => false,
+                                'quicktags' => array(
+                                    'buttons' => 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close,p'
+                                )
+                            )
+                        );
+                        ?>
+                    </div>
+                </div>
+            <?php endfor; ?>
+        </div>
+
+        <!-- Your Role Section -->
+        <div class="landing-your-role-wrapper">
+            <h3>نقش شما</h3>
+            <div class="field-group">
+                <label for="landing_add_your_role_top_text">متن بالایی</label>
+                <textarea name="landing_add_your_role_top_text" id="landing_add_your_role_top_text"
+                    style="width:100%; height:60px;">
+                    <?php echo esc_textarea($your_role_top_text); ?>
+                </textarea>
+            </div>
+            <div class="field-group">
+                <label for="landing_add_your_role_title_text">تایتل</label>
+                <textarea name="landing_add_your_role_title_text" id="landing_add_your_role_title_text"
+                    style="width:100%; height:60px;">
+                    <?php echo esc_textarea($your_role_title_text); ?>
+                </textarea>
+            </div>
+            <div class="field-group">
+                <label for="landing_add_your_role_content">متن محتوا</label>
+                <?php
+                wp_editor(
+                    wp_kses_post($your_role_content),
+                    'landing_add_your_role_content',
+                    array(
+                        'textarea_name' => 'landing_add_your_role_content',
+                        'textarea_rows' => 10,
+                        'media_buttons' => true,
+                        'teeny' => false,
+                        'quicktags' => array(
+                            'buttons' => 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close,p'
+                        )
+                    )
+                );
+                ?>
+            </div>
+        </div>
+
+        <!-- Reasons to Choose Cyberisho Section -->
+        <div class="landing-cyberisho-reasons-wrapper">
+            <h3>دلایل انتخاب سایبریشو</h3>
+            <div class="field-group">
+                <label for="landing_add_cyberisho_top_text">متن بالایی</label>
+                <textarea name="landing_add_cyberisho_top_text" id="landing_add_cyberisho_top_text"
+                    style="width:100%; height:60px;">
+                    <?php echo esc_textarea($cyberisho_top_text); ?>
+                </textarea>
+            </div>
+            <div class="field-group">
+                <label for="landing_add_cyberisho_title_text">متن تایتل</label>
+                <textarea name="landing_add_cyberisho_title_text" id="landing_add_cyberisho_title_text"
+                    style="width:100%; height:60px;">
+                    <?php echo esc_textarea($cyberisho_title_text); ?>
+                </textarea>
+            </div>
+            <div id="cyberisho-reasons-container">
+                <?php foreach ($cyberisho_reasons_data as $index => $reason): ?>
+                    <div class="cyberisho-reason-group">
+                        <h4>دلیل <?php echo $index + 1; ?></h4>
+                        <textarea name="landing_add_cyberisho_reasons[<?php echo $index; ?>][content]"
+                            style="width:100%; height:100px;"><?php echo esc_textarea($reason['content'] ?? ''); ?></textarea>
+                        <button type="button" class="button remove-cyberisho-reason-btn"
+                            style="color: red; margin-top: 10px;">حذف دلیل</button>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <button type="button" class="button button-primary" id="add-cyberisho-reason-btn">افزودن دلیل</button>
+        </div>
+
+        <!-- Our Solutions Section -->
+        <div class="landing-solutions-wrapper">
+            <h3>راهکارهای ما</h3>
+            <div class="field-group">
+                <label for="landing_add_solutions_top_text">متن بالایی</label>
+                <textarea name="landing_add_solutions_top_text" id="landing_add_solutions_top_text"
+                    style="width:100%; height:60px;">
+                    <?php echo esc_textarea($solutions_top_text); ?>
+                </textarea>
+            </div>
+            <div class="field-group">
+                <label for="landing_add_solutions_header_text">متن هدر</label>
+                <textarea name="landing_add_solutions_header_text" id="landing_add_solutions_header_text"
+                    style="width:100%; height:60px;">
+                    <?php echo esc_textarea($solutions_header_text); ?>
+                </textarea>
+            </div>
+            <div class="field-group">
+                <label for="landing_add_solutions_content">متن محتوا</label>
+                <?php
+                wp_editor(
+                    wp_kses_post($solutions_content),
+                    'landing_add_solutions_content',
+                    array(
+                        'textarea_name' => 'landing_add_solutions_content',
+                        'textarea_rows' => 10,
+                        'media_buttons' => true,
+                        'teeny' => false,
+                        'quicktags' => array(
+                            'buttons' => 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close,p'
+                        )
+                    )
+                );
+                ?>
+            </div>
+        </div>
+
+        <!-- Dangers of Not Having a Website Section -->
+        <div class="landing-dangers-wrapper">
+            <h3>خطرات نداشتن سایت</h3>
+            <div class="field-group">
+                <label for="landing_add_dangers_top_text">متن بالایی</label>
+                <textarea name="landing_add_dangers_top_text" id="landing_add_dangers_top_text"
+                    style="width:100%; height:60px;">
+                    <?php echo esc_textarea($dangers_top_text); ?>
+                </textarea>
+            </div>
+            <div class="field-group">
+                <label for="landing_add_dangers_title_text">متن تایتل</label>
+                <textarea name="landing_add_dangers_title_text" id="landing_add_dangers_title_text"
+                    style="width:100%; height:60px;">
+                    <?php echo esc_textarea($dangers_title_text); ?>
+                </textarea>
+            </div>
+            <?php for ($i = 0; $i < 3; $i++): ?>
+                <div class="danger-group">
+                    <h4>خطر <?php echo $i + 1; ?></h4>
+                    <div class="field-group">
+                        <label for="landing_add_dangers_<?php echo $i; ?>_content">محتوای خطر</label>
+                        <?php
+                        wp_editor(
+                            wp_kses_post($dangers_data[$i]['content'] ?? ''),
+                            'landing_add_dangers_' . $i . '_content',
+                            array(
+                                'textarea_name' => 'landing_add_dangers[' . $i . '][content]',
+                                'textarea_rows' => 8,
+                                'media_buttons' => true,
+                                'teeny' => false,
+                                'quicktags' => array(
+                                    'buttons' => 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close,p'
+                                )
+                            )
+                        );
+                        ?>
+                    </div>
+                </div>
+            <?php endfor; ?>
+        </div>
+
+        <!-- Advertisement Text (Footer Text) Section -->
+        <div class="landing-ad-wrapper">
+            <h3>متن تبلیغ (متن فوتر)</h3>
+            <div class="field-group">
+                <label for="landing_add_ad_header_text">متن هدر</label>
+                <textarea name="landing_add_ad_header_text" id="landing_add_ad_header_text"
+                    style="width:100%; height:60px;">
+                    <?php echo esc_textarea($ad_header_text); ?>
+                </textarea>
+            </div>
+            <div class="field-group">
+                <label for="landing_add_ad_content">متن محتوا</label>
+                <?php
+                wp_editor(
+                    wp_kses_post($ad_content),
+                    'landing_add_ad_content',
+                    array(
+                        'textarea_name' => 'landing_add_ad_content',
+                        'textarea_rows' => 10,
+                        'media_buttons' => true,
+                        'teeny' => false,
+                        'quicktags' => array(
+                            'buttons' => 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close,p'
+                        )
+                    )
+                );
+                ?>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        jQuery(document).ready(function ($) {
+            // Register custom Quicktags button for <p> tag
+            if (typeof QTags !== 'undefined') {
+                QTags.addButton('p_tag', 'p', '<p>', '</p>', '', 'Paragraph tag', 1);
+            }
+
+            // Video Upload
+            var videoUploader;
+            $('#upload_video_button').on('click', function (e) {
+                e.preventDefault();
+                if (videoUploader) {
+                    videoUploader.open();
+                    return;
+                }
+                videoUploader = wp.media.frames.file_frame = wp.media({
+                    title: 'انتخاب ویدیو',
+                    button: { text: 'استفاده از این ویدیو' },
+                    multiple: false,
+                    library: { type: 'video' }
+                });
+                videoUploader.on('select', function () {
+                    var attachment = videoUploader.state().get('selection').first().toJSON();
+                    $('#landing_add_video_attachment_id').val(attachment.id);
+                    var videoHtml = '<video controls style="max-width:100%; margin-top:10px;"><source src="' + attachment.url + '" type="video/mp4"></video>';
+                    $('.video-preview').html(videoHtml);
+                    $('#remove_video_button').show();
+                });
+                videoUploader.open();
+            });
+            $('#remove_video_button').on('click', function (e) {
+                e.preventDefault();
+                $('#landing_add_video_attachment_id').val('');
+                $('.video-preview').html('');
+                $(this).hide();
+            });
+
+            // Thumbnail Upload
+            var thumbnailUploader;
+            $('#upload_thumbnail_button').on('click', function (e) {
+                e.preventDefault();
+                if (thumbnailUploader) {
+                    thumbnailUploader.open();
+                    return;
+                }
+                thumbnailUploader = wp.media.frames.file_frame = wp.media({
+                    title: 'انتخاب تصویر',
+                    button: { text: 'استفاده از این تصویر' },
+                    multiple: false,
+                    library: { type: 'image' }
+                });
+                thumbnailUploader.on('select', function () {
+                    var attachment = thumbnailUploader.state().get('selection').first().toJSON();
+                    $('#landing_add_thumbnail_attachment_id').val(attachment.id);
+                    var imageUrl = attachment.sizes && attachment.sizes.medium ? attachment.sizes.medium.url : attachment.url;
+                    $('.thumbnail-preview').html('<img src="' + imageUrl + '" style="max-width:100%; margin-top: 10px; border-radius: 8px;" />');
+                    $('#remove_thumbnail_button').show();
+                });
+                thumbnailUploader.open();
+            });
+            $('#remove_thumbnail_button').on('click', function (e) {
+                e.preventDefault();
+                $('#landing_add_thumbnail_attachment_id').val('');
+                $('.thumbnail-preview').html('');
+                $('#remove_thumbnail_button').hide();
+            });
+
+            // Add Cyberisho Reason
+            var maxCyberishoReasons = 5;
+            var cyberishoReasonCount = $('.cyberisho-reason-group').length;
+            $('#add-cyberisho-reason-btn').on('click', function () {
+                if (cyberishoReasonCount >= maxCyberishoReasons) {
+                    alert('حداکثر ۵ دلیل مجاز است.');
+                    return;
+                }
+                var newReason = `
+                    <div class="cyberisho-reason-group">
+                        <h4>دلیل ${cyberishoReasonCount + 1}</h4>
+                        <textarea name="landing_add_cyberisho_reasons[${cyberishoReasonCount}][content]" style="width:100%; height:100px;"></textarea>
+                        <button type="button" class="button remove-cyberisho-reason-btn" style="color: red; margin-top: 10px;">حذف دلیل</button>
+                    </div>
+                `;
+                $('#cyberisho-reasons-container').append(newReason);
+                cyberishoReasonCount++;
+            });
+
+            // Remove Cyberisho Reason
+            $(document).on('click', '.remove-cyberisho-reason-btn', function () {
+                if (confirm('آیا از حذف این دلیل مطمئن هستید؟')) {
+                    $(this).closest('.cyberisho-reason-group').remove();
+                    cyberishoReasonCount--;
+                    updateCyberishoReasonIndexes();
+                }
+            });
+
+            // Update Cyberisho Reason Indexes
+            function updateCyberishoReasonIndexes() {
+                $('#cyberisho-reasons-container .cyberisho-reason-group').each(function (index) {
+                    $(this).find('h4').text(`دلیل ${index + 1}`);
+                    $(this).find('textarea').attr('name', `landing_add_cyberisho_reasons[${index}][content]`);
+                });
+            }
+        });
+    </script>
+
+    <style>
+        .landing-add-metabox-container {
+            padding: 15px;
+        }
+
+        .landing-field-group {
+            margin-bottom: 20px;
+        }
+
+        .landing-reasons-wrapper,
+        .landing-your-role-wrapper,
+        .landing-cyberisho-reasons-wrapper,
+        .landing-solutions-wrapper,
+        .landing-dangers-wrapper,
+        .landing-ad-wrapper {
+            margin-top: 30px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+
+        .reason-group,
+        .cyberisho-reason-group,
+        .danger-group {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        .field-group {
+            margin-bottom: 15px;
+        }
+
+        .field-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .video-preview,
+        .thumbnail-preview {
+            margin-bottom: 10px;
+        }
+    </style>
+    <?php
+}
+
+// Save meta box data
+function save_landing_add_page_metabox($post_id)
+{
+    // Verify nonce
+    if (!isset($_POST['landing_add_nonce']) || !wp_verify_nonce($_POST['landing_add_nonce'], 'landing_add_metabox_nonce')) {
+        return;
+    }
+
+    // Check user permissions
+    if (!current_user_can('edit_page', $post_id)) {
+        return;
+    }
+
+    // Save header fields
+    if (isset($_POST['landing_add_header_top_text'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_add_header_top_text',
+            sanitize_textarea_field(wp_unslash($_POST['landing_add_header_top_text']))
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_header_top_text');
+    }
+
+    if (isset($_POST['landing_add_header_title_text'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_add_header_title_text',
+            sanitize_textarea_field(wp_unslash($_POST['landing_add_header_title_text']))
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_header_top_text');
+    }
+
+    if (isset($_POST['landing_add_header_content'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_add_header_content',
+            wp_kses_post(wp_unslash($_POST['landing_add_header_content']))
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_header_content');
+    }
+
+    // Save video attachment ID
+    if (isset($_POST['landing_add_video_attachment_id']) && !empty($_POST['landing_add_video_attachment_id'])) {
+        update_post_meta($post_id, '_landing_add_video_attachment_id', intval($_POST['landing_add_video_attachment_id']));
+    } else {
+        delete_post_meta($post_id, '_landing_add_video_attachment_id');
+    }
+
+    // Save thumbnail attachment ID
+    if (isset($_POST['landing_add_thumbnail_attachment_id']) && !empty($_POST['landing_add_thumbnail_attachment_id'])) {
+        update_post_meta($post_id, '_landing_add_thumbnail_attachment_id', intval($_POST['landing_add_thumbnail_attachment_id']));
+    } else {
+        delete_post_meta($post_id, '_landing_add_thumbnail_attachment_id');
+    }
+
+    // Save reasons top text
+    if (isset($_POST['landing_add_reasons_top_text'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_add_reasons_top_text',
+            sanitize_textarea_field(wp_unslash($_POST['landing_add_reasons_top_text']))
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_reasons_top_text');
+    }
+
+    // Save reasons header text
+    if (isset($_POST['landing_add_reasons_header_text'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_add_reasons_header_text',
+            sanitize_textarea_field(wp_unslash($_POST['landing_add_reasons_header_text']))
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_reasons_header_text');
+    }
+
+    // Save reasons
+    if (isset($_POST['landing_add_reasons'])) {
+        $reasons = array_map(function ($reason) {
+            return [
+                'header' => sanitize_textarea_field(wp_unslash($reason['header'] ?? '')),
+                'content' => wp_kses_post(wp_unslash($reason['content'] ?? ''))
+            ];
+        }, $_POST['landing_add_reasons']);
+
+        update_post_meta(
+            $post_id,
+            '_landing_add_reasons',
+            wp_json_encode($reasons, JSON_UNESCAPED_UNICODE)
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_reasons');
+    }
+
+    // Save your role fields
+    if (isset($_POST['landing_add_your_role_top_text'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_add_your_role_top_text',
+            sanitize_textarea_field(wp_unslash($_POST['landing_add_your_role_top_text']))
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_your_role_top_text');
+    }
+
+    if (isset($_POST['landing_add_your_role_title_text'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_add_your_role_title_text',
+            sanitize_textarea_field(wp_unslash($_POST['landing_add_your_role_title_text']))
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_your_role_title_text');
+    }
+
+    if (isset($_POST['landing_add_your_role_content'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_add_your_role_content',
+            wp_kses_post(wp_unslash($_POST['landing_add_your_role_content']))
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_your_role_content');
+    }
+
+    // Save Cyberisho reasons
+    if (isset($_POST['landing_add_cyberisho_reasons'])) {
+        $cyberisho_reasons = array_map(function ($reason) {
+            return [
+                'content' => sanitize_textarea_field(wp_unslash($reason['content'] ?? ''))
+            ];
+        }, $_POST['landing_add_cyberisho_reasons']);
+
+        update_post_meta(
+            $post_id,
+            '_landing_add_cyberisho_reasons',
+            wp_json_encode($cyberisho_reasons, JSON_UNESCAPED_UNICODE)
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_cyberisho_reasons');
+    }
+
+    // Save Cyberisho top text
+    if (isset($_POST['landing_add_cyberisho_top_text'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_add_cyberisho_top_text',
+            sanitize_textarea_field(wp_unslash($_POST['landing_add_cyberisho_top_text']))
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_cyberisho_top_text');
+    }
+
+    // Save Cyberisho title text
+    if (isset($_POST['landing_add_cyberisho_title_text'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_add_cyberisho_title_text',
+            sanitize_textarea_field(wp_unslash($_POST['landing_add_cyberisho_title_text']))
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_cyberisho_title_text');
+    }
+
+    // Save solutions fields
+    if (isset($_POST['landing_add_solutions_top_text'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_add_solutions_top_text',
+            sanitize_textarea_field(wp_unslash($_POST['landing_add_solutions_top_text']))
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_solutions_top_text');
+    }
+
+    // Save solutions header text
+    if (isset($_POST['landing_add_solutions_header_text'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_add_solutions_header_text',
+            sanitize_textarea_field(wp_unslash($_POST['landing_add_solutions_header_text']))
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_solutions_header_text');
+    }
+
+    // Save solutions content
+    if (isset($_POST['landing_add_solutions_content'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_add_solutions_content',
+            wp_kses_post(wp_unslash($_POST['landing_add_solutions_content']))
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_solutions_content');
+    }
+
+    // Save dangers top text
+    if (isset($_POST['landing_add_dangers_top_text'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_add_dangers_top_text',
+            sanitize_textarea_field(wp_unslash($_POST['landing_add_dangers_top_text']))
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_dangers_top_text');
+    }
+
+    // Save dangers title text
+    if (isset($_POST['landing_add_dangers_title_text'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_add_dangers_title_text',
+            sanitize_textarea_field(wp_unslash($_POST['landing_add_dangers_title_text']))
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_dangers_title_text');
+    }
+
+    // Save dangers
+    if (isset($_POST['landing_add_dangers'])) {
+        $dangers = array_map(function ($danger) {
+            return [
+                'content' => wp_kses_post(wp_unslash($danger['content'] ?? ''))
+            ];
+        }, $_POST['landing_add_dangers']);
+
+        update_post_meta(
+            $post_id,
+            '_landing_add_dangers',
+            wp_json_encode($dangers, JSON_UNESCAPED_UNICODE)
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_dangers');
+    }
+
+    // Save advertisement text fields
+    if (isset($_POST['landing_add_ad_header_text'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_add_ad_header_text',
+            sanitize_textarea_field(wp_unslash($_POST['landing_add_ad_header_text']))
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_ad_header_text');
+    }
+
+    // Save advertisement content
+    if (isset($_POST['landing_add_ad_content'])) {
+        update_post_meta(
+            $post_id,
+            '_landing_add_ad_content',
+            wp_kses_post(wp_unslash($_POST['landing_add_ad_content']))
+        );
+    } else {
+        delete_post_meta($post_id, '_landing_add_ad_content');
+    }
+}
+add_action('save_post', 'save_landing_add_page_metabox');
+
+
+
+
+
 // Add meta boxes for 'landing' page template
 function my_custom_landing_metaboxes()
 {
@@ -998,8 +1798,8 @@ function landing_page_metabox_callback($post)
                                             <textarea
                                                 name="landing_containers[<?php echo $index; ?>][items][<?php echo $item_index; ?>][value]"
                                                 style="width: 100%; height: <?php echo $item['type'] === 'content' ? '100px' : '60px'; ?>;">
-                                                                                              <?php echo esc_textarea($item['value']); ?>
-                                                                                    </textarea>
+                                                                                                                                                                                                  <?php echo esc_textarea($item['value']); ?>
+                                                                                                                                                                                        </textarea>
                                             <input type="hidden"
                                                 name="landing_containers[<?php echo $index; ?>][items][<?php echo $item_index; ?>][type]"
                                                 value="<?php echo esc_attr($item['type']); ?>">

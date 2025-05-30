@@ -169,6 +169,7 @@
       <div class="container header-conent">
         <nav class="animated-section">
           <div class="logo-wrapper">
+            <a href="<?php echo home_url(); ?>">
             <svg viewBox="0 0 1920 739">
               <g id="var(--background-color)">
                 <path fill="var(--background-color)" opacity="1.00"
@@ -189,6 +190,7 @@
                   d=" M 1120.10 626.65 C 1133.92 629.50 1147.73 632.71 1161.83 634.05 C 1160.71 646.58 1159.50 659.10 1158.16 671.61 C 1142.22 669.97 1126.39 667.06 1110.91 662.93 C 1113.71 650.77 1117.21 638.78 1120.10 626.65 Z" />
               </g>
             </svg>
+            </a>
           </div>
           <div class="nav-item">
             <?php
@@ -217,12 +219,10 @@
         <div class="text-container  animated-section">
           <div class="right-side">
             <div class="content">
-              <p class="top-text">مسیر موفقیت از این صفحه میگزره</p>
-              <h2>ضرورتی برای تمام مشاغل</h2>
+              <p class="top-text"><?php echo get_post_meta(get_the_ID(), '_landing_add_header_top_text', true); ?></p>
+              <h2><?php echo get_post_meta(get_the_ID(), '_landing_add_header_title_text', true); ?></h2>
               <p class="main-content">
-                مشاغلی که در پی آینـده‌نگری و توسعه كار خود هستند مهمترین
-                اقدامشان، داشتن سایت خواهد بود. بسیاری از رقبای موفق شما با یک
-                سایت فروش چندین برابری دارند...
+                <?php echo get_post_meta(get_the_ID(), '_landing_add_header_content', true); ?>
               </p>
               <div class="bott-info">
                 <a href="">مشاوره رایگان</a>
@@ -270,7 +270,7 @@
           <h3>سایبریشو</h3>
         </div>
         <ul>
-      
+
           <?php
           // Output the right-menu using wp_nav_menu
           wp_nav_menu(array(

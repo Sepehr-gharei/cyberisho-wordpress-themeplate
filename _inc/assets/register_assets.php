@@ -5,8 +5,8 @@ function register_assets()
     wp_register_style('main-style', get_stylesheet_directory_uri() . '/style.css', [], '1.0.0');
     wp_enqueue_style('main-style');
     if (is_page('landing-add')) {
-    wp_register_style('lading-add-style', get_stylesheet_directory_uri() . '/assets/css/landing-add.css', [], '1.0.0');
-    wp_enqueue_style('lading-add-style');
+        wp_register_style('lading-add-style', get_stylesheet_directory_uri() . '/assets/css/landing-add.css', [], '1.0.0');
+        wp_enqueue_style('lading-add-style');
     }
     /* **************************** end register CSS *****************************/
     /* **************************** start register JS *****************************/
@@ -19,10 +19,8 @@ function register_assets()
         true
     );
     wp_enqueue_script('jquery');
-    if (is_page('home') or is_page('landing') or is_page('about-us')) {
-        wp_register_script('video-wrapper', get_template_directory_uri() . '/assets/js/video-wrapper.js', [], '1.0.0', true);
-        wp_enqueue_script('video-wrapper');
-    }
+    wp_register_script('video-wrapper', get_template_directory_uri() . '/assets/js/video-wrapper.js', [], '1.0.0', true);
+    wp_enqueue_script('video-wrapper');
     wp_register_script('load-animate', get_template_directory_uri() . '/assets/js/load-animate.js', [], '1.0.0', true);
     wp_enqueue_script('load-animate');
     if (is_single() or is_page('landing')) {

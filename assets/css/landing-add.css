@@ -358,7 +358,7 @@ header nav .nav-item a:last-child::after {
 
 .your-role-section .main-content {
   position: relative;
-  background-image: url("/index/assets/img/Landing-ADD-02.svg");
+  background-image: url("../img/Landing-ADD-02.svg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -539,7 +539,7 @@ header nav .nav-item a:last-child::after {
 
 .solution-section .solution-container {
   position: relative;
-  background-image: url("/index/assets/img/Landing-ADD-03.svg");
+  background-image: url("../img/Landing-ADD-03.svg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -754,6 +754,7 @@ header nav .nav-item a:last-child::after {
 footer.secend-footer {
   position: relative;
   overflow: hidden;
+  margin-bottom: 0 !important;
 }
 footer.secend-footer .curve-svg {
   height: 100%;
