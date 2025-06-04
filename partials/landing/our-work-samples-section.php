@@ -17,7 +17,12 @@
             <div class="ticker-container">
                 <div class="ticker-content" id="tickerContent">
                     <?php 
-                    get_template_part('loop/landing/work-sample-text-loop', 'work-sample-text-loop');
+                    get_template_part('loop/global/work-sample-text-loop', 'work-sample-text-loop');
+                    ?>
+                </div>
+                <div class="ticker-content" id="tickerContent">
+                    <?php 
+                    get_template_part('loop/global/work-sample-text-loop', 'work-sample-text-loop');
                     ?>
                 </div>
             </div>

@@ -545,17 +545,6 @@ add_action('save_post', 'save_my_contact_location_metabox');
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 function my_landing_add_page_metabox()
 {
     error_log('my_landing_add_page_metabox function called');
@@ -2067,3 +2056,231 @@ function save_landing_page_metabox($post_id)
     }
 }
 add_action('save_post', 'save_landing_page_metabox');
+
+
+// افزودن متاباکس‌ها برای صفحه Employment
+function my_employment_page_metabox() {
+    global $post;
+
+    if ($post && $post->post_name === 'employment') {
+        // متاباکس برای ردیف‌های شغلی
+        add_meta_box(
+            'employment_positions_metabox',
+            'ردیف‌های شغلی',
+            'employment_positions_metabox_callback',
+            'page',
+            'normal',
+            'high'
+        );
+
+        // متاباکس برای شرایط عمومی
+        add_meta_box(
+            'employment_general_conditions_metabox',
+            'شرایط عمومی',
+            'employment_general_conditions_metabox_callback',
+            'page',
+            'normal',
+            'high'
+        );
+
+        // متاباکس برای شرایط‌ها (تا 8 کانتینر)
+        add_meta_box(
+            'employment_conditions_metabox',
+            'شرایط‌ها',
+            'employment_conditions_metabox_callback',
+            'page',
+            'normal',
+            'high'
+        );
+    }
+}
+add_action('add_meta_boxes', 'my_employment_page_metabox');
+
+// کالبک متاباکس ردیف‌های شغلی
+function employment_positions_metabox_callback($post) {
+    wp_nonce_field('employment_positions_nonce', 'employment_positions_nonce');
+    $positions = get_post_meta($post->ID, '_employment_positions', true);
+    $positions_data = !empty($positions) ? json_decode($positions, true) : array_fill(0, 5, '');
+
+    ?>
+    <div class="employment-positions-wrapper">
+        <p>لطفاً اطلاعات مربوط به هر ردیف شغلی را وارد کنید:</p>
+        <?php for ($i = 0; $i < 5; $i++): ?>
+            <div class="position-group">
+                <label for="employment_position_<?php echo $i; ?>">ردیف شغلی <?php echo $i + 1; ?></label>
+                <textarea name="employment_positions[<?php echo $i; ?>]" id="employment_position_<?php echo $i; ?>"
+                    style="width:100%; height:80px;"><?php echo esc_textarea($positions_data[$i] ?? ''); ?></textarea>
+            </div>
+        <?php endfor; ?>
+    </div>
+    <style>
+        .employment-positions-wrapper .position-group {
+            margin-bottom: 15px;
+        }
+        .employment-positions-wrapper label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    </style>
+    <?php
+}
+
+// کالبک متاباکس شرایط عمومی
+function employment_general_conditions_metabox_callback($post) {
+    wp_nonce_field('employment_general_conditions_nonce', 'employment_general_conditions_nonce');
+    $general_conditions = get_post_meta($post->ID, '_employment_general_conditions', true);
+    ?>
+    <div class="employment-field-group">
+        <label for="employment_general_conditions">تایتل شرایط عمومی</label>
+        <textarea name="employment_general_conditions" id="employment_general_conditions"
+            style="width:100%; height:100px;"><?php echo esc_textarea($general_conditions); ?></textarea>
+    </div>
+    <?php
+}
+
+// کالبک متاباکس شرایط‌ها
+function employment_conditions_metabox_callback($post) {
+    wp_nonce_field('employment_conditions_nonce', 'employment_conditions_nonce');
+    $conditions = get_post_meta($post->ID, '_employment_conditions', true);
+    $conditions_data = !empty($conditions) ? json_decode($conditions, true) : array();
+
+    ?>
+    <div class="employment-conditions-wrapper">
+        <button type="button" class="button button-primary add-condition-btn">افزودن شرط جدید</button>
+        <div class="employment-conditions-container">
+            <?php if (!empty($conditions_data)): ?>
+                <?php foreach ($conditions_data as $index => $condition): ?>
+                    <div class="condition-group" data-index="<?php echo $index; ?>">
+                        <h4>شرط <?php echo $index + 1; ?></h4>
+                        <textarea name="employment_conditions[<?php echo $index; ?>]"
+                            style="width:100%; height:100px;"><?php echo esc_textarea($condition); ?></textarea>
+                        <button type="button" class="button remove-condition-btn" style="color: red; margin-top: 10px;">حذف شرط</button>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <script>
+        jQuery(document).ready(function ($) {
+            var maxConditions = 8;
+            var conditionCount = $('.condition-group').length;
+
+            // افزودن شرط جدید
+            $('.add-condition-btn').on('click', function () {
+                if (conditionCount >= maxConditions) {
+                    alert('حداکثر ۸ شرط مجاز است.');
+                    return;
+                }
+
+                var newCondition = `
+                    <div class="condition-group" data-index="${conditionCount}">
+                        <h4>شرط ${conditionCount + 1}</h4>
+                        <textarea name="employment_conditions[${conditionCount}]" style="width:100%; height:100px;"></textarea>
+                        <button type="button" class="button remove-condition-btn" style="color: red; margin-top: 10px;">حذف شرط</button>
+                    </div>
+                `;
+                $('.employment-conditions-container').append(newCondition);
+                conditionCount++;
+            });
+
+            // حذف شرط
+            $(document).on('click', '.remove-condition-btn', function () {
+                if (confirm('آیا از حذف این شرط مطمئن هستید؟')) {
+                    $(this).closest('.condition-group').remove();
+                    conditionCount--;
+                    updateConditionIndexes();
+                }
+            });
+
+            // به‌روزرسانی اندیس‌های شرط‌ها
+            function updateConditionIndexes() {
+                $('.employment-conditions-container .condition-group').each(function (index) {
+                    $(this).attr('data-index', index);
+                    $(this).find('h4').text(`شرط ${index + 1}`);
+                    $(this).find('textarea').attr('name', `employment_conditions[${index}]`);
+                });
+            }
+        });
+    </script>
+
+    <style>
+        .employment-conditions-wrapper {
+            margin-top: 20px;
+        }
+        .condition-group {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .condition-group h4 {
+            margin: 0 0 10px;
+        }
+        .employment-field-group {
+            margin-bottom: 20px;
+        }
+        .employment-field-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    </style>
+    <?php
+}
+
+// ذخیره داده‌های متاباکس‌ها
+function save_employment_page_metabox($post_id) {
+    // بررسی نانس‌ها
+    if (
+        (isset($_POST['employment_positions_nonce']) && !wp_verify_nonce($_POST['employment_positions_nonce'], 'employment_positions_nonce')) ||
+        (isset($_POST['employment_general_conditions_nonce']) && !wp_verify_nonce($_POST['employment_general_conditions_nonce'], 'employment_general_conditions_nonce')) ||
+        (isset($_POST['employment_conditions_nonce']) && !wp_verify_nonce($_POST['employment_conditions_nonce'], 'employment_conditions_nonce'))
+    ) {
+        return;
+    }
+
+    // بررسی مجوز کاربر
+    if (!current_user_can('edit_page', $post_id)) {
+        return;
+    }
+
+    // ذخیره ردیف‌های شغلی
+    if (isset($_POST['employment_positions'])) {
+        $positions = array_map('sanitize_textarea_field', wp_unslash($_POST['employment_positions']));
+        update_post_meta(
+            $post_id,
+            '_employment_positions',
+            wp_json_encode($positions, JSON_UNESCAPED_UNICODE)
+        );
+    } else {
+        delete_post_meta($post_id, '_employment_positions');
+    }
+
+    // ذخیره شرایط عمومی
+    if (isset($_POST['employment_general_conditions'])) {
+        update_post_meta(
+            $post_id,
+            '_employment_general_conditions',
+            sanitize_textarea_field(wp_unslash($_POST['employment_general_conditions']))
+        );
+    } else {
+        delete_post_meta($post_id, '_employment_general_conditions');
+    }
+
+    // ذخیره شرایط‌ها
+    if (isset($_POST['employment_conditions'])) {
+        $conditions = array_map('sanitize_textarea_field', wp_unslash($_POST['employment_conditions']));
+        $conditions = array_slice($conditions, 0, 8); // محدود کردن به 8 شرط
+        update_post_meta(
+            $post_id,
+            '_employment_conditions',
+            wp_json_encode($conditions, JSON_UNESCAPED_UNICODE)
+        );
+    } else {
+        delete_post_meta($post_id, '_employment_conditions');
+    }
+}
+add_action('save_post', 'save_employment_page_metabox');

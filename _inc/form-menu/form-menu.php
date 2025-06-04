@@ -13,12 +13,12 @@ class Admin_Form
         $contact_table = $wpdb->prefix . 'contact_forms';
         $meeting_table = $wpdb->prefix . 'meeting_forms';
         $inperson_meeting_table = $wpdb->prefix . 'inperson_meeting_forms';
+        $job_application_table = $wpdb->prefix . 'job_application_forms';
 
         // Create or update contact_forms table
         if ($wpdb->get_var("SHOW TABLES LIKE '$contact_table'") != $contact_table) {
             $this->create_custom_table_contact_form();
         } else {
-            // Check if email column exists, add if missing
             $columns = $wpdb->get_results("SHOW COLUMNS FROM $contact_table LIKE 'email'");
             if (empty($columns)) {
                 $wpdb->query("ALTER TABLE $contact_table ADD email VARCHAR(100) DEFAULT NULL AFTER name");
@@ -38,6 +38,11 @@ class Admin_Form
         // Create inperson_meeting_forms table if it doesn't exist
         if ($wpdb->get_var("SHOW TABLES LIKE '$inperson_meeting_table'") != $inperson_meeting_table) {
             $this->create_custom_table_inperson_meeting_form();
+        }
+
+        // Create job_application_forms table if it doesn't exist
+        if ($wpdb->get_var("SHOW TABLES LIKE '$job_application_table'") != $job_application_table) {
+            $this->create_custom_table_job_application_form();
         }
     }
 
@@ -111,6 +116,33 @@ class Admin_Form
         }
     }
 
+    public function create_custom_table_job_application_form()
+    {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'job_application_forms';
+        $charset_collate = $wpdb->get_charset_collate();
+        $sql = "CREATE TABLE $table_name (
+            id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+            name VARCHAR(50) NOT NULL,
+            email VARCHAR(100) NOT NULL,
+            phone VARCHAR(20) NOT NULL,
+            job_position VARCHAR(50) NOT NULL,
+            description TEXT NOT NULL,
+            file_path VARCHAR(255) DEFAULT NULL,
+            is_read TINYINT NOT NULL DEFAULT 0,
+            sent_datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (id)
+        ) $charset_collate;";
+
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+        $result = dbDelta($sql);
+        if (!empty($wpdb->last_error)) {
+            error_log('Job Application Form Table Creation Error: ' . $wpdb->last_error);
+        } else {
+            error_log('Job Application Form Table Creation Result: ' . print_r($result, true));
+        }
+    }
+
     public function form_menu()
     {
         $all_count = $this->all_show_unread_forms_count();
@@ -149,7 +181,8 @@ class Admin_Form
         $meeting_count = $this->get_unread_forms_count('meeting_forms');
         $contact_count = $this->get_unread_forms_count('contact_forms');
         $inperson_meeting_count = $this->get_unread_forms_count('inperson_meeting_forms');
-        $count = $meeting_count + $contact_count + $inperson_meeting_count;
+        $job_application_count = $this->get_unread_forms_count('job_application_forms');
+        $count = $meeting_count + $contact_count + $inperson_meeting_count + $job_application_count;
         if ($count > 0) {
             $count = "<span class='awaiting-mod'><span class='pending-count'>$count</span></span>";
         } else {
@@ -164,12 +197,14 @@ class Admin_Form
         $meeting_count = $this->show_unread_forms_count('meeting_forms');
         $contact_count = $this->show_unread_forms_count('contact_forms');
         $inperson_meeting_count = $this->show_unread_forms_count('inperson_meeting_forms');
+        $job_application_count = $this->show_unread_forms_count('job_application_forms');
         echo "<div class='wrap received-forms'>"
             . "<nav class='nav-tab-wrapper'>";
         $settings = [
             'meeting_form' => 'فرم درخواست ملاقات ' . $meeting_count,
             'contact_form' => 'فرم تماس با ما ' . $contact_count,
             'inperson_meeting_form' => 'فرم ملاقات حضوری ' . $inperson_meeting_count,
+            'job_application_form' => 'فرم درخواست شغل ' . $job_application_count,
         ];
         foreach ($settings as $id => $menu) {
             $tab_url = admin_url('admin.php?page=forms_menu&tab=' . $id);
@@ -313,8 +348,7 @@ class Admin_Form
                 }
                 echo '</div>';
             }
-        } else {
-            // Handle inperson_meeting_form
+        } elseif ($form_type == 'inperson_meeting_form') {
             switch ($action) {
                 case 'delete':
                     $user_id = $this->Delete_Action();
@@ -376,6 +410,75 @@ class Admin_Form
                 }
                 echo '</div>';
             }
+        } elseif ($form_type == 'job_application_form') {
+            switch ($action) {
+                case 'delete':
+                    $user_id = $this->Delete_Action();
+                    if ($user_id) {
+                        $this->delete_form_entry('job_application_forms', $user_id);
+                    }
+                    break;
+                case 'read':
+                    $user_id = $this->Read_Action();
+                    if ($user_id) {
+                        $this->mark_form_as_read('job_application_forms', $user_id);
+                    }
+                    break;
+            }
+
+            $job_applications = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}job_application_forms ORDER BY id DESC LIMIT $offset, $rows_per_page", ARRAY_A);
+            echo "<h1 class='wp-heading'>فرم های دریافتی درخواست شغل</h1>";
+            if ($wpdb->last_error) {
+                echo '<div class="error"><p>خطا در دیتابیس: ' . esc_html($wpdb->last_error) . '</p></div>';
+            }
+            echo '<table class="wp-list-table widefat fixed striped table-view-list users">'
+                . '<thead>'
+                . '<tr>'
+                . '<th>نام</th>'
+                . '<th>ایمیل</th>'
+                . '<th>تلفن</th>'
+                . '<th>ردیف شغلی</th>'
+                . '<th>توضیحات</th>'
+                . '<th>فایل</th>'
+                . '<th>تاریخ و ساعت</th>'
+                . '<th class="condition-lable">وضعیت</th>'
+                . '<th class="remove-lable">حذف</th>'
+                . '</tr>'
+                . '</thead>'
+                . '<tbody id="the-list">';
+            foreach ($job_applications as $form) {
+                $file_link = !empty($form['file_path']) ? "<a href='" . esc_url($form['file_path']) . "' target='_blank'>دانلود فایل</a>" : '-';
+                echo '<tr>'
+                    . '<td>' . esc_html($form['name']) . '</td>'
+                    . '<td>' . esc_html($form['email']) . '</td>'
+                    . '<td>' . esc_html($form['phone']) . '</td>'
+                    . '<td>' . esc_html($form['job_position']) . '</td>'
+                    . '<td>' . esc_html($form['description']) . '</td>'
+                    . '<td>' . $file_link . '</td>'
+                    . '<td>' . esc_html($this->mdate_to_jdate($form['sent_datetime'])) . '</td>'
+                    . "<td class='read-btn'>";
+                if ($form['is_read'] == 0) {
+                    echo "<a href='" . esc_url(add_query_arg(['user_action' => 'read', 'user_id' => esc_html($form["id"])])) . "'>مشاهده نشده</a>";
+                } else {
+                    echo "<span>مشاهده شده</span>";
+                }
+                echo "</td>"
+                    . "<td class='remove-btn'><a href='" . esc_url(add_query_arg(['user_action' => 'delete', 'user_id' => esc_html($form["id"])])) . "'><span class='dashicons dashicons-trash'></span></a></td>"
+                    . '</tr>';
+            }
+            echo '</tbody>'
+                . '</table>';
+
+            $total_rows = $wpdb->get_var("SELECT COUNT(id) FROM {$wpdb->prefix}job_application_forms");
+            $total_pages = ceil($total_rows / $rows_per_page);
+            if ($total_pages > 1) {
+                echo '<div class="pagination-links flex justify-content-center">';
+                for ($i = 1; $i <= $total_pages; $i++) {
+                    $class = ($current_page == $i) ? ' active' : '';
+                    echo "<a href='admin.php?page=forms_menu&tab=job_application_form&paged=$i' class='next-page button$class'>$i</a>";
+                }
+                echo '</div>';
+            }
         }
     }
 
@@ -393,6 +496,15 @@ class Admin_Form
     {
         global $wpdb;
         $table_name = $wpdb->prefix . $form_type;
+
+        // If deleting a job application, remove the associated file
+        if ($form_type == 'job_application_forms') {
+            $file_path = $wpdb->get_var($wpdb->prepare("SELECT file_path FROM $table_name WHERE id = %d", $id));
+            if ($file_path && file_exists(WP_CONTENT_DIR . '/Uploads/job_applications/' . basename($file_path))) {
+                unlink(WP_CONTENT_DIR . '/Uploads/job_applications/' . basename($file_path));
+            }
+        }
+
         $result = $wpdb->delete($table_name, array('id' => $id));
         if ($result === false) {
             error_log('Delete Error for ' . $form_type . ': ' . $wpdb->last_error);
@@ -435,6 +547,8 @@ class Form_Handler
         add_action('wp_ajax_nopriv_insert_meeting_form_data', array($this, 'insert_meeting_form_data'));
         add_action('wp_ajax_insert_inperson_meeting_form_data', array($this, 'insert_inperson_meeting_form_data'));
         add_action('wp_ajax_nopriv_insert_inperson_meeting_form_data', array($this, 'insert_inperson_meeting_form_data'));
+        add_action('wp_ajax_insert_job_application_form_data', array($this, 'insert_job_application_form_data'));
+        add_action('wp_ajax_nopriv_insert_job_application_form_data', array($this, 'insert_job_application_form_data'));
     }
 
     public function insert_contact_form_data()
@@ -550,6 +664,80 @@ class Form_Handler
         wp_send_json_success('فرم ملاقات حضوری با موفقیت ارسال شد!');
     }
 
+    public function insert_job_application_form_data()
+    {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ajax-nonce')) {
+            wp_send_json_error('دسترسی غیرمجاز!');
+        }
+
+        error_log('Raw POST Data: ' . print_r($_POST, true));
+        error_log('Raw FILES Data: ' . print_r($_FILES, true));
+
+        $name = sanitize_text_field($_POST['name'] ?? '');
+        $email = sanitize_email($_POST['email'] ?? '');
+        $phone = sanitize_text_field(preg_replace('/[^0-9]/', '', $_POST['phone'] ?? ''));
+        $job_position = sanitize_text_field($_POST['job_position'] ?? '');
+        $description = wp_kses($_POST['description'] ?? '', array());
+
+        error_log('Processed Name: ' . $name);
+
+        // اعتبارسنجی فیلدها
+        if (empty($name)) {
+            wp_send_json_error('نام الزامی است!');
+        }
+        if (empty($email)) {
+            wp_send_json_error('ایمیل الزامی است!');
+        }
+        if (empty($phone)) {
+            wp_send_json_error('شماره تماس الزامی است!');
+        }
+        if (empty($job_position)) {
+            wp_send_json_error('ردیف شغلی الزامی است!');
+        }
+        if (empty($description)) {
+            wp_send_json_error('توضیحات الزامی است!');
+        }
+        if (!preg_match('/^(\+98|0)9\d{9}$/', $phone)) {
+            wp_send_json_error('لطفاً یک شماره تلفن معتبر ایرانی وارد کنید.');
+        }
+        if (!in_array($job_position, ['برنامه نویس', 'گرافیست', 'طراح سایت', 'متخصص فروش', 'تولید کننده محتوا'])) {
+            wp_send_json_error('ردیف شغلی نامعتبر است!');
+        }
+
+        // مدیریت آپلود فایل
+        $file_path = '';
+        if (!empty($_FILES['resume']['name'])) {
+            $allowed_types = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
+            $file_type = pathinfo($_FILES['resume']['name'], PATHINFO_EXTENSION);
+            if (!in_array(strtolower($file_type), $allowed_types)) {
+                wp_send_json_error('نوع فایل نامعتبر است! فقط فایل‌های PDF، JPG، PNG و Word مجاز هستند.');
+            }
+
+            $upload_dir = WP_CONTENT_DIR . '/Uploads/job_applications/';
+            if (!file_exists($upload_dir)) {
+                wp_mkdir_p($upload_dir);
+            }
+
+            $unique_filename = wp_unique_filename($upload_dir, $_FILES['resume']['name']);
+            $destination = $upload_dir . $unique_filename;
+            if (!move_uploaded_file($_FILES['resume']['tmp_name'], $destination)) {
+                wp_send_json_error('خطا در آپلود فایل!');
+            }
+            $file_path = content_url('/Uploads/job_applications/' . $unique_filename);
+        } else {
+            wp_send_json_error('فایل رزومه الزامی است!');
+        }
+
+        $result = $this->save_job_application_form_data($name, $email, $phone, $job_position, $description, $file_path);
+        if ($result === false) {
+            global $wpdb;
+            error_log('Job Application Form Insert Error: ' . $wpdb->last_error);
+            wp_send_json_error('خطا در ذخیره اطلاعات در پایگاه داده: ' . $wpdb->last_error);
+        }
+
+        wp_send_json_success('فرم درخواست شغل با موفقیت ارسال شد!');
+    }
+
     public function save_contact_form_data($name, $email, $phone, $message_content)
     {
         global $wpdb;
@@ -600,6 +788,28 @@ class Form_Handler
         }
         return $result;
     }
+
+    public function save_job_application_form_data($name, $email, $phone, $job_position, $description, $file_path)
+    {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'job_application_forms';
+        $data = array(
+            'name' => $name,
+            'email' => $email,
+            'phone' => $phone,
+            'job_position' => $job_position,
+            'description' => $description,
+            'file_path' => $file_path,
+            'is_read' => 0,
+        );
+        $format = array('%s', '%s', '%s', '%s', '%s', '%s', '%d');
+        $result = $wpdb->insert($table_name, $data, $format);
+        if ($result === false) {
+            error_log('Job Application Form Insert Error: ' . $wpdb->last_error);
+            wp_send_json_error('خطا در ذخیره اطلاعات در پایگاه داده: ' . $wpdb->last_error);
+        }
+        return $result;
+    }
 }
 
 class Form
@@ -641,9 +851,7 @@ class Form
 
     public function inperson_meeting_form()
     {
-        $form = 
-          
-             "<form method='post' action='" . admin_url('admin-ajax.php') . "' id='inperson-meeting-form-id'>"
+        $form = "<form method='post' action='" . admin_url('admin-ajax.php') . "' id='inperson-meeting-form-id'>"
             . wp_nonce_field('ajax-nonce', 'nonce', false, false)
             . "<input type='hidden' name='action' value='insert_inperson_meeting_form_data'>"
             . "<div class='form-item type-text honeypot' data-field='family' style='display:none;'>"
@@ -653,6 +861,34 @@ class Form
             . "<input type='text' name='phone' placeholder='شماره تلفن*' pattern='[0-9]{10,11}' required oninvalid=\"setCustomValidity('لطفا شماره تماس خود را به فرمت صحیح وارد کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\">"
             . "<input type='text' name='city' placeholder='شهر شما*' required oninvalid=\"setCustomValidity('لطفا شهر خود را وارد کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\">"
             . "<input type='submit' class='submit' name='submit_form' value='ثبت درخواست'>"
+            . "</form>";
+        return $form;
+    }
+
+    public function job_application_form()
+    {
+        $form = "<form method='post' action='" . admin_url('admin-ajax.php') . "' id='job-application-form-id' enctype='multipart/form-data'>"
+            . wp_nonce_field('ajax-nonce', 'nonce', false, false)
+            . "<input type='hidden' name='action' value='insert_job_application_form_data'>"
+            . "<input type='text' name='name' placeholder='نام*' required oninvalid=\"setCustomValidity('لطفا نام خود را وارد کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\">"
+            . "<input type='email' name='email' placeholder='ایمیل*' required oninvalid=\"setCustomValidity('لطفا ایمیل خود را وارد کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\">"
+            . "<input type='text' name='phone' placeholder='شماره تلفن*' pattern='[0-9]{10,11}' required oninvalid=\"setCustomValidity('لطفا شماره تماس خود را به فرمت صحیح وارد کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\">"
+            . "<div class='select'>"
+            . "<select name='job_position' required oninvalid=\"setCustomValidity('لطفا ردیف شغلی را انتخاب کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\">"
+            . "<option value='' disabled selected>انتخاب ردیف شغلی*</option>"
+            . "<option value='برنامه نویس'>برنامه نویس</option>"
+            . "<option value='گرافیست'>گرافیست</option>"
+            . "<option value='طراح سایت'>طراح سایت</option>"
+            . "<option value='متخصص فروش'>متخصص فروش</option>"
+            . "<option value='تولید کننده محتوا'>تولید کننده محتوا</option>"
+            . "</select>"
+            . "<div class='icon'> <svg viewBox='0 0 218 146' version='1.1'   xmlns='http://www.w3.org/2000/svg' >  <g id='#000000ff'> <path  fill='var(--normal-text-color)'  opacity='1.00'  d=' M 30.79 30.75 C 34.54 29.49 38.76 30.85 41.39 33.72 C 63.29 55.55 85.13 77.44 107.01 99.30 C 127.75 78.58 148.47 57.86 169.19 37.12 C 171.53 34.86 173.70 32.01 177.01 31.16 C 181.48 29.82 186.63 32.17 188.60 36.39 C 190.63 40.30 189.53 45.33 186.31 48.27 C 163.96 70.60 141.65 92.97 119.27 115.28 C 113.07 121.79 101.72 122.09 95.27 115.77 C 73.36 94.00 51.59 72.08 29.70 50.29 C 27.35 47.92 24.49 45.55 24.00 42.04 C 23.01 37.26 26.13 32.14 30.79 30.75 Z' /></g> </svg>  </div>"
+            . "</div>"
+            . "<textarea name='description' placeholder='توضیحات*' required oninvalid=\"setCustomValidity('لطفا توضیحات را وارد کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\"></textarea>"
+            . " <label for='file_upload' class='file-upload-label'>انتخاب فایل</label>"
+            . "   <input   type='file'   id='file_upload' type='file' name='resume' accept='.pdf,.jpg,.jpeg,.png,.doc,.docx' required oninvalid=\"setCustomValidity('لطفا فایل رزومه را آپلود کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\">"
+            . "<div id='file_name' class='file-name'>  پسوند مجاز: pdf، jpg، png، word و حداکثر حجم مجاز 2 مگابایت می‌باشد. </div>"
+            . "<input type='submit' class='button' name='submit_form' value='ارسال درخواست'>"
             . "</form>";
         return $form;
     }
@@ -670,12 +906,12 @@ register_activation_hook(__FILE__, function () {
 
 // Enqueue scripts and styles
 add_action('wp_enqueue_scripts', function () {
-    wp_enqueue_script('form-handler', plugins_url('/js/form-handler.js', __FILE__), ['jquery'], '1.4', true);
+    wp_enqueue_script('form-handler', plugins_url('/js/form-handler.js', __FILE__), ['jquery'], '1.5', true);
     wp_localize_script('form-handler', 'ajax_object', [
         'ajax_url' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('ajax-nonce')
     ]);
-    wp_enqueue_style('form-styles', plugins_url('/css/form-styles.css', __FILE__), [], '1.4');
+    wp_enqueue_style('form-styles', plugins_url('/css/form-styles.css', __FILE__), [], '1.5');
 });
 
 // Shortcodes for forms
@@ -690,5 +926,9 @@ add_shortcode('meeting_form', function () {
 add_shortcode('inperson_meeting_form', function () {
     $form = new Form();
     return $form->inperson_meeting_form();
+});
+add_shortcode('job_application_form', function () {
+    $form = new Form();
+    return $form->job_application_form();
 });
 ?>

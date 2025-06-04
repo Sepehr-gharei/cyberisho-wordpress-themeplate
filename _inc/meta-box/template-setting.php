@@ -224,7 +224,6 @@ class Admin_Helper {
         return $field;
     }
 
-
     public function cyberisho_Get_Post_Type($post_type) {
         // Initialize an empty array to store post IDs and titles
         $posts = [];
@@ -776,6 +775,21 @@ class Main_Settings extends Admin_Helper {
                     ],
                 ],
             ],
+            'glossary' => [
+                'menu' => 'واژه‌نامه',
+                'lable' => 'تنظیمات صفحه واژه‌نامه',
+                'settings' => [
+                    'glossary_archive_header_title' => [
+                        'type' => 'heading',
+                        'title' => 'تایتل صفحه آرشیو واژه‌نامه',
+                    ],
+                    'glossary_archive_title' => [
+                        'type' => 'editor',
+                        'title' => 'تایتل صفحه آرشیو واژه‌نامه',
+                        'w' => 'w100',
+                    ],
+                ],
+            ],
         ];
 
         return $settings;
@@ -856,7 +870,7 @@ class Theme_Settings extends Main_Settings {
     public function __construct() {
         add_action('admin_menu', array($this, 'add_theme_settings_page'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
-        add_action('admin_head', [$this, 'admin_font']);
+        add_action('admin_head', array($this, 'admin_font'));
     }
 
     public function add_theme_settings_page() {

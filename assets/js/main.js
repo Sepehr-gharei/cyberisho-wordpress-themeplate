@@ -7,6 +7,7 @@
 // work samples section
 // text loop
 
+
 // ********************************  about us text ********************************
 $(document).ready(function () {
   // متن اصلی و دکمه را انتخاب کنید
@@ -148,20 +149,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
   items.forEach((item) => {
     const header = item.querySelector(".accordion-header");
-    const content = item.querySelector(".accordion-content");
+    const icon = item.querySelector(".wrapper-icon");
 
-    header.addEventListener("click", () => {
-      // Check if the current item is active
+    // تابع مشترک برای مدیریت باز/بسته شدن
+    function toggleAccordion() {
       const isActive = item.classList.contains("active");
 
-      // Close all other items
+      // بستن تمام آیتم‌ها
       items.forEach((i) => i.classList.remove("active"));
 
-      // Open the clicked item if it's not active
+      // باز کردن فقط آیتم فعلی اگر بسته بود
       if (!isActive) {
         item.classList.add("active");
       }
-    });
+    }
+
+    // رویداد کلیک برای header
+    if (header) {
+      header.addEventListener("click", toggleAccordion);
+    }
+
+    // رویداد کلیک برای icon
+    if (icon) {
+      icon.addEventListener("click", toggleAccordion);
+    }
   });
 });
 
@@ -364,34 +375,7 @@ function initImageScrollbars() {
   const resizeObserver = new ResizeObserver(updateThumbPosition);
   resizeObserver.observe(container);
 }
-// text loop
-document.addEventListener("DOMContentLoaded", function () {
-  const tickerContent = document.getElementById("tickerContent");
-  const originalContent = tickerContent.innerHTML;
 
-  // تکرار محتوا 6 بار برای ایجاد حلقه پیوسته
-  tickerContent.innerHTML =
-    originalContent +
-    originalContent +
-    originalContent +
-    originalContent +
-    originalContent +
-    originalContent;
-
-  // تنظیم عرض محتوا بر اساس عرض واقعی
-  const tickerItems = document.querySelectorAll(".ticker-item");
-  let totalWidth = 0;
-
-  tickerItems.forEach((item) => {
-    totalWidth += item.offsetWidth + 20; // 20px فاصله بین آیتم‌ها
-  });
-
-  // تنظیم مدت انیمیشن بر اساس عرض کل
-  const tickerContentElement = document.querySelector(".ticker-content");
-  const animationDuration = totalWidth / 100; // سرعت حرکت
-
-  tickerContentElement.style.animationDuration = `${animationDuration}s`;
-});
 
 document.addEventListener("DOMContentLoaded", function () {
   const wrappers = document.querySelectorAll(
@@ -431,140 +415,69 @@ function activateFirstWrapperOnLoad() {
   }
 }
 
-const container = document.querySelector(
-  ".belog-title-section .programming-fields-container"
-);
-// انتخاب همه آیتم‌های داخل scroll-content
-const items = document.querySelectorAll(
-  ".belog-title-section .programming-fields-container .item"
-);
-// انتخاب همه کانتینرهای تصویر
-const imageContainers = document.querySelectorAll(
-  ".belog-title-section .programming-fields-container .image-container"
-);
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.querySelector('.belog-title-section .programming-fields');
+  const items = document.querySelectorAll('.belog-title-section .programming-fields .blog-scroll-content .item');
+  const imageContainers = document.querySelectorAll('.belog-title-section .programming-fields .image-container');
 
-// اضافه کردن رویداد کلیک به هر آیتم
-items.forEach((item) => {
-  item.addEventListener("click", () => {
-    // حذف کلاس active از همه آیتم‌ها
-    items.forEach((i) => i.classList.remove("active"));
-    // اضافه کردن کلاس active به آیتم کلیک‌شده
-    item.classList.add("active");
-
-    // گرفتن شماره آیتم از id (مثلاً item-1 -> 1)
-    const itemNumber = item.id.split("-")[1];
-    // پیدا کردن image-container مربوطه
-    const targetContainer = container.querySelector(`#content-${itemNumber}`);
-
-    // حذف کلاس active-content از همه کانتینرها
-    imageContainers.forEach((container) =>
-      container.classList.remove("active-content")
-    );
-    // اضافه کردن کلاس active-content به کانتینر هدف
-    targetContainer.classList.add("active-content");
+  items.forEach(item => {
+    item.addEventListener('click', () => {
+      items.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      const itemNumber = item.id.split('-')[1];
+      const targetContainer = container.querySelector(`#content-${itemNumber}`);
+      imageContainers.forEach(container => container.classList.remove('active-content'));
+      targetContainer.classList.add('active-content');
+    });
   });
 });
+
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
-  const container = document.querySelector(".programming-fields");
-  const items = document.querySelectorAll(
-    ".programming-fields .section .content .item"
-  );
-  const imageContainers = document.querySelectorAll(
-    ".programming-fields .image-container"
-  );
+  const tickerContainer = document.querySelector(".ticker-container");
+  let tickerContents = document.querySelectorAll(".ticker-content");
 
-  items.forEach((item) => {
-    item.addEventListener("click", () => {
-      // حذف کلاس active از همه آیتم‌ها
-      items.forEach((i) => i.classList.remove("active"));
-      // اضافه کردن کلاس active به آیتم کلیک‌شده
-      item.classList.add("active");
+  // Function to clone and append the last ticker-content
+  function appendNewTickerContent() {
+    const lastTickerContent = tickerContents[tickerContents.length - 1];
+    const newTickerContent = lastTickerContent.cloneNode(true);
+    tickerContainer.appendChild(newTickerContent);
+    tickerContents = document.querySelectorAll(".ticker-content"); // Update the NodeList
+  }
 
-      // گرفتن شماره آیتم از id (مثلاً item-1 -> 1)
-      const itemNumber = item.id.split("-")[1];
-      // پیدا کردن image-container مربوطه
-      const targetContainer = container.querySelector(`#content-${itemNumber}`);
+  // Function to handle animation end
+  function handleAnimationEnd(event) {
+    if (event.target === tickerContents[0]) {
+      // Remove the first ticker-content
+      event.target.remove();
+      tickerContents = document.querySelectorAll(".ticker-content"); // Update the NodeList
 
-      // حذف کلاس active-content از همه کانتینرها
-      imageContainers.forEach((container) =>
-        container.classList.remove("active-content")
-      );
-      // اضافه کردن کلاس active-content به کانتینر هدف
-      targetContainer.classList.add("active-content");
-    });
+      // Append a new copy of the last ticker-content
+      appendNewTickerContent();
+    }
+  }
+
+  // Add animationend event listener to all ticker-content elements
+  tickerContents.forEach((content) => {
+    content.addEventListener("animationend", handleAnimationEnd);
   });
+
+  // Ensure there’s always a second ticker-content to start with
+  if (tickerContents.length === 1) {
+    appendNewTickerContent();
+  }
 });
 
-function getCurrentPageUrl() {
-  return window.location.href;
-}
 
-function shareToTelegram(event) {
-  event.preventDefault();
-  const url = encodeURIComponent(getCurrentPageUrl());
-  window.open(`https://t.me/share/url?url= ${url}`, "_blank");
-}
+document.addEventListener("DOMContentLoaded", function () {
+  const tickerContent = document.getElementById("tickerContent");
+  const tickerItems = tickerContent.querySelectorAll(".ticker-item");
+  const itemCount = tickerItems.length;
 
-function shareToWhatsApp(event) {
-  event.preventDefault();
-  const url = encodeURIComponent(getCurrentPageUrl());
-  window.open(`https://api.whatsapp.com/send?text= ${url}`, "_blank");
-}
-
-function shareToTwitter(event) {
-  event.preventDefault();
-  const url = encodeURIComponent(getCurrentPageUrl());
-  window.open(`https://twitter.com/intent/tweet?url= ${url}`, "_blank");
-}
-
-function shareToLinkedIn(event) {
-  event.preventDefault();
-  const url = encodeURIComponent(getCurrentPageUrl());
-  window.open(
-    `https://www.linkedin.com/shareArticle?mini=true&url= ${url}`,
-    "_blank"
-  );
-}
-
-function showCustomAlert(message) {
-  const alertBox = document.getElementById("customAlert");
-  const alertMessage = document.getElementById("alertMessage");
-
-  alertMessage.textContent = message;
-
-  alertBox.classList.remove("hidden");
-
-  setTimeout(() => {
-    alertBox.classList.add("hidden");
-  }, 3000);
-}
-
-function showCustomAlertRed(message) {
-  const alertBox = document.getElementById("customAlertRed");
-  const alertMessage = document.getElementById("alertMessageRed");
-
-  alertMessage.textContent = message;
-
-  alertBox.classList.remove("hidden");
-
-  setTimeout(() => {
-    alertBox.classList.add("hidden");
-  }, 3000);
-}
-
-function copyCurrentURL() {
-  const urlElement = document.getElementById("url-display");
-  const urlText = urlElement.innerText;
-
-  // استفاده از Clipboard API برای کپی کردن
-  navigator.clipboard
-    .writeText(urlText)
-    .then(() => {
-      showCustomAlert("آدرس با موفقیت کپی شد!");
-    })
-    .catch((err) => {
-      console.error("خطا در کپی کردن:", err);
-      showCustomAlertRed("خطا در کپی کردن آدرس.");
-    });
-}
+  // اگر تعداد آیتم‌ها 5 یا کمتر باشد، محتوا را دو برابر کن
+  if (itemCount <= 10) {
+    tickerContent.innerHTML += tickerContent.innerHTML;
+  }
+});

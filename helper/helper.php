@@ -206,39 +206,54 @@ function get_excerpt_blog_item_title($text)
 
     return $excerpt;
 }
-
-function custom_breadcrumb()
-{
-    // تنظیمات اولیه
+function custom_breadcrumb() {
+    // Initial settings
     $home_icon = '<svg><use href="#house-icon"></use></svg>';
     $arrow_icon = '<div class="arrow-icon"><svg><use href="#double-arrow-icon"></use></svg></div>';
 
     echo '<div class="col-12 breadcrumb"><div class="d-flex">';
 
-    // آیکون خانه برای صفحه اصلی
+    // Home page icon
     echo '<li class="home-page"><a href="' . esc_url(home_url('/')) . '">' . $home_icon . '</a></li>';
 
-    // اگر در صفحه اصلی نیستیم
+    // If not on the front page
     if (!is_front_page()) {
         echo $arrow_icon;
 
-        // اگر در یک پست یا صفحه هستیم
+        // If on a single post or page
         if (is_singular()) {
             echo '<li class="breadcrumb-page"><a href="' . esc_url(get_the_permalink()) . '">' . esc_html(get_the_title()) . '</a></li>';
         }
 
-        // اگر در دسته‌بندی هستیم
+        // If on a category page
         if (is_category()) {
             $category = get_queried_object();
             echo '<li class="breadcrumb-page"><a href="' . esc_url(get_category_link($category->term_id)) . '">' . esc_html($category->name) . '</a></li>';
         }
 
-        // اگر در آرشیو هستیم
-        if (is_archive() && !is_category()) {
-            echo '<li class="breadcrumb-page"><a href="#">' . esc_html(get_the_archive_title()) . '</a></li>';
+        // If on an archive page (including custom post type archives)
+        if (is_archive()) {
+            if (is_category()) {
+                // Skip category archives (already handled above)
+            } else {
+                $queried_object = get_queried_object();
+                $post_type = get_post_type();
+
+                if ($post_type && $post_type !== 'post') {
+                    // For custom post type archives (like glossary)
+                    $post_type_object = get_post_type_object($post_type);
+                    $archive_title = $post_type_object->labels->name; // e.g., "واژه‌ها"
+                    $archive_link = get_post_type_archive_link($post_type);
+                    echo '<li class="breadcrumb-page"><a href="' . esc_url($archive_link) . '">' . esc_html($archive_title) . '</a></li>';
+                } else {
+                    // For other archives (e.g., date, author)
+                    $archive_title = wp_strip_all_tags(get_the_archive_title()); // Remove HTML and prefixes
+                    echo '<li class="breadcrumb-page"><a href="#">' . esc_html($archive_title) . '</a></li>';
+                }
+            }
         }
 
-        // اگر در صفحه جستجو هستیم
+        // If on a search page
         if (is_search()) {
             echo '<li class="breadcrumb-page"><a href="#">' . esc_html__('Search', 'textdomain') . '</a></li>';
         }
@@ -246,4 +261,3 @@ function custom_breadcrumb()
 
     echo '</div></div>';
 }
-

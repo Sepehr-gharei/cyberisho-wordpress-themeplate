@@ -1,7 +1,6 @@
 <?php
 $theme_options = get_option('cyberisho_main_option', []);
 $contact_options = $theme_options['contact'];
-$theme_options = get_option('cyberisho_main_option', []);
 $footer_content_options = $theme_options['footer-content'];
 
 ?>

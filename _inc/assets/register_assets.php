@@ -46,7 +46,10 @@ function register_assets()
         wp_register_script('portfolio', get_template_directory_uri() . '/assets/js/portfolio.js', [], '1.0.0', true);
         wp_enqueue_script('portfolio');
     }
-
+    if (is_page('employment')) { // 'portfolio' باید slug یا ID صفحه باشد
+        wp_register_script('employment', get_template_directory_uri() . '/assets/js/employment.js', [], '1.0.0', true);
+        wp_enqueue_script('employment');
+    }
 }
 add_action('wp_enqueue_scripts', 'register_assets');
 function enqueue_panorama_slider_script()

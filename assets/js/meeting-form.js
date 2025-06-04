@@ -70,6 +70,7 @@ jQuery(document).ready(function ($) {
             }
         });
     });
+
     $('#inperson-meeting-form-id').submit(function (e) {
         e.preventDefault();
         var form = $(this);
@@ -101,6 +102,42 @@ jQuery(document).ready(function ($) {
             },
             error: function (error) {
                 console.log('In-Person Meeting Form Error:', error);
+                form.append('<p class="error-message">خطا در ارسال درخواست: ' + (error.responseText || 'خطای ناشناخته') + '</p>');
+            }
+        });
+    });
+
+    $('#job-application-form-id').submit(function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var formData = new FormData(this);
+        var nonce = ajax_object.nonce;
+
+        // لاگ داده‌های فرم برای دیباگ
+        console.log('Form Data Name:', formData.get('name'));
+
+        // حذف پیام‌های قبلی
+        form.find('.success-message, .error-message').remove();
+
+        $.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function (response) {
+                console.log('Job Application Form Response:', response);
+                if (response.success) {
+                    form.find('input[type="submit"]').hide();
+                    form.append('<p class="success-message">درخواست شما با موفقیت ارسال شد!</p>');
+                    form[0].reset();
+                } else {
+                    form.append('<p class="error-message">' + (response.data || 'خطای ناشناخته') + '</p>');
+                }
+            },
+            error: function (error) {
+                console.log('Job Application Form Error:', error);
                 form.append('<p class="error-message">خطا در ارسال درخواست: ' + (error.responseText || 'خطای ناشناخته') + '</p>');
             }
         });
