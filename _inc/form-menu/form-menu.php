@@ -843,7 +843,7 @@ class Form
             . "</div>"
             . "<input type='text' name='name' placeholder='نام شما'>"
             . "<input type='text' name='phone' placeholder='شماره تماس*' pattern='[0-9]{10,11}' required oninvalid=\"setCustomValidity('لطفا شماره تماس خود را به فرمت صحیح وارد کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\">"
-            . "<input type='submit' class='submit' name='submit_form' value='ثبت درخواست'>"
+            . "<input type='submit' class='submit' name='submit_form' value='ثبت'>"
             . "</form>"
             . "</div>";
         return $form;

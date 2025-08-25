@@ -1,7 +1,7 @@
 <?php
 
-  $theme_options = get_option('cyberisho_main_option', []);
-  $landing_options = $theme_options['landing'];
+$theme_options = get_option('cyberisho_main_option', []);
+$landing_options = $theme_options['landing'];
 
 // دریافت داده‌ها از get_option
 $faq_items = $landing_options['landing_page_faqs'];
@@ -12,30 +12,45 @@ if (!empty($faq_items) && is_array($faq_items)) {
         $title = isset($item['title']) ? esc_html($item['title']) : '';
         $content = isset($item['content']) ? esc_html($item['content']) : '';
         ?>
-        <div class="accordion-item d-flex">
-            <div class="col-11 wrapper-text">
-                <button class="accordion-header">
-                    <p class="text">
-                        <?php echo $title; ?>
-                    </p>
-                </button>
-                <div class="accordion-content">
-                    <p>
-                        <?php echo $content; ?>
-                    </p>
-                </div>
+      
+      <div class="accordion-item d-flex">
+        <div class="col-12 wrapper-text">
+          <button class="accordion-header">
+            <div class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0.00 0.00 12.00 20.00">
+                <path fill="#000000" d="
+                          M 12.00 5.72
+                          L 12.00 7.20
+                          C 11.21 10.35 9.04 11.54 7.66 12.93
+                          A 1.25 1.24 65.1 0 0 7.30 13.92
+                          Q 7.30 13.94 7.33 14.25
+                          A 0.71 0.71 0.0 0 1 6.62 15.02
+                          L 4.61 15.02
+                          A 0.66 0.66 0.0 0 1 3.95 14.40
+                          C 3.72 11.24 5.63 10.04 7.65 8.21
+                          C 9.17 6.82 8.56 4.56 6.45 4.25
+                          Q 5.57 4.13 1.87 4.72
+                          A 0.70 0.69 85.4 0 1 1.07 4.03
+                          L 1.07 2.16
+                          A 0.62 0.61 80.9 0 1 1.49 1.57
+                          C 5.91 0.10 11.32 -0.13 12.00 5.72
+                          Z" />
+                <rect fill="#000000" x="-1.76" y="-1.74" transform="translate(5.49,18.01) rotate(0.1)" width="3.52"
+                  height="3.48" rx="0.44" />
+              </svg>
             </div>
-            <div class="col-1 wrapper-icon">
-                <div class="icon">
-                    <svg width="218pt" height="146pt" viewBox="0 0 218 146" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                        <g id="#000000ff">
-                            <path fill="var(--light-shadow-white-color)" opacity="1.00"
-                                d="M 30.79 30.75 C 34.54 29.49 38.76 30.85 41.39 33.72 C 63.29 55.55 85.13 77.44 107.01 99.30 C 127.75 78.58 148.47 57.86 169.19 37.12 C 171.53 34.86 173.70 32.01 177.01 31.16 C 181.48 29.82 186.63 32.17 188.60 36.39 C 190.63 40.30 189.53 45.33 186.31 48.27 C 163.96 70.60 141.65 92.97 119.27 115.28 C 113.07 121.79 101.72 122.09 95.27 115.77 C 73.36 94.00 51.59 72.08 29.70 50.29 C 27.35 47.92 24.49 45.55 24.00 42.04 C 23.01 37.26 26.13 32.14 30.79 30.75 Z" />
-                        </g>
-                    </svg>
-                </div>
-            </div>
+            <p class="text">
+            <?php echo $title; ?>
+            </p>
+          </button>
+          <div class="accordion-content">
+            <p>
+            <?php echo $content; ?>
+            </p>
+          </div>
         </div>
+      </div>
+
         <?php
     }
 } else {
