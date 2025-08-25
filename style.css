@@ -3,24 +3,28 @@
   --text-color: #000000;
   --bakcground-header-nav-color: #e6e4ff9c;
   --background-white-transparent: #ffffff69;
+  --background-white-light-transparent: #ffffff40;
+  --background-black-transparent: #00000040;
   --background-buttom-header-color: #dbdffe;
   --border-header-nav-color: #ffff;
-  --border-light-black-color: #dbdbdb;
+  --border-light-black-color:#dbdbdb;
   --text-medium-black-color: #58595b;
   --text-white-color: #ffff;
   --text-medium-blue-color: #2743da;
   --text-dark-blue-color: #2a00c4;
   --background-medium-blue-color: #2743da;
+  --background-medium-blue-color-light-transparent: #2743da99;
   --background-blur-light-blue: #e4fcf985;
   --background-chart-line-color: #2b2b2b;
   --background-gradient-normal-blue-color: #afb6fd;
   --background-gradient-shadow-normal-blue-color: #919aff;
   --background-gradient-light-blue-color: rgb(216, 216, 255);
   --background-gradient-light-Turquoise-color: #a0fbed;
+  --background-gradient-light-Turquoise-transparent-color: #f1fdfc;
   --normal-yellow-color: #f9d42b;
   --normal-red-color: #c52f48;
+  --normal-orange-color :#ff7e38;
 }
-
 @font-face {
   font-family: peyda-regular;
   src: url(./assets/fonts/PeydaWeb-Regular.woff) format("woff");
