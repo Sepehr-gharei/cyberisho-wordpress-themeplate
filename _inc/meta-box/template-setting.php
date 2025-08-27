@@ -750,15 +750,7 @@ class Main_Settings extends Admin_Helper {
                                 'type' => 'text',
                                 'title' => 'URL سایت',
                             ],
-                            'theme_portfolios[0][blue_effect]' => [
-                                'type' => 'select',
-                                'title' => 'افکت آبی',
-                                'content' => [
-                                    'enabled' => 'فعال',
-                                    'disabled' => 'غیرفعال',
-                                ],
-                                'default' => 'disabled',
-                            ],
+                          
                             'theme_portfolios[0][main_image]' => [
                                 'type' => 'image-uploader',
                                 'title' => 'عکس اصلی',

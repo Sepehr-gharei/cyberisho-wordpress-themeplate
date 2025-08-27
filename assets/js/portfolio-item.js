@@ -15,10 +15,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const mobileImage = aside.querySelector(".image-section .mobile");
     const imageSection = aside.querySelector(".image-section");
     const closeIcon = aside.querySelector(".close-side-icon");
+    const contentPortfolioSite = aside.querySelector(".content-portfolio-site");
 
     // Function to open modal
     function openModal() {
-      modal.style.display = "block";
+      modal.style.display = "flex";
       document.body.classList.add("modal-open");
     }
 
@@ -36,8 +37,10 @@ document.addEventListener("DOMContentLoaded", function () {
       mobileImage.style.height = "0";
       mobileImage.style.width = "0";
       // Remove all scrollbars
-      const scrollbars = imageSection.querySelectorAll(".custom-scrollbar");
-      scrollbars.forEach((scrollbar) => scrollbar.remove());
+      const scrolls = imageSection.querySelectorAll(".custom-scrollbar");
+      scrolls.forEach((scrollbar) => scrollbar.remove());
+      // Reset content-portfolio-site classes
+      contentPortfolioSite.classList.remove("desktop", "mobile");
     }
 
     // Close on close icon click
@@ -57,6 +60,8 @@ document.addEventListener("DOMContentLoaded", function () {
         desktopImage.style.opacity = "0";
         desktopImage.style.height = "0";
         desktopImage.style.width = "0";
+        contentPortfolioSite.classList.remove("desktop");
+        contentPortfolioSite.classList.add("mobile");
         initCustomScrollbar(mobileImage, "mobile");
       });
     }
@@ -73,6 +78,8 @@ document.addEventListener("DOMContentLoaded", function () {
         mobileImage.style.opacity = "0";
         mobileImage.style.height = "0";
         mobileImage.style.width = "0";
+        contentPortfolioSite.classList.remove("mobile");
+        contentPortfolioSite.classList.add("desktop");
         initCustomScrollbar(desktopImage, "desktop");
       });
     }
@@ -90,6 +97,8 @@ document.addEventListener("DOMContentLoaded", function () {
         mobileImage.style.width = "0";
         desktopIcon.style.display = "none";
         mobileIcon.style.display = "block";
+        contentPortfolioSite.classList.remove("mobile");
+        contentPortfolioSite.classList.add("desktop");
         initCustomScrollbar(desktopImage, "desktop");
       });
     }
@@ -107,6 +116,8 @@ document.addEventListener("DOMContentLoaded", function () {
         desktopImage.style.width = "0";
         mobileIcon.style.display = "none";
         desktopIcon.style.display = "block";
+        contentPortfolioSite.classList.remove("desktop");
+        contentPortfolioSite.classList.add("mobile");
         initCustomScrollbar(mobileImage, "mobile");
       });
     }
@@ -155,9 +166,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         function updateThumbPosition() {
           const { contentHeight, viewportHeight } = getDimensions();
-          const scrollRatio = image.scrollTop / (contentHeight - viewportHeight);
+          const scrollRatio =
+            image.scrollTop / (contentHeight - viewportHeight);
           const thumbTop = scrollRatio * (viewportHeight - 15);
-          thumb.style.top = `${Math.max(0, Math.min(thumbTop, viewportHeight - 15))}px`;
+          thumb.style.top = `${Math.max(
+            0,
+            Math.min(thumbTop, viewportHeight - 15)
+          )}px`;
         }
 
         function updateScrollPosition(clientY) {
@@ -167,7 +182,10 @@ document.addEventListener("DOMContentLoaded", function () {
             (deltaY / (viewportHeight - 15)) * (contentHeight - viewportHeight);
           image.scrollTop = Math.max(
             0,
-            Math.min(startScrollTop + scrollDelta, contentHeight - viewportHeight)
+            Math.min(
+              startScrollTop + scrollDelta,
+              contentHeight - viewportHeight
+            )
           );
           updateThumbPosition();
         }

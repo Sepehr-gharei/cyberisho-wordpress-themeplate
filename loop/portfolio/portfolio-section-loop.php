@@ -22,9 +22,7 @@ if (!empty($current_portfolios)): ?>
                 $mobile_image = !empty($portfolio['mobile_image']) ? esc_url($portfolio['mobile_image']) : '';
                 ?>
                 <!--************************* start example of portfolio section  *************************-->
-                <aside class="item <?php if ($portfolio['blue_effect'] == 'enabled') {
-                    echo 'blue-gradient';
-                } ?>
+                <aside class="item
                   ">
                     <div class="portfolio-main-item-wrapper container">
                         <div class="portfolio-info">
