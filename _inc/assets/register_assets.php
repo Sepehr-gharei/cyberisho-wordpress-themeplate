@@ -21,7 +21,28 @@ function register_assets()
     wp_enqueue_script('jquery');
     wp_register_script('main-js', get_template_directory_uri() . '/assets/js/main.js', [], '1.0.0', true);
     wp_enqueue_script('main-js');
-    if ( is_front_page()) {
+    wp_register_script('comment-form-ajax', get_template_directory_uri() . '/assets/js/comment-form-ajax', [], '1.0.0', true);
+    wp_enqueue_script('comment-form-ajax');
+    wp_register_script('meeting-form', get_template_directory_uri() . '/assets/js/meeting-form.js', [], '1.0.0', true);
+    wp_enqueue_script('meeting-form');
+    function cyberisho_enqueue_scripts()
+    {
+        // ... سایر اسکریپت‌ها ...
+
+        // تنها در صفحات تکی (single post) که فرم دیدگاه وجود دارد
+        if (is_single()) {
+            wp_enqueue_script(
+                'custom-comment-ajax',
+                get_template_directory_uri() . '/assets/js/comment-form-ajax.js',
+                [],
+                filemtime(get_template_directory() . '/assets/js/comment-form-ajax.js'),
+                true
+            );
+        }
+    }
+    add_action('wp_enqueue_scripts', 'cyberisho_enqueue_scripts');
+
+    if (is_front_page()) {
         wp_register_script('client-items-animation', get_template_directory_uri() . '/assets/js/client-items-animation.js', [], '1.0.0', true);
         wp_enqueue_script('client-items-animation');
         wp_register_script('audio-player', get_template_directory_uri() . '/assets/js/audio-player.js', [], '1.0.0', true);

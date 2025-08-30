@@ -24,6 +24,8 @@
   --normal-yellow-color: #f9d42b;
   --normal-red-color: #c52f48;
   --normal-orange-color: #ff7e38;
+  --light-green-color: #00ff73;
+
 }
 @font-face {
   font-family: peyda-regular;
@@ -4956,4 +4958,33 @@ header .small-responsive {
   .portfolio-main-item-section aside.item .content-portfolio-site {
     height: 350px;
   }
+}
+
+.form-employment-section .success-message {
+  margin: 4px 0;
+  border-radius: 50px;
+  padding: 15px 15px;
+  width: 100%;
+  outline: unset;
+  border: unset;
+  font-size: 16px;
+  color: var(--normal-text-color);
+  background: var(--light-green-color);
+  margin-top: 10px;
+  text-align: center;
+  font-family: peyda-bold;
+}
+form .success-message {
+  margin: 4px 0;
+  border-radius: 50px;
+  padding: 15px 15px;
+  width: 100%;
+  outline: unset;
+  border: unset;
+  font-size: 16px;
+  color: var(--normal-text-color);
+  background: var(--light-green-color);
+  margin-top: 10px;
+  text-align: center;
+  font-family: peyda-bold;
 }

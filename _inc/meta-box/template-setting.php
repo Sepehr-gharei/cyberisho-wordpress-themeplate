@@ -475,6 +475,15 @@ class Main_Settings extends Admin_Helper {
                         'title' => 'محتوای تایتل هدر صفحه اصلی',
                         'w' => 'w50',
                     ],
+                    'home_header_side_text_header' => [
+                        'type' => 'heading',
+                        'title' => 'متن کنار عکس',
+                    ],
+                    'home_header_side_text' => [
+                        'type' => 'editor',
+                        'title' => 'متن کنار عکس',
+                        'w' => 'w100',
+                    ],
                     'home_header_image_content' => [
                         'type' => 'image-uploader',
                         'title' => 'عکس تایتل هدر صفحه اصلی',
@@ -490,9 +499,19 @@ class Main_Settings extends Admin_Helper {
                         'title' => 'محتوای ملاقات',
                         'w' => 'w50',
                     ],
+                    'home_about_side_image' => [
+                        'type' => 'image-uploader',
+                        'title' => 'عکس کنار درباره ما',
+                        'w' => 'w50',
+                    ],
                     'home_about_text' => [
                         'type' => 'textarea',
                         'title' => 'متن درباره ما',
+                        'w' => 'w100',
+                    ],
+                    'home_services_main_text' => [
+                        'type' => 'textarea',
+                        'title' => 'متن اصلی خدمات ما',
                         'w' => 'w100',
                     ],
                     'home_service_1_title' => [

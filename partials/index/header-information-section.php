@@ -50,8 +50,9 @@
             </div>
             <div class="text-field">
                 <p>
-                    کسب و کارتان را از سنتی , به <strong>انلاین</strong> تغیر بدهید
-                </p>
+                <?php
+            echo $home_options['home_header_side_text'];
+            ?>   </p>
             </div>
         </div>
     </div>

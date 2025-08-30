@@ -8,7 +8,9 @@ $home_options = $theme_options['home'];
     <div class="container home-about-us-container">
         <div class="image-wrapper">
             <div class="main-image">
-                <img src="<?php  echo get_template_directory_uri().'/assets/img/Lay1.png'?>" alt="" />
+                <img src=" <?php
+            echo $home_options['home_about_side_image'];
+            ?> " alt="" />
             </div>
         </div>
         <div class="text-wrapper">

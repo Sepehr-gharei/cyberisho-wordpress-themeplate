@@ -8,9 +8,9 @@
         <div class="text-field">
             <strong>خدمات ما</strong>
             <p>
-                از همین امروز برای طراحی سایت اقدام کنید! بعد از آن برای جذب مشتریان
-                دائمی و همیشگی سایت را سئو کنید...
-            </p>
+            <?php
+            echo $home_options['home_services_main_text'];
+            ?> </p>
         </div>
         <div class="services-item">
             <div class="item">
