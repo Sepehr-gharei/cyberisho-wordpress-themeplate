@@ -1,123 +1,148 @@
 <?php
 
-class Admin_Helper {
-
-    public function cyberisho_Text($id, $title, $content, $width) {
+class Admin_Helper
+{
+    public function cyberisho_Text($id, $title, $content, $width)
+    {
         $field = "<div id='$id' class='cyberisho-field $width field-text'>"
             . "<label for='$id'>$title</label>"
-            . "<input type='text' value='". (!empty($content) ? esc_attr($content) : '') ."' name='$id' />"
-        . "</div>";
+            . "<input type='text' value='" . (!empty($content) ? esc_attr($content) : '') . "' name='$id' />"
+            . "</div>";
 
         return $field;
     }
 
-    public function cyberisho_Textarea($id, $title, $content, $width) {
+    public function cyberisho_Textarea($id, $title, $content, $width)
+    {
         $escaped_content = !empty($content) ? esc_attr($content) : '';
         $br_content = nl2br($escaped_content);
         $field = "<div id='$id' class='cyberisho-field $width field-textarea'>"
             . "<label for='$id'>$title</label>"
-            . "<textarea name='$id' rows='4' cols='50'>". (!empty($content) ? esc_attr($content) : '') ."</textarea>"
-        . "</div>";
+            . "<textarea name='$id' rows='4' cols='50'>" . (!empty($content) ? esc_attr($content) : '') . "</textarea>"
+            . "</div>";
 
         return $field;
     }
 
-    public function cyberisho_URL($id, $title, $content, $width) {
+    public function cyberisho_URL($id, $title, $content, $width)
+    {
         $field = "<div id='$id' class='cyberisho-field $width field-url'>"
             . "<label for='$id'>$title</label>"
-            . "<input type='text' value='". (!empty($content) ? esc_attr($content) : '') ."' name='$id' />"
-        . "</div>";
+            . "<input type='text' value='" . (!empty($content) ? esc_attr($content) : '') . "' name='$id' />"
+            . "</div>";
 
         return $field;
     }
 
-    public function cyberisho_Image_Uploader($id, $title, $content, $width) {
+    public function cyberisho_Image_Uploader($id, $title, $content, $width)
+    {
         $field = "<div id='$id' class='cyberisho-field $width field-image-uploader'>"
             . "<label for='$id'>$title</label>"
             . "<div class='flex align-items-center'>"
-                . "<button class='button field-upload-img' id='chooseLogo'>انتخاب تصویر</button>"
-                . "<input value='". (!empty($content) ? esc_url($content) : '') ."' type='text' class='field-img-url' name='$id' />"
-                . "<div class='field-img-container'>". (!empty($content) ? '<img src="'. esc_url($content) .'" alt="'. $id . '">' : '') ."</div>"
-                . "<a class='field-delete-img". (empty($content) ? ' hidden' : '') ."' href='#'>حذف تصویر</a>"
+            . "<button class='button field-upload-img' id='chooseLogo'>انتخاب تصویر</button>"
+            . "<input value='" . (!empty($content) ? esc_url($content) : '') . "' type='text' class='field-img-url' name='$id' />"
+            . "<div class='field-img-container'>" . (!empty($content) ? '<img src="' . esc_url($content) . '" alt="' . $id . '">' : '') . "</div>"
+            . "<a class='field-delete-img" . (empty($content) ? ' hidden' : '') . "' href='#'>حذف تصویر</a>"
             . "</div>"
-        . "</div>";
+            . "</div>";
 
         return $field;
     }
 
-    public function cyberisho_Multiple_Image_Uploader($id, $title, $content, $width) {
+    public function cyberisho_Audio_Uploader($id, $title, $content, $width)
+    {
+        $field = "<div id='$id' class='cyberisho-field $width field-audio-uploader'>"
+            . "<label for='$id'>$title</label>"
+            . "<div class='flex align-items-center'>"
+            . "<button class='button field-upload-audio' id='chooseAudio'>انتخاب ویس</button>"
+            . "<input value='" . (!empty($content) ? esc_url($content) : '') . "' type='text' class='field-audio-url' name='$id' />"
+            . "<div class='field-audio-container'>" . (!empty($content) ? '<audio src="' . esc_url($content) . '" controls></audio>' : '') . "</div>"
+            . "<a class='field-delete-audio" . (empty($content) ? ' hidden' : '') . "' href='#'>حذف ویس</a>"
+            . "</div>"
+            . "</div>";
+
+        return $field;
+    }
+
+    public function cyberisho_Multiple_Image_Uploader($id, $title, $content, $width)
+    {
         $content = explode(',', $content);
         $field = "<div id='$id' class='cyberisho-field $width field-multiple-image-uploader'>"
             . "<label for='$id'>$title</label>"
             . "<div class='flex align-items-center flex-wrap'>"
-                . "<button class='button field-upload-img' id='chooseLogo'>انتخاب تصاویر</button>"
-                . "<input value='". (!empty($content) ? implode(',', $content) : '') ."' type='text' class='field-img-ids' name='$id' />"
-                . "<div class='field-img-container'>";
-                if (!empty($content) && is_array($content)) {
-                    foreach ($content as $image_id) {
-                        $image_url = wp_get_attachment_image_url($image_id, 'thumbnail');
-                        if ($image_url) {
-                            $field .= "<div class='field-img-item' data-id='$image_id'><img src='$image_url' alt=''></div>";
-                        }
-                    }
+            . "<button class='button field-upload-img' id='chooseLogo'>انتخاب تصاویر</button>"
+            . "<input value='" . (!empty($content) ? implode(',', $content) : '') . "' type='text' class='field-img-ids' name='$id' />"
+            . "<div class='field-img-container'>";
+        if (!empty($content) && is_array($content)) {
+            foreach ($content as $image_id) {
+                $image_url = wp_get_attachment_image_url($image_id, 'thumbnail');
+                if ($image_url) {
+                    $field .= "<div class='field-img-item' data-id='$image_id'><img src='$image_url' alt=''></div>";
                 }
-                $field .= "</div>"
+            }
+        }
+        $field .= "</div>"
             . "</div>"
-        . "</div>";
-    
+            . "</div>";
+
         return $field;
     }
 
-    public function cyberisho_Checkbox($id, $title, $content, $width) {
+    public function cyberisho_Checkbox($id, $title, $content, $width)
+    {
         $field = "<div id='$id' class='cyberisho-field $width field-checkbox'>"
             . "<label for='$id'>$title</label>"
             . "<div>"
-                . "<input type='checkbox' name='$id' ". ($content == true ? ' checked' : '') ." >"
-                . "<span class='btn-toggle'></span>"
+            . "<input type='checkbox' name='$id' " . ($content == true ? ' checked' : '') . " >"
+            . "<span class='btn-toggle'></span>"
             . "</div>"
-        . "</div>";
+            . "</div>";
 
         return $field;
     }
 
-    public function cyberisho_Select($id, $title, $content, $selected, $width) {
+    public function cyberisho_Select($id, $title, $content, $selected, $width)
+    {
         $field = '';
         $field .= "<div id='$id' class='cyberisho-field $width field-select'>"
             . "<label for='$id'>$title</label>"
             . "<select class='cyberisho-select select-single' name='$id'>";
-                foreach($content as $id => $value) {
-                    $field .= "<option ". ($selected == $id ? ' selected' : '') ." value='$id'>$value</option>";
-                }
-            $field .= "</select>"
-        . "</div>";
+        foreach ($content as $id => $value) {
+            $field .= "<option " . ($selected == $id ? ' selected' : '') . " value='$id'>$value</option>";
+        }
+        $field .= "</select>"
+            . "</div>";
 
         return $field;
     }
 
-    public function cyberisho_Select2($id, $select_id, $title, $content, $selected, $width) {
+    public function cyberisho_Select2($id, $select_id, $title, $content, $selected, $width)
+    {
         $field = '';
         $field .= "<div id='$id' class='cyberisho-field $width field-select2'>"
             . "<label for='$id'>$title</label>"
             . "<select class='cyberisho-select select-multiple' name='$select_id' multiple='multiple'>";
-                foreach($content as $id => $value) {
-                    $field .= "<option ". (!empty($selected) && in_array($id, $selected) ? ' selected' : '') ." value='$id'>$value</option>";
-                }
-            $field .= "</select>"
-        . "</div>";
+        foreach ($content as $id => $value) {
+            $field .= "<option " . (!empty($selected) && in_array($id, $selected) ? ' selected' : '') . " value='$id'>$value</option>";
+        }
+        $field .= "</select>"
+            . "</div>";
 
         return $field;
     }
 
-    public function cyberisho_Color($id, $title, $content, $width) {
+    public function cyberisho_Color($id, $title, $content, $width)
+    {
         $field = "<div id='$id' class='cyberisho-field $width field-color'>"
             . "<label for='$id'>$title</label>"
-            . "<input type='text' class='color-picker' data-alpha-color-type='hex' data-alpha-enabled='true' value='". (!empty($content) ? esc_attr($content) : '#000') ."' name='$id' />"
-        . "</div>";
+            . "<input type='text' class='color-picker' data-alpha-color-type='hex' data-alpha-enabled='true' value='" . (!empty($content) ? esc_attr($content) : '#000') . "' name='$id' />"
+            . "</div>";
 
         return $field;
     }
 
-    public function cyberisho_Editor($id, $title, $content, $width) {
+    public function cyberisho_Editor($id, $title, $content, $width)
+    {
         $settings = array(
             'textarea_name' => $id,
             'wpautop' => false,
@@ -127,29 +152,30 @@ class Admin_Helper {
             'editor_height' => 200,
             'tinymce' => array('plugins' => 'fullscreen,wordpress,wplink,textcolor'),
         );
-    
+
         $content = html_entity_decode($content);
         $content = stripslashes($content);
         return wp_editor($content, $id, $settings);
     }
 
-    public function cyberisho_Repeater($id, $title, $section, $btn, $settings, $default, $width) {
+    public function cyberisho_Repeater($id, $title, $section, $btn, $settings, $default, $width)
+    {
         $field = '';
         $theme_options = get_option('cyberisho_main_option', []);
-        
+
         // Encode settings as JSON for the data-settings attribute
         $json_settings = json_encode($settings, JSON_UNESCAPED_UNICODE);
-        
+
         $field .= "<div id='$id' class='cyberisho-field field-repeater'>"
             . "<label for='$id'>$title</label>"
             . "<div class='main-repeater flex flex-wrap'>";
-        
+
         $get_option = (!empty($theme_options[$section]) ? $theme_options[$section] : '');
         if (!empty($get_option[$id])) {
             $i = -1;
             foreach ($get_option[$id] as $repeater) {
                 $i++;
-                $field .= "<div id='". $id . "[" . $i . "]' class='repeater-table $width'>"
+                $field .= "<div id='" . $id . "[" . $i . "]' class='repeater-table $width'>"
                     . "<div class='repeater-table-entry'>"
                     . "<button class='delete-repeater-row'>حذف</button>";
                 foreach ($settings as $key => $setting) {
@@ -171,6 +197,9 @@ class Admin_Helper {
                         case 'image-uploader':
                             $field .= $this->cyberisho_Image_Uploader($key, $title, $default, $w);
                             break;
+                        case 'audio-uploader':
+                            $field .= $this->cyberisho_Audio_Uploader($key, $title, $default, $w);
+                            break;
                         case 'select':
                             $field .= $this->cyberisho_Select($key, $title, $setting['content'], $default, $w);
                             break;
@@ -180,51 +209,56 @@ class Admin_Helper {
                     . "</div>";
             }
         } else {
-            $field .= "<div id='". $id . "[0]' class='repeater-table $width'>"
+            $field .= "<div id='" . $id . "[0]' class='repeater-table $width'>"
                 . "<div class='repeater-table-entry'>";
-                foreach ($settings as $key => $setting) {
-                    $parts = explode('[', $key);
-                    $lastPart = end($parts);
-                    $default_id = rtrim($lastPart, ']');
-                    $type = $setting['type'];
-                    $title = $setting['title'];
-                    $field_id = $id . '[0][' . $default_id . ']';
-                    $w = '';
-                    $default = (!empty($get_option[$id][0][$default_id]) ? $get_option[$id][0][$default_id] : '');
-                    switch ($type) {
-                        case 'text':
-                            $field .= $this->cyberisho_Text($field_id, $title, $default, $w);
-                            break;
-                        case 'textarea':
-                            $field .= $this->cyberisho_Textarea($field_id, $title, $default, $w);
-                            break;
-                        case 'image-uploader':
-                            $field .= $this->cyberisho_Image_Uploader($field_id, $title, $default, $w);
-                            break;
-                        case 'select':
-                            $field .= $this->cyberisho_Select($field_id, $title, $setting['content'], $default, $w);
-                            break;
-                    }
+            foreach ($settings as $key => $setting) {
+                $parts = explode('[', $key);
+                $lastPart = end($parts);
+                $default_id = rtrim($lastPart, ']');
+                $type = $setting['type'];
+                $title = $setting['title'];
+                $field_id = $id . '[0][' . $default_id . ']';
+                $w = '';
+                $default = (!empty($get_option[$id][0][$default_id]) ? $get_option[$id][0][$default_id] : '');
+                switch ($type) {
+                    case 'text':
+                        $field .= $this->cyberisho_Text($field_id, $title, $default, $w);
+                        break;
+                    case 'textarea':
+                        $field .= $this->cyberisho_Textarea($field_id, $title, $default, $w);
+                        break;
+                    case 'image-uploader':
+                        $field .= $this->cyberisho_Image_Uploader($field_id, $title, $default, $w);
+                        break;
+                    case 'audio-uploader':
+                        $field .= $this->cyberisho_Audio_Uploader($field_id, $title, $default, $w);
+                        break;
+                    case 'select':
+                        $field .= $this->cyberisho_Select($field_id, $title, $setting['content'], $default, $w);
+                        break;
                 }
-                $field .= "</div>"
-                    . "</div>";
+            }
+            $field .= "</div>"
+                . "</div>";
         }
-        
+
         // Add the data-settings attribute to the button
         $field .= "<button class='button w100 button-primary add-repeater-row' data-settings='" . esc_attr($json_settings) . "'>$btn</button>"
             . "</div>"
-        . "</div>";
+            . "</div>";
 
         return $field;
     }
 
-    public function cyberisho_Heading($id, $title) {
+    public function cyberisho_Heading($id, $title)
+    {
         $field = "<h3 id='$id' class='cyberisho-field w100 field-heading'>$title</h3>";
 
         return $field;
     }
 
-    public function cyberisho_Get_Post_Type($post_type) {
+    public function cyberisho_Get_Post_Type($post_type)
+    {
         // Initialize an empty array to store post IDs and titles
         $posts = [];
 
@@ -235,7 +269,7 @@ class Admin_Helper {
 
         // Fetch published posts of the specified post type
         $get_posts = get_posts(array(
-            'post_type'   => $post_type,
+            'post_type' => $post_type,
             'numberposts' => -1, // Retrieve all posts
             'post_status' => 'publish',
         ));
@@ -251,9 +285,10 @@ class Admin_Helper {
     }
 }
 
-class Main_Settings extends Admin_Helper {
-
-    protected function All_Settings() {
+class Main_Settings extends Admin_Helper
+{
+    protected function All_Settings()
+    {
         $settings = [
             'footer-content' => [
                 'menu' => 'محتواهای پاورچین',
@@ -769,7 +804,6 @@ class Main_Settings extends Admin_Helper {
                                 'type' => 'text',
                                 'title' => 'URL سایت',
                             ],
-                          
                             'theme_portfolios[0][main_image]' => [
                                 'type' => 'image-uploader',
                                 'title' => 'عکس اصلی',
@@ -781,6 +815,37 @@ class Main_Settings extends Admin_Helper {
                             'theme_portfolios[0][mobile_image]' => [
                                 'type' => 'image-uploader',
                                 'title' => 'عکس موبایل',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'testimonials' => [
+                'menu' => 'نظرات مشتریان',
+                'lable' => 'تنظیمات نظرات مشتریان',
+                'settings' => [
+                    'testimonials_items' => [
+                        'type' => 'repeater',
+                        'title' => 'نظرات مشتریان',
+                        'section' => 'testimonials',
+                        'btn' => 'افزودن نظر جدید',
+                        'w' => 'w100',
+                        'settings' => [
+                            'testimonials_items[0][customer_name]' => [
+                                'type' => 'text',
+                                'title' => 'نام مشتری',
+                            ],
+                            'testimonials_items[0][site_name]' => [
+                                'type' => 'text',
+                                'title' => 'نام سایت مشتری',
+                            ],
+                            'testimonials_items[0][voice]' => [
+                                'type' => 'audio-uploader',
+                                'title' => 'ویس مشتری',
+                            ],
+                            'testimonials_items[0][content]' => [
+                                'type' => 'textarea',
+                                'title' => 'متن نظر مشتری',
                             ],
                         ],
                     ],
@@ -806,7 +871,8 @@ class Main_Settings extends Admin_Helper {
         return $settings;
     }
 
-    protected function General_Settings($current_tab) {
+    protected function General_Settings($current_tab)
+    {
         $all_settings = $this->All_Settings();
         $theme_options = get_option('cyberisho_main_option', []);
 
@@ -836,6 +902,9 @@ class Main_Settings extends Admin_Helper {
                             break;
                         case 'image-uploader':
                             echo $this->cyberisho_Image_Uploader($id, $title, $default, $width);
+                            break;
+                        case 'audio-uploader':
+                            echo $this->cyberisho_Audio_Uploader($id, $title, $default, $width);
                             break;
                         case 'gallery-uploader':
                             echo $this->cyberisho_Multiple_Image_Uploader($id, $title, $default, $width);
@@ -876,15 +945,17 @@ class Main_Settings extends Admin_Helper {
     }
 }
 
-class Theme_Settings extends Main_Settings {
-
-    public function __construct() {
+class Theme_Settings extends Main_Settings
+{
+    public function __construct()
+    {
         add_action('admin_menu', array($this, 'add_theme_settings_page'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
         add_action('admin_head', array($this, 'admin_font'));
     }
 
-    public function add_theme_settings_page() {
+    public function add_theme_settings_page()
+    {
         add_menu_page(
             'تنظیمات قالب',
             'تنظیمات قالب',
@@ -896,7 +967,8 @@ class Theme_Settings extends Main_Settings {
         );
     }
 
-    public function render_settings_page() {
+    public function render_settings_page()
+    {
         $this->Save_Change();
         echo FlashMessage::get();
         $settings = $this->All_Settings();
@@ -924,7 +996,8 @@ class Theme_Settings extends Main_Settings {
             . "</div>";
     }
 
-    public function Save_Change() {
+    public function Save_Change()
+    {
         if (isset($_POST['SaveSetting'])) {
             $current_tab = isset($_POST['current_tab']) ? $_POST['current_tab'] : 'contact';
             if ($current_tab) {
@@ -949,6 +1022,7 @@ class Theme_Settings extends Main_Settings {
                             $value = $field_value;
                             break;
                         case 'image-uploader':
+                        case 'audio-uploader':
                         case 'url':
                             $value = sanitize_url($field_value);
                             break;
@@ -975,7 +1049,8 @@ class Theme_Settings extends Main_Settings {
         }
     }
 
-    public function enqueue_admin_scripts() {
+    public function enqueue_admin_scripts()
+    {
         wp_enqueue_style('style', get_template_directory_uri() . '/_inc/meta-box/css/style.css', [], '1.0.0');
         wp_enqueue_media();
         wp_enqueue_script('theme-settings-script', get_template_directory_uri() . '/_inc/meta-box/js/admin.js', array('jquery'), '1.0', true);
@@ -984,22 +1059,26 @@ class Theme_Settings extends Main_Settings {
         wp_enqueue_script('wp-color-picker-alpha', get_template_directory_uri() . '/_inc/meta-box/js/wp-color-picker-alpha.min.js', array('wp-color-picker'), '4.1.0', true);
     }
 
-    private function Code_Validator($code) {
+    private function Code_Validator($code)
+    {
         return str_replace(array('\'', '\"'), '"', $code);
     }
 
-    public function start_session() {
+    public function start_session()
+    {
         if (!session_id()) {
             session_start();
         }
     }
 
-    public function end_session() {
+    public function end_session()
+    {
         session_write_close();
     }
 
-    public function admin_font() {
-        echo "<style type='text/css'>@font-face {font-family: 'YekanBakh';font-style: normal;font-weight: normal;src:  url('".get_template_directory_uri()."/assets/fonts/PeydaWeb-Regular.woff') format('woff'),   url('".get_template_directory_uri()."/assets/fonts/PeydaWeb-Regular.woff') format('woff2');}@font-face {font-family: 'YekanBakh';font-style: normal;font-weight: bold;src: url('".get_template_directory_uri()."/assets/fonts/PeydaWeb-Regular.woff') format('woff'),   url('".get_template_directory_uri()."/assets/fonts/PeydaWeb-Regular.woff') format('woff2'); }body.rtl, #wpadminbar *:not([class='ab-icon']), .wp-core-ui, .media-menu, .media-frame *, .media-modal *,.rtl h1, .rtl h2, .rtl h3, .rtl h4, .rtl h5, .rtl h6 {font-family:'YekanBakh' !important;}.php-error #adminmenuback, .php-error #adminmenuwrap {margin-top: 0 !important;}#sub-accordion-section-custom_codes textarea {direction: ltr;}</style>" . PHP_EOL;
+    public function admin_font()
+    {
+        echo "<style type='text/css'>@font-face {font-family: 'YekanBakh';font-style: normal;font-weight: normal;src:  url('" . get_template_directory_uri() . "/assets/fonts/PeydaWeb-Regular.woff') format('woff'),   url('" . get_template_directory_uri() . "/assets/fonts/PeydaWeb-Regular.woff') format('woff2');}@font-face {font-family: 'YekanBakh';font-style: normal;font-weight: bold;src: url('" . get_template_directory_uri() . "/assets/fonts/PeydaWeb-Regular.woff') format('woff'),   url('" . get_template_directory_uri() . "/assets/fonts/PeydaWeb-Regular.woff') format('woff2'); }body.rtl, #wpadminbar *:not([class='ab-icon']), .wp-core-ui, .media-menu, .media-frame *, .media-modal *,.rtl h1, .rtl h2, .rtl h3, .rtl h4, .rtl h5, .rtl h6 {font-family:'YekanBakh' !important;}.php-error #adminmenuback, .php-error #adminmenuwrap {margin-top: 0 !important;}#sub-accordion-section-custom_codes textarea {direction: ltr;}</style>" . PHP_EOL;
     }
 }
 
@@ -1009,19 +1088,21 @@ if (!defined('ABSPATH')) {
     exit;
 } // Exit if accessed directly
 
-class FlashMessage {
-
+class FlashMessage
+{
     const SUCCESS = 1;
     const ERROR = 2;
 
-    public static function add($message, $type = self::SUCCESS) {
+    public static function add($message, $type = self::SUCCESS)
+    {
         $_SESSION['cyberisho_message'] = [
             'message' => $message,
             'type' => $type
         ];
     }
 
-    public static function show() {
+    public static function show()
+    {
         if (isset($_SESSION['cyberisho_message'])) {
             $message = $_SESSION['cyberisho_message'];
             if ($message['type'] = self::SUCCESS) {
@@ -1034,7 +1115,8 @@ class FlashMessage {
         }
     }
 
-    public static function get() {
+    public static function get()
+    {
         $message_text = '';
 
         if (isset($_SESSION['cyberisho_message'])) {
@@ -1059,7 +1141,8 @@ class FlashMessage {
         return $message_text;
     }
 
-    public static function clear() {
+    public static function clear()
+    {
         unset($_SESSION['cyberisho_message']);
     }
 }

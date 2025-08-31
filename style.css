@@ -494,9 +494,10 @@ header .main-header {
   border-left: 2px solid var(--border-header-nav-color);
   border-bottom: 2px solid var(--border-header-nav-color);
   border-right: 2px solid var(--border-header-nav-color);
-  background: var(--bakcground-header-nav-color);
-  backdrop-filter: blur(8px);
   display: flex;
+  background: #FFFFFF50;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
 }
 header .main-header .search-wrapper,
 header .main-header .phone-number-wrapper {
@@ -1025,7 +1026,9 @@ footer .footer-container {
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   padding: 90px 60px 10px 60px;
-  background-color: var(--bakcground-header-nav-color);
+  background: #FFFFFF50;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
 }
 footer .footer-container .top-wrapper {
   height: 80px;

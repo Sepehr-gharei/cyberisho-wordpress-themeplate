@@ -1,7 +1,24 @@
 <div class="team-and-members-section">
     <div class="container team-and-members-container">
         <div class="image-wrapper">
-            <img src="<?php echo get_template_directory_uri() . '/assets/img/dev_team.jpg' ?>" alt="" />
+            <?php
+            // در فایل قالب صفحه (مثل page-about-us.php)
+            global $post;
+
+            if ($post && $post->post_name === 'about-us') {
+                $image_id = get_post_meta($post->ID, '_aboutus_info_image_id', true);
+                if ($image_id) {
+                    $image_url = wp_get_attachment_url($image_id);
+                    if ($image_url) {
+                        echo '<img src="' . esc_url($image_url) . '" alt="عکس کانتینر اطلاعات بیشتر" />';
+                    } else {
+                        echo '<p>تصویری یافت نشد.</p>';
+                    }
+                } else {
+                    echo '<p>تصویری برای نمایش انتخاب نشده است.</p>';
+                }
+            }
+            ?>
         </div>
         <div class="text-wrapper">
             <div class="top-text">
@@ -34,20 +51,28 @@
             </div>
             <div class="members-items">
                 <div class="item">
-                    <span><?php mb_internal_encoding("UTF-8"); echo preg_replace('/[^\p{N}]/u', '', $team_1);?></span>
-                    <p><?php mb_internal_encoding("UTF-8") ;echo preg_replace('/[^\p{L}\s]/u', '', $team_1);?> </p>
+                    <span><?php mb_internal_encoding("UTF-8");
+                    echo preg_replace('/[^\p{N}]/u', '', $team_1); ?></span>
+                    <p><?php mb_internal_encoding("UTF-8");
+                    echo preg_replace('/[^\p{L}\s]/u', '', $team_1); ?> </p>
                 </div>
                 <div class="item">
-                <span><?php mb_internal_encoding("UTF-8"); echo preg_replace('/[^\p{N}]/u', '',  $team_2);?></span>
-                <p><?php mb_internal_encoding("UTF-8"); echo preg_replace('/[^\p{L}\s]/u', '',  $team_2);?> </p>
+                    <span><?php mb_internal_encoding("UTF-8");
+                    echo preg_replace('/[^\p{N}]/u', '', $team_2); ?></span>
+                    <p><?php mb_internal_encoding("UTF-8");
+                    echo preg_replace('/[^\p{L}\s]/u', '', $team_2); ?> </p>
                 </div>
                 <div class="item">
-                <span><?php mb_internal_encoding("UTF-8"); echo preg_replace('/[^\p{N}]/u', '',  $team_3);?></span>
-                <p><?php mb_internal_encoding("UTF-8"); echo preg_replace('/[^\p{L}\s]/u', '',  $team_3);?> </p>
+                    <span><?php mb_internal_encoding("UTF-8");
+                    echo preg_replace('/[^\p{N}]/u', '', $team_3); ?></span>
+                    <p><?php mb_internal_encoding("UTF-8");
+                    echo preg_replace('/[^\p{L}\s]/u', '', $team_3); ?> </p>
                 </div>
                 <div class="item">
-                <span><?php mb_internal_encoding("UTF-8"); echo preg_replace('/[^\p{N}]/u', '',  $team_4);?></span>
-                <p><?php mb_internal_encoding("UTF-8"); echo preg_replace('/[^\p{L}\s]/u', '',  $team_4);?> </p>
+                    <span><?php mb_internal_encoding("UTF-8");
+                    echo preg_replace('/[^\p{N}]/u', '', $team_4); ?></span>
+                    <p><?php mb_internal_encoding("UTF-8");
+                    echo preg_replace('/[^\p{L}\s]/u', '', $team_4); ?> </p>
                 </div>
             </div>
         </div>

@@ -42,48 +42,27 @@ function save_page_header_meta_box_data($post_id)
 add_action('save_post', 'save_page_header_meta_box_data');
 
 
-//***************** افزودن متا باکس ویدیو وعکس ویدیو درباره ما **********************
-//***************** افزودن متا باکس ویدیو وعکس ویدیو درباره ما **********************
+
+// افزودن متاباکس برای صفحه درباره ما
 function my_custom_aboutus_metaboxes()
 {
     global $post;
 
-    if ($post) {
-        $page_slug = $post->post_name;
-        if ($page_slug === 'about-us') {
-            // Meta box for video
-            add_meta_box(
-                'aboutus_video_metabox',
-                'ویدیو درباره ما',
-                'aboutus_video_metabox_callback',
-                'page',
-                'normal',
-                'high'
-            );
-
-            // Meta box for video thumbnail
-            add_meta_box(
-                'aboutus_video_thumbnail_metabox',
-                'عکس تامبنیل ویدیو درباره ما',
-                'aboutus_video_thumbnail_metabox_callback',
-                'page',
-                'normal',
-                'high'
-            );
-
-            // New meta box for more information container image
-            add_meta_box(
-                'aboutus_info_image_metabox',
-                'عکس کانتینر اطلاعات بیشتر',
-                'aboutus_info_image_metabox_callback',
-                'page',
-                'normal',
-                'high'
-            );
-        }
+    if ($post && $post->post_name === 'about-us') {
+        // متاباکس برای کانتینر اطلاعات بیشتر
+        add_meta_box(
+            'aboutus_info_image_metabox',
+            'عکس کانتینر اطلاعات بیشتر',
+            'aboutus_info_image_metabox_callback',
+            'page',
+            'normal',
+            'high'
+        );
     }
 }
 add_action('add_meta_boxes', 'my_custom_aboutus_metaboxes');
+
+// کالبک متاباکس عکس کانتینر اطلاعات بیشتر
 function aboutus_info_image_metabox_callback($post)
 {
     $image_id = get_post_meta($post->ID, '_aboutus_info_image_id', true);
@@ -132,80 +111,8 @@ function aboutus_info_image_metabox_callback($post)
     </script>
     <?php
 }
-// Save meta box data
 
-// کالبک متاباکس ویدیو
-function aboutus_video_metabox_callback($post)
-{
-    $video_url = get_post_meta($post->ID, '_aboutus_video_url', true);
-    wp_nonce_field('aboutus_metabox_nonce', 'aboutus_nonce');
-    ?>
-    <label for="aboutus_video_url">آدرس ویدیو:</label>
-    <input type="text" id="aboutus_video_url" name="aboutus_video_url" value="<?php echo esc_url($video_url); ?>"
-        style="width: 100%; margin-bottom: 10px;">
-    <input type="button" id="upload_video_button" class="button" value="انتخاب ویدیو از رسانه">
-    <script>
-        jQuery(document).ready(function ($) {
-            $('#upload_video_button').click(function () {
-                var frame = wp.media({
-                    title: 'انتخاب ویدیو',
-                    library: { type: 'video' },
-                    multiple: false
-                });
-
-                frame.on('select', function () {
-                    var attachment = frame.state().get('selection').first().toJSON();
-                    $('#aboutus_video_url').val(attachment.url);
-                });
-
-                frame.open();
-            });
-        });
-    </script>
-    <?php
-}
-
-// کالبک متاباکس تامبنیل ویدیو
-function aboutus_video_thumbnail_metabox_callback($post)
-{
-    $thumbnail_id = get_post_meta($post->ID, '_aboutus_video_thumbnail_id', true);
-    $thumbnail_url = $thumbnail_id ? wp_get_attachment_url($thumbnail_id) : '';
-    wp_nonce_field('aboutus_metabox_nonce', 'aboutus_nonce');
-    ?>
-    <label for="aboutus_video_thumbnail">تصویر تامبنیل:</label>
-    <input type="hidden" id="aboutus_video_thumbnail_id" name="aboutus_video_thumbnail_id"
-        value="<?php echo esc_attr($thumbnail_id); ?>">
-    <input type="text" id="aboutus_video_thumbnail_url" name="aboutus_video_thumbnail_url"
-        value="<?php echo esc_url($thumbnail_url); ?>" style="width: 100%; margin-bottom: 10px;">
-    <input type="button" id="upload_thumbnail_button" class="button" value="انتخاب تصویر از رسانه">
-    <div id="thumbnail_preview" style="margin-top: 10px;">
-        <?php if ($thumbnail_url): ?>
-            <img src="<?php echo esc_url($thumbnail_url); ?>" style="max-width: 200px; height: auto;">
-        <?php endif; ?>
-    </div>
-    <script>
-        jQuery(document).ready(function ($) {
-            $('#upload_thumbnail_button').click(function () {
-                var frame = wp.media({
-                    title: 'انتخاب تصویر تامبنیل',
-                    library: { type: 'image' },
-                    multiple: false
-                });
-
-                frame.on('select', function () {
-                    var attachment = frame.state().get('selection').first().toJSON();
-                    $('#aboutus_video_thumbnail_id').val(attachment.id);
-                    $('#aboutus_video_thumbnail_url').val(attachment.url);
-                    $('#thumbnail_preview').html('<img src="' + attachment.url + '" style="max-width: 200px; height: auto;">');
-                });
-
-                frame.open();
-            });
-        });
-    </script>
-    <?php
-}
-// تابع ذخیره سازی داده‌های متاباکس
+// تابع ذخیره‌سازی داده‌های متاباکس
 function save_aboutus_metaboxes($post_id)
 {
     if (!isset($_POST['aboutus_nonce']) || !wp_verify_nonce($_POST['aboutus_nonce'], 'aboutus_metabox_nonce')) {
@@ -216,21 +123,7 @@ function save_aboutus_metaboxes($post_id)
         return;
     }
 
-    // Save video URL
-    if (isset($_POST['aboutus_video_url'])) {
-        update_post_meta($post_id, '_aboutus_video_url', esc_url_raw($_POST['aboutus_video_url']));
-    } else {
-        delete_post_meta($post_id, '_aboutus_video_url');
-    }
-
-    // Save video thumbnail
-    if (isset($_POST['aboutus_video_thumbnail_id'])) {
-        update_post_meta($post_id, '_aboutus_video_thumbnail_id', absint($_POST['aboutus_video_thumbnail_id']));
-    } else {
-        delete_post_meta($post_id, '_aboutus_video_thumbnail_id');
-    }
-
-    // Save more information container image
+    // ذخیره عکس کانتینر اطلاعات بیشتر
     if (isset($_POST['aboutus_info_image_id']) && !empty($_POST['aboutus_info_image_id'])) {
         update_post_meta($post_id, '_aboutus_info_image_id', absint($_POST['aboutus_info_image_id']));
     } else {
@@ -239,7 +132,7 @@ function save_aboutus_metaboxes($post_id)
 }
 add_action('save_post', 'save_aboutus_metaboxes');
 
-
+// افزودن متاباکس اطلاعات درباره ما
 function my_custom_aboutus_metabox()
 {
     global $post;
@@ -260,19 +153,15 @@ function my_custom_aboutus_metabox()
 }
 add_action('add_meta_boxes', 'my_custom_aboutus_metabox');
 
-// === 2. تابع Callback متا باکس ===
+// کالبک متاباکس اطلاعات درباره ما
 if (!function_exists('my_aboutus_metabox_callback')) {
     function my_aboutus_metabox_callback($post)
     {
-        // گرفتن داده‌های ذخیره شده قبلی
         $sections = get_post_meta($post->ID, '_aboutus_info_sections', true);
-
         wp_nonce_field('my_aboutus_metabox_nonce', 'my_aboutus_nonce');
-
         ?>
         <div id="aboutus-sections-container">
             <?php
-            // اگر داده وجود داشت، نمایش بده
             if (!empty($sections) && is_array($sections)):
                 foreach ($sections as $index => $section):
                     ?>
@@ -291,7 +180,6 @@ if (!function_exists('my_aboutus_metabox_callback')) {
                     <?php
                 endforeach;
             else:
-                // در غیر اینصورت فقط یک فیلد نمایش بده
                 ?>
                 <div class="aboutus-section">
                     <label>عنوان:</label>
@@ -361,7 +249,7 @@ if (!function_exists('my_aboutus_metabox_callback')) {
     }
 }
 
-// === 3. ذخیره داده‌ها ===
+// ذخیره داده‌های متاباکس اطلاعات درباره ما
 function save_my_aboutus_metabox($post_id)
 {
     if (!isset($_POST['my_aboutus_nonce']) || !wp_verify_nonce($_POST['my_aboutus_nonce'], 'my_aboutus_metabox_nonce')) {
@@ -387,8 +275,7 @@ function save_my_aboutus_metabox($post_id)
 }
 add_action('save_post', 'save_my_aboutus_metabox');
 
-
-// Add Meta Box for Contact Page Only
+// افزودن متاباکس برای صفحه تماس
 function my_custom_contact_location_metabox()
 {
     global $post;
@@ -396,7 +283,7 @@ function my_custom_contact_location_metabox()
     if ($post && $post->post_name === 'contact') {
         add_meta_box(
             'my_location_metabox_id',
-            'لوکیشن ها',
+            'لوکیشن‌ها',
             'my_contact_location_metabox_callback',
             'page',
             'normal',
@@ -406,10 +293,9 @@ function my_custom_contact_location_metabox()
 }
 add_action('add_meta_boxes', 'my_custom_contact_location_metabox');
 
-// Metabox HTML Output
+// کالبک متاباکس لوکیشن‌ها
 function my_contact_location_metabox_callback($post)
 {
-    // Retrieve saved values
     $location_neshan_address = get_post_meta($post->ID, '_location_neshan_address', true);
     $location_balad_address = get_post_meta($post->ID, '_location_balad_address', true);
     $location_waze_address = get_post_meta($post->ID, '_location_waze_address', true);
@@ -418,9 +304,7 @@ function my_contact_location_metabox_callback($post)
     $location_metro_address = get_post_meta($post->ID, '_location_metro_address', true);
     $location_image_address = get_post_meta($post->ID, '_location_image_address', true);
 
-    // Security Nonce
     wp_nonce_field('my_location_metabox_nonce', 'my_location_nonce');
-
     ?>
     <table class="form-table">
         <tr>
@@ -444,12 +328,12 @@ function my_contact_location_metabox_callback($post)
                     style="width:100%;"><?php echo esc_textarea($location_map_address); ?></textarea></td>
         </tr>
         <tr>
-            <th><label for="location_brt_address">نزدیک ترین brt</label></th>
+            <th><label for="location_brt_address">نزدیک‌ترین BRT</label></th>
             <td><textarea name="location_brt_address" id="location_brt_address" rows="4"
                     style="width:100%;"><?php echo esc_textarea($location_brt_address); ?></textarea></td>
         </tr>
         <tr>
-            <th><label for="location_metro_address">نزدیک ترین metro</label></th>
+            <th><label for="location_metro_address">نزدیک‌ترین مترو</label></th>
             <td><textarea name="location_metro_address" id="location_metro_address" rows="4"
                     style="width:100%;"><?php echo esc_textarea($location_metro_address); ?></textarea></td>
         </tr>
@@ -486,20 +370,17 @@ function my_contact_location_metabox_callback($post)
     <?php
 }
 
-// Save Meta Box Data
+// ذخیره داده‌های متاباکس لوکیشن
 function save_my_contact_location_metabox($post_id)
 {
-    // Check nonce
     if (!isset($_POST['my_location_nonce']) || !wp_verify_nonce($_POST['my_location_nonce'], 'my_location_metabox_nonce')) {
         return;
     }
 
-    // Check user permissions
     if (!current_user_can('edit_page', $post_id)) {
         return;
     }
 
-    // Save fields
     if (isset($_POST['location_neshan_address'])) {
         update_post_meta($post_id, '_location_neshan_address', sanitize_text_field($_POST['location_neshan_address']));
     }
@@ -516,31 +397,19 @@ function save_my_contact_location_metabox($post_id)
         update_post_meta($post_id, '_location_map_address', sanitize_textarea_field($_POST['location_map_address']));
     }
 
-
-
-
-
-
-    if (isset($_POST['location_metro_address'])) {
-        update_post_meta($post_id, '_location_metro_address', sanitize_textarea_field($_POST['location_metro_address']));
-    }
-
-
     if (isset($_POST['location_brt_address'])) {
         update_post_meta($post_id, '_location_brt_address', sanitize_textarea_field($_POST['location_brt_address']));
     }
 
-
-
-
+    if (isset($_POST['location_metro_address'])) {
+        update_post_meta($post_id, '_location_metro_address', sanitize_textarea_field($_POST['location_metro_address']));
+    }
 
     if (isset($_POST['location_image_address'])) {
         update_post_meta($post_id, '_location_image_address', esc_url_raw($_POST['location_image_address']));
     }
 }
 add_action('save_post', 'save_my_contact_location_metabox');
-
-
 
 
 
@@ -608,15 +477,15 @@ function landing_add_page_metabox_callback($post)
                 <label for="landing_add_header_top_text">متن بالایی</label>
                 <textarea name="landing_add_header_top_text" id="landing_add_header_top_text"
                     style="width:100%; height:60px;">
-                    <?php echo esc_textarea($header_top_text); ?>
-                </textarea>
+                        <?php echo esc_textarea($header_top_text); ?>
+                    </textarea>
             </div>
             <div class="field-group">
                 <label for="landing_add_header_title_text">متن تایتل</label>
                 <textarea name="landing_add_header_title_text" id="landing_add_header_title_text"
                     style="width:100%; height:60px;">
-                    <?php echo esc_textarea($header_title_text); ?>
-                </textarea>
+                        <?php echo esc_textarea($header_title_text); ?>
+                    </textarea>
             </div>
             <div class="field-group">
                 <label for="landing_add_header_content">متن محتوا</label>
@@ -645,15 +514,15 @@ function landing_add_page_metabox_callback($post)
                 <label for="landing_add_reasons_top_text">متن بالایی دلایل داشتن سایت</label>
                 <textarea name="landing_add_reasons_top_text" id="landing_add_reasons_top_text"
                     style="width:100%; height:60px;">
-                    <?php echo esc_textarea($reasons_top_text); ?>
-                </textarea>
+                        <?php echo esc_textarea($reasons_top_text); ?>
+                    </textarea>
             </div>
             <div class="field-group">
                 <label for="landing_add_reasons_header_text">هدر دلایل سایت</label>
                 <textarea name="landing_add_reasons_header_text" id="landing_add_reasons_header_text"
                     style="width:100%; height:60px;">
-                    <?php echo esc_textarea($reasons_header_text); ?>
-                </textarea>
+                        <?php echo esc_textarea($reasons_header_text); ?>
+                    </textarea>
             </div>
             <!-- Video Upload -->
             <div class="field-group">
@@ -707,8 +576,8 @@ function landing_add_page_metabox_callback($post)
                         <label for="landing_add_reasons_<?php echo $i; ?>_header">هدر دلیل</label>
                         <textarea name="landing_add_reasons[<?php echo $i; ?>][header]"
                             id="landing_add_reasons_<?php echo $i; ?>_header" style="width:100%; height:60px;">
-                            <?php echo esc_textarea($reasons_data[$i]['header'] ?? ''); ?>
-                        </textarea>
+                                    <?php echo esc_textarea($reasons_data[$i]['header'] ?? ''); ?>
+                                </textarea>
                     </div>
                     <div class="field-group">
                         <label for="landing_add_reasons_<?php echo $i; ?>_content">محتوای دلیل</label>
@@ -739,15 +608,15 @@ function landing_add_page_metabox_callback($post)
                 <label for="landing_add_your_role_top_text">متن بالایی</label>
                 <textarea name="landing_add_your_role_top_text" id="landing_add_your_role_top_text"
                     style="width:100%; height:60px;">
-                    <?php echo esc_textarea($your_role_top_text); ?>
-                </textarea>
+                        <?php echo esc_textarea($your_role_top_text); ?>
+                    </textarea>
             </div>
             <div class="field-group">
                 <label for="landing_add_your_role_title_text">تایتل</label>
                 <textarea name="landing_add_your_role_title_text" id="landing_add_your_role_title_text"
                     style="width:100%; height:60px;">
-                    <?php echo esc_textarea($your_role_title_text); ?>
-                </textarea>
+                        <?php echo esc_textarea($your_role_title_text); ?>
+                    </textarea>
             </div>
             <div class="field-group">
                 <label for="landing_add_your_role_content">متن محتوا</label>
@@ -776,15 +645,15 @@ function landing_add_page_metabox_callback($post)
                 <label for="landing_add_cyberisho_top_text">متن بالایی</label>
                 <textarea name="landing_add_cyberisho_top_text" id="landing_add_cyberisho_top_text"
                     style="width:100%; height:60px;">
-                    <?php echo esc_textarea($cyberisho_top_text); ?>
-                </textarea>
+                        <?php echo esc_textarea($cyberisho_top_text); ?>
+                    </textarea>
             </div>
             <div class="field-group">
                 <label for="landing_add_cyberisho_title_text">متن تایتل</label>
                 <textarea name="landing_add_cyberisho_title_text" id="landing_add_cyberisho_title_text"
                     style="width:100%; height:60px;">
-                    <?php echo esc_textarea($cyberisho_title_text); ?>
-                </textarea>
+                        <?php echo esc_textarea($cyberisho_title_text); ?>
+                    </textarea>
             </div>
             <div id="cyberisho-reasons-container">
                 <?php foreach ($cyberisho_reasons_data as $index => $reason): ?>
@@ -807,15 +676,15 @@ function landing_add_page_metabox_callback($post)
                 <label for="landing_add_solutions_top_text">متن بالایی</label>
                 <textarea name="landing_add_solutions_top_text" id="landing_add_solutions_top_text"
                     style="width:100%; height:60px;">
-                    <?php echo esc_textarea($solutions_top_text); ?>
-                </textarea>
+                        <?php echo esc_textarea($solutions_top_text); ?>
+                    </textarea>
             </div>
             <div class="field-group">
                 <label for="landing_add_solutions_header_text">متن هدر</label>
                 <textarea name="landing_add_solutions_header_text" id="landing_add_solutions_header_text"
                     style="width:100%; height:60px;">
-                    <?php echo esc_textarea($solutions_header_text); ?>
-                </textarea>
+                        <?php echo esc_textarea($solutions_header_text); ?>
+                    </textarea>
             </div>
             <div class="field-group">
                 <label for="landing_add_solutions_content">متن محتوا</label>
@@ -844,15 +713,15 @@ function landing_add_page_metabox_callback($post)
                 <label for="landing_add_dangers_top_text">متن بالایی</label>
                 <textarea name="landing_add_dangers_top_text" id="landing_add_dangers_top_text"
                     style="width:100%; height:60px;">
-                    <?php echo esc_textarea($dangers_top_text); ?>
-                </textarea>
+                        <?php echo esc_textarea($dangers_top_text); ?>
+                    </textarea>
             </div>
             <div class="field-group">
                 <label for="landing_add_dangers_title_text">متن تایتل</label>
                 <textarea name="landing_add_dangers_title_text" id="landing_add_dangers_title_text"
                     style="width:100%; height:60px;">
-                    <?php echo esc_textarea($dangers_title_text); ?>
-                </textarea>
+                        <?php echo esc_textarea($dangers_title_text); ?>
+                    </textarea>
             </div>
             <?php for ($i = 0; $i < 3; $i++): ?>
                 <div class="danger-group">
@@ -886,8 +755,8 @@ function landing_add_page_metabox_callback($post)
                 <label for="landing_add_ad_header_text">متن هدر</label>
                 <textarea name="landing_add_ad_header_text" id="landing_add_ad_header_text"
                     style="width:100%; height:60px;">
-                    <?php echo esc_textarea($ad_header_text); ?>
-                </textarea>
+                        <?php echo esc_textarea($ad_header_text); ?>
+                    </textarea>
             </div>
             <div class="field-group">
                 <label for="landing_add_ad_content">متن محتوا</label>
@@ -1787,8 +1656,8 @@ function landing_page_metabox_callback($post)
                                             <textarea
                                                 name="landing_containers[<?php echo $index; ?>][items][<?php echo $item_index; ?>][value]"
                                                 style="width: 100%; height: <?php echo $item['type'] === 'content' ? '100px' : '60px'; ?>;">
-                                                                                                                                                                                                  <?php echo esc_textarea($item['value']); ?>
-                                                                                                                                                                                        </textarea>
+                                                                                                                                                                                                                      <?php echo esc_textarea($item['value']); ?>
+                                                                                                                                                                                                            </textarea>
                                             <input type="hidden"
                                                 name="landing_containers[<?php echo $index; ?>][items][<?php echo $item_index; ?>][type]"
                                                 value="<?php echo esc_attr($item['type']); ?>">
@@ -2059,7 +1928,8 @@ add_action('save_post', 'save_landing_page_metabox');
 
 
 // افزودن متاباکس‌ها برای صفحه Employment
-function my_employment_page_metabox() {
+function my_employment_page_metabox()
+{
     global $post;
 
     if ($post && $post->post_name === 'employment') {
@@ -2097,7 +1967,8 @@ function my_employment_page_metabox() {
 add_action('add_meta_boxes', 'my_employment_page_metabox');
 
 // کالبک متاباکس ردیف‌های شغلی
-function employment_positions_metabox_callback($post) {
+function employment_positions_metabox_callback($post)
+{
     wp_nonce_field('employment_positions_nonce', 'employment_positions_nonce');
     $positions = get_post_meta($post->ID, '_employment_positions', true);
     $positions_data = !empty($positions) ? json_decode($positions, true) : array_fill(0, 5, '');
@@ -2117,6 +1988,7 @@ function employment_positions_metabox_callback($post) {
         .employment-positions-wrapper .position-group {
             margin-bottom: 15px;
         }
+
         .employment-positions-wrapper label {
             display: block;
             margin-bottom: 5px;
@@ -2127,7 +1999,8 @@ function employment_positions_metabox_callback($post) {
 }
 
 // کالبک متاباکس شرایط عمومی
-function employment_general_conditions_metabox_callback($post) {
+function employment_general_conditions_metabox_callback($post)
+{
     wp_nonce_field('employment_general_conditions_nonce', 'employment_general_conditions_nonce');
     $general_conditions = get_post_meta($post->ID, '_employment_general_conditions', true);
     ?>
@@ -2140,7 +2013,8 @@ function employment_general_conditions_metabox_callback($post) {
 }
 
 // کالبک متاباکس شرایط‌ها
-function employment_conditions_metabox_callback($post) {
+function employment_conditions_metabox_callback($post)
+{
     wp_nonce_field('employment_conditions_nonce', 'employment_conditions_nonce');
     $conditions = get_post_meta($post->ID, '_employment_conditions', true);
     $conditions_data = !empty($conditions) ? json_decode($conditions, true) : array();
@@ -2155,7 +2029,8 @@ function employment_conditions_metabox_callback($post) {
                         <h4>شرط <?php echo $index + 1; ?></h4>
                         <textarea name="employment_conditions[<?php echo $index; ?>]"
                             style="width:100%; height:100px;"><?php echo esc_textarea($condition); ?></textarea>
-                        <button type="button" class="button remove-condition-btn" style="color: red; margin-top: 10px;">حذف شرط</button>
+                        <button type="button" class="button remove-condition-btn" style="color: red; margin-top: 10px;">حذف
+                            شرط</button>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
@@ -2209,6 +2084,7 @@ function employment_conditions_metabox_callback($post) {
         .employment-conditions-wrapper {
             margin-top: 20px;
         }
+
         .condition-group {
             background: #f9f9f9;
             padding: 15px;
@@ -2216,12 +2092,15 @@ function employment_conditions_metabox_callback($post) {
             border: 1px solid #ddd;
             border-radius: 3px;
         }
+
         .condition-group h4 {
             margin: 0 0 10px;
         }
+
         .employment-field-group {
             margin-bottom: 20px;
         }
+
         .employment-field-group label {
             display: block;
             margin-bottom: 5px;
@@ -2232,7 +2111,8 @@ function employment_conditions_metabox_callback($post) {
 }
 
 // ذخیره داده‌های متاباکس‌ها
-function save_employment_page_metabox($post_id) {
+function save_employment_page_metabox($post_id)
+{
     // بررسی نانس‌ها
     if (
         (isset($_POST['employment_positions_nonce']) && !wp_verify_nonce($_POST['employment_positions_nonce'], 'employment_positions_nonce')) ||
