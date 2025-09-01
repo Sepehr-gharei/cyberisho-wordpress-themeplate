@@ -461,7 +461,7 @@ img {
 
 header.blue-gradient {
   position: relative;
-  height: 100vh;
+  height: 160px;
 }
 header.blue-gradient::after {
   width: 300px;
@@ -557,7 +557,7 @@ header .main-header nav .icon svg {
 }
 
 .header-page-title-section {
-  margin-top: -450px;
+  margin-top: 0px;
   position: relative;
 }
 .header-page-title-section::after {
@@ -664,39 +664,7 @@ header .main-header nav .icon svg {
 .header-page-title-section .breadcrumb .breadcrumb-page {
   font-size: 14px;
 }
-@media (min-height: 630px) {
-  .header-page-title-section {
-    margin-top: -500px;
-    position: relative;
-  }
-}
-@media (min-height: 750px) {
-  .header-page-title-section {
-    margin-top: -600px;
-    position: relative;
-  }
-}
-@media (max-height: 560px) {
-  .header-page-title-section {
-    margin-top: -350px;
-    position: relative;
-  }
-}
-@media (max-height: 460px) {
-  .header-page-title-section {
-    margin-top: -250px;
-  }
-}
-@media (max-height: 460px) {
-  .header-page-title-section {
-    margin-top: -150px;
-  }
-}
-@media (max-height: 360px) {
-  .header-page-title-section {
-    margin-top: -100px;
-  }
-}
+
 .about-page-title-section .content-title-text .main-text {
   color: var(--text-color);
   overflow: hidden;
@@ -2514,44 +2482,12 @@ header .small-responsive {
 }
 
 .header-home-information-section {
-  margin-top: -450px;
+  margin-top: 0px;
   position: relative;
   height: 450px;
 }
 
-@media (min-height: 630px) {
-  .header-home-information-section {
-    margin-top: -500px;
-    position: relative;
-  }
-}
-@media (min-height: 750px) {
-  .header-home-information-section {
-    margin-top: -600px;
-    position: relative;
-  }
-}
-@media (max-height: 560px) {
-  .header-home-information-section {
-    margin-top: -350px;
-    position: relative;
-  }
-}
-@media (max-height: 460px) {
-  .header-home-information-section {
-    margin-top: -250px;
-  }
-}
-@media (max-height: 460px) {
-  .header-home-information-section {
-    margin-top: -150px;
-  }
-}
-@media (max-height: 360px) {
-  .header-home-information-section {
-    margin-top: -100px;
-  }
-}
+
 .header-home-information-section .header-home-information-container {
   height: 100%;
   display: flex;
@@ -3624,6 +3560,9 @@ header .small-responsive {
   }
 }
 @media (max-width: 992px) {
+    .latest-blog-main-section .main-section .left-wrapper .blogs-items .item .text-field {
+    width: 90%;
+  }
   .cyberisho-reasons-section .cyberisho-reasons-container {
     height: 440px;
   }

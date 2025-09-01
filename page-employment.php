@@ -16,24 +16,24 @@ $position_5 = !empty($positions[4]) ? wp_kses_post($positions[4]) : '';
 ?>
 <!-- ************************* start contact us container   *************************-->
 <div class="header-page-title-section">
-      <div class="container">
+    <div class="container">
         <div class="row">
-          <div class="col-12 title-header-text">
-            <small>EMPLOYMENT</small>
-            <h2>استخدام</h2>
-          </div>
-          <?php custom_breadcrumb(); ?>
+            <div class="col-12 title-header-text">
+                <small>EMPLOYMENT</small>
+                <h2>استخدام</h2>
+            </div>
+            <?php custom_breadcrumb(); ?>
 
-          <div class="col-12 content-title-text">
-            <p id="main-text" class="main-text">
-            <?php
-                echo get_the_content();
-                ?>
-            </p>
-          </div>
+            <div class="col-12 content-title-text">
+                <p id="main-text" class="main-text">
+                    <?php
+                    echo get_the_content();
+                    ?>
+                </p>
+            </div>
         </div>
-      </div>
     </div>
+</div>
 <!-- ************************* end contact us container   *************************-->
 
 <!-- ************************* start onditions section  *************************-->
@@ -42,7 +42,7 @@ $position_5 = !empty($positions[4]) ? wp_kses_post($positions[4]) : '';
         <div class="right-side">
             <h3>شرایط عمومی</h3>
             <p>
-            <?php if (!empty($general_conditions)) {
+                <?php if (!empty($general_conditions)) {
                     echo $general_conditions;
                 } ?>
             </p>
@@ -50,23 +50,23 @@ $position_5 = !empty($positions[4]) ? wp_kses_post($positions[4]) : '';
         <div class="left-side">
 
 
-        <?php
+            <?php
             // لوپ برای نمایش شرایط‌ها
             if (!empty($conditions) && is_array($conditions)) {
                 foreach ($conditions as $index => $condition) {
                     if (!empty($condition)) {
                         $condition_content = wp_kses_post($condition);
                         ?>
-                          <div class="item">
-                <div class="icon">
-                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="1280.000000pt" height="640.000000pt"
-                        viewBox="0 0 1280.000000 640.000000" preserveAspectRatio="xMidYMid meet">
-                        <metadata>
-                            Created by potrace 1.15, written by Peter Selinger 2001-2017
-                        </metadata>
-                        <g transform="translate(0.000000,640.000000) scale(0.100000,-0.100000)"
-                            fill="var(--text-white-color)" stroke="none">
-                            <path d="M9280 5934 c-106 -21 -223 -80 -293 -150 -99 -97 -148 -196 -168
+                        <div class="item">
+                            <div class="icon">
+                                <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="1280.000000pt" height="640.000000pt"
+                                    viewBox="0 0 1280.000000 640.000000" preserveAspectRatio="xMidYMid meet">
+                                    <metadata>
+                                        Created by potrace 1.15, written by Peter Selinger 2001-2017
+                                    </metadata>
+                                    <g transform="translate(0.000000,640.000000) scale(0.100000,-0.100000)"
+                                        fill="var(--text-white-color)" stroke="none">
+                                        <path d="M9280 5934 c-106 -21 -223 -80 -293 -150 -99 -97 -148 -196 -168
                 -336 -10 -72 -9 -97 5 -164 22 -108 75 -212 144 -282 33 -33 391 -297 851
                 -627 l794 -570 -5084 -5 c-4763 -5 -5087 -6 -5132 -22 -146 -52 -265 -152
                 -330 -275 -114 -217 -77 -472 93 -644 70 -71 126 -108 217 -142 l58 -22 5078
@@ -75,11 +75,11 @@ $position_5 = !empty($positions[4]) ? wp_kses_post($positions[4]) : '';
                 68 70 39 2847 2303 2942 2399 160 162 199 422 93 633 -46 94 -119 163 -324
                 311 -1086 782 -2701 1940 -2747 1970 -83 54 -166 80 -272 84 -49 2 -101 1
                 -115 -1z" />
-                        </g>
-                    </svg>
-                </div>
-                <p><?php echo $condition_content ?></p>
-            </div>
+                                    </g>
+                                </svg>
+                            </div>
+                            <p><?php echo $condition_content ?></p>
+                        </div>
                         <?php
                     }
                 }
@@ -87,8 +87,8 @@ $position_5 = !empty($positions[4]) ? wp_kses_post($positions[4]) : '';
             ?>
 
 
-         
-          
+
+
 
 
 
@@ -101,7 +101,11 @@ $position_5 = !empty($positions[4]) ? wp_kses_post($positions[4]) : '';
     <div class="container employment-form-contianer">
         <div class="conditions-wrapper">
             <div class="image-section">
-                <img src="<?php echo get_template_directory_uri() . '/assets/img/dev_team.jpg'?>" alt="" />
+                <?php if (has_post_thumbnail()): ?>
+                    <?php the_post_thumbnail('full', ['alt' => get_the_title()]); ?>
+                <?php else: ?>
+                    <img src="<?php echo get_template_directory_uri() . '/assets/img/dev_team.jpg' ?>" alt="" />
+                <?php endif; ?>
             </div>
             <div class="conditions-item">
                 <div class="item">

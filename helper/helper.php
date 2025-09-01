@@ -206,6 +206,52 @@ function get_excerpt_blog_item_title($text)
 
     return $excerpt;
 }
+function get_excerpt_home_page_blog_item_title($text, $is_mobile = false)
+{
+    if (!is_string($text)) {
+        return '';
+    }
+
+    // تعیین تعداد کاراکترها بر اساس عرض صفحه
+    $length = $is_mobile ? 24 : 38;
+
+    // گرفتن تعداد مشخصی از کاراکترهای اول متن به صورت ایمن
+    $excerpt = mb_substr($text, 0, $length, 'UTF-8');
+
+    // اضافه کردن "..." در صورتی که متن طولانی‌تر از حد مشخص شده باشد
+    if (mb_strlen($text, 'UTF-8') > $length) {
+        $excerpt .= '…';
+    }
+
+    return $excerpt;
+}
+
+// اکشن برای مدیریت درخواست AJAX
+add_action('wp_ajax_get_excerpt', 'handle_get_excerpt_ajax');
+add_action('wp_ajax_nopriv_get_excerpt', 'handle_get_excerpt_ajax');
+
+function handle_get_excerpt_ajax() {
+    // بررسی وجود متن و is_mobile در درخواست
+    $text = isset($_POST['text']) ? sanitize_text_field($_POST['text']) : '';
+    $is_mobile = isset($_POST['is_mobile']) && $_POST['is_mobile'] === 'true' ? true : false;
+
+    // دریافت متن کوتاه‌شده
+    $excerpt = get_excerpt_home_page_blog_item_title($text, $is_mobile);
+
+    // ارسال پاسخ به صورت JSON
+    wp_send_json_success(['excerpt' => $excerpt]);
+}
+
+// ثبت اسکریپت جاوااسکریپت و ارسال URL AJAX به آن
+add_action('wp_enqueue_scripts', 'enqueue_excerpt_script');
+function enqueue_excerpt_script() {
+    wp_enqueue_script('excerpt-script', get_template_directory_uri() . '/assets/js/excerpt.js', ['jquery'], null, true);
+    wp_localize_script('excerpt-script', 'excerptAjax', [
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('excerpt_nonce')
+    ]);
+}
+
 function custom_breadcrumb() {
     // Initial settings
     $home_icon = '<svg><use href="#house-icon"></use></svg>';
