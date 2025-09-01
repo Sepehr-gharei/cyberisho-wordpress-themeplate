@@ -217,8 +217,7 @@
             </ul>
         </div>
     </div>
-            </header>
-
+  </header>
   
   <!--************************* end header *************************-->
   <div id="customAlert" class="custom-alert hidden">
@@ -227,3 +226,5 @@
   <div id="customAlertRed" class="custom-alert-red hidden">
     <span id="alertMessageRed"></span>
   </div>
+
+  
