@@ -79,39 +79,39 @@ class Cyberisho_Nav_Walker extends Walker_Nav_Menu {
 }
 // Custom Walker to output only <li> and <a> tags
 class Cyberisho_Footer_Nav_Walker extends Walker_Nav_Menu {
-    // Start of the menu (remove <ul>)
+    // حذف ul های داخلی
     function start_lvl(&$output, $depth = 0, $args = null) {
-        // No output for levels (no nested menus)
+        // بدون <ul>
     }
 
-    // End of the menu (remove </ul>)
-    function end_lvl(&$output, $depth = 0, $argsKin = null) {
-        // No output
+    function end_lvl(&$output, $depth = 0, $args = null) {
+        // بدون </ul>
     }
 
-    // Start of each menu item (output <li>)
+    // شروع li
     function start_el(&$output, $item, $depth = 0, $args = null, $id = 0) {
         $classes = empty($item->classes) ? array() : (array) $item->classes;
         $classes[] = 'menu-item-' . $item->ID;
 
-        // Build class attribute for <li>
+        // اضافه کردن کلاس item
+        $classes[] = 'item';
+
+        // ساختن class attribute
         $class_names = join(' ', apply_filters('nav_menu_css_class', array_filter($classes), $item, $args));
         $class_names = $class_names ? ' class="' . esc_attr($class_names) . '"' : '';
 
-        // Start the <li> tag
+        // شروع li
         $output .= '<li' . $class_names . '>';
 
-        // Build the <a> tag
+        // لینک
         $atts = array();
         $atts['title']  = !empty($item->attr_title) ? $item->attr_title : '';
         $atts['target'] = !empty($item->target) ? $item->target : '';
         $atts['rel']    = !empty($item->xfn) ? $item->xfn : '';
         $atts['href']   = !empty($item->url) ? $item->url : '';
 
-        // Apply filters for attributes
         $atts = apply_filters('nav_menu_link_attributes', $atts, $item, $args);
 
-        // Build attributes string
         $attributes = '';
         foreach ($atts as $attr => $value) {
             if (!empty($value)) {
@@ -120,17 +120,14 @@ class Cyberisho_Footer_Nav_Walker extends Walker_Nav_Menu {
             }
         }
 
-        // Get the menu item title
         $title = apply_filters('the_title', $item->title, $item->ID);
         $title = apply_filters('nav_menu_item_title', $title, $item, $args, $depth);
 
-        // Append the <a> tag
         $output .= '<a' . $attributes . '>' . $title . '</a>';
     }
 
-    // End of each menu item (close <li>)
+    // پایان li
     function end_el(&$output, $item, $depth = 0, $args = null) {
         $output .= '</li>';
     }
 }
-?>

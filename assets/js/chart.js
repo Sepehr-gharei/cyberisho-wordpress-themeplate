@@ -1,18 +1,4 @@
-<?php
-/*
-Template Name: about us
-*/
-get_header();
-get_template_part('partials/about-us/about-us-section', 'about-us-section');
-get_template_part('partials/about-us/chart-container-section', 'chart-container-section');
-get_template_part('partials/about-us/team-and-members-section', 'team-and-members-section');
-get_template_part('partials/about-us/collapse-section', 'collapse-section');
-get_footer();
-
-
-?>
-<script>
-   window.addEventListener("load", function () {
+window.addEventListener("load", function () {
   const svg = document.getElementById("myChart");
   if (!svg) return;
 
@@ -30,37 +16,14 @@ get_footer();
 
     const maxX = 600;
     const rawData = [
-        { x: 0, y: 0, year: "", projects: "" },
-        <?php
-        $theme_options = get_option('cyberisho_main_option', []);
-        $about_options = $theme_options['about'];
-        $chart_items = $about_options['about_chart_items'];
-        if (count($chart_items) < 6) {
-            $chart_items = array_pad($chart_items, 6, ['year' => '', 'projects' => '']);
-        }
-
-        // تعریف موقعیت‌های x,y برای هر یک از 6 آیتم
-        $positions = [
-            ['x' => 80, 'y' => 50],
-            ['x' => 160, 'y' => 20],
-            ['x' => 250, 'y' => 160],
-            ['x' => 380, 'y' => 80],
-            ['x' => 480, 'y' => 130],
-            ['x' => 600, 'y' => 200]
-        ];
-        ?>
-        
-        <?php for ($i = 0; $i < 6; $i++):
-            $item = isset($chart_items[$i]) ? $chart_items[$i] : ['year' => '', 'projects' => ''];
-            $year = esc_html($item['year']);
-            $projects = esc_html($item['projects']);
-
-            $pos = $positions[$i] ?? ['x' => 0, 'y' => 0]; // موقعیت فعلی
-            ?>
-                            { x: <?= $pos['x'] ?> / maxX, y: <?= $pos['y'] ?>, year: "<?= $year ?>", projects: "<?= $projects ?>" },
-        <?php endfor; ?>
+      { x: 0, y: 0, year: "", projects: " " }, // نشون داده نمی‌شود
+      { x: 80 / maxX, y: 50, year: "1399", projects: "پروژه 120" },
+      { x: 160 / maxX, y: 20, year: "1400", projects: "پروژه 112" },
+      { x: 250 / maxX, y: 160, year: "1401", projects: "پروژه 150" },
+      { x: 380 / maxX, y: 80, year: "1402", projects: "پروژه 130" },
+      { x: 480 / maxX, y: 130, year: "1403", projects: "پروژه 140" },
+      { x: 600 / maxX, y: 200, year: "1404", projects: "پروژه 160" },
     ];
-
 
     const tenPercentX = svgWidth * 0.1;
 
@@ -93,7 +56,8 @@ get_footer();
 
         const cp1x = rightX + (30 * svgWidth) / maxX;
         const cp1y = curr.y;
-        const cp2x = next.x - (3 * svgWidth) / maxX - (30 * svgWidth) / maxX;
+        const cp2x =
+          next.x - (3 * svgWidth) / maxX - (30 * svgWidth) / maxX;
         const cp2y = next.y;
 
         pathD += ` C ${cp1x},${curr.y} ${cp2x},${next.y} ${
@@ -102,7 +66,10 @@ get_footer();
       }
     }
 
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const path = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
     path.setAttribute("d", pathD);
     path.setAttribute("fill", "none");
     path.setAttribute("stroke", "#000");
@@ -132,7 +99,10 @@ get_footer();
         const verticalPadding = 30; // فاصله عمودی 30px از نقطه
         const horizontalOffset = 2; // جابجایی 2px به راست
 
-        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        const g = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "g"
+        );
         g.classList.add("tooltip-group");
 
         // ساخت متن با فرمت "پروژه‌ها • سال" و معکوس کردن ترتیب
@@ -166,7 +136,10 @@ get_footer();
       }
       function createTooltip() {
         const textPadding = 60; // فاصله 30px از نقطه
-        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        const g = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "g"
+        );
         g.classList.add("tooltip-group");
 
         // ساخت متن با نقطه به عنوان جداکننده و ترتیب معکوس
@@ -238,7 +211,10 @@ get_footer();
 
         // Update circle color and state
         circle.classList.add("clicked");
-        circle.setAttribute("fill", "var(--background-medium-blue-color)");
+        circle.setAttribute(
+          "fill",
+          "var(--background-medium-blue-color)"
+        );
         lastClickedCircle = circle;
       });
     });
@@ -247,4 +223,3 @@ get_footer();
   drawChart();
   window.addEventListener("resize", drawChart);
 });
-</script>

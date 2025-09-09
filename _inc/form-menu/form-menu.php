@@ -843,7 +843,7 @@ class Form
             . "</div>"
             . "<input type='text' name='name' placeholder='نام شما'>"
             . "<input type='text' name='phone' placeholder='شماره تماس*' pattern='[0-9]{10,11}' required oninvalid=\"setCustomValidity('لطفا شماره تماس خود را به فرمت صحیح وارد کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\">"
-            . "<input type='submit' class='submit' name='submit_form' value='ثبت درخواست'>"
+            . "<input type='submit' class='submit' name='submit_form' value='ثبت'>"
             . "</form>"
             . "</div>";
         return $form;
@@ -888,7 +888,7 @@ class Form
             . " <label for='file_upload' class='file-upload-label'>انتخاب فایل</label>"
             . "   <input   type='file'   id='file_upload' type='file' name='resume' accept='.pdf,.jpg,.jpeg,.png,.doc,.docx' required oninvalid=\"setCustomValidity('لطفا فایل رزومه را آپلود کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\">"
             . "<div id='file_name' class='file-name'>  پسوند مجاز: pdf، jpg، png، word و حداکثر حجم مجاز 2 مگابایت می‌باشد. </div>"
-            . "<input type='submit' class='button' name='submit_form' value='ارسال درخواست'>"
+            . "<input type='submit' class='button' name='submit_form' value='ارسال'>"
             . "</form>";
         return $form;
     }
