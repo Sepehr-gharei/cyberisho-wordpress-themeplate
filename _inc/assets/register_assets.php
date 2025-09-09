@@ -15,10 +15,27 @@ function register_assets()
         true
     );
     wp_enqueue_script('jquery');
-    wp_register_script('main-js', get_template_directory_uri() . '/assets/js/main.js', [], '1.0.0', true);
-    wp_enqueue_script('main-js');
-    wp_register_script('comment-form-ajax', get_template_directory_uri() . '/assets/js/comment-form-ajax.js', [], '1.0.0', true);
-    wp_enqueue_script('comment-form-ajax');
+    wp_register_script('video-wrapper', get_template_directory_uri() . '/assets/js/video-wrapper.js', [], '1.0.0', true);
+    wp_enqueue_script('video-wrapper');
+    wp_register_script('load-animate', get_template_directory_uri() . '/assets/js/load-animate.js', [], '1.0.0', true);
+    wp_enqueue_script('load-animate');
+    if (is_single() or is_page('landing')) {
+        wp_register_script('jquery-toc', get_template_directory_uri() . '/assets/js/jquery-toc.js', [], '1.0.0', true);
+        wp_enqueue_script('jquery-toc');
+    }
+    if (is_single()) {
+        wp_enqueue_script('like-dislike-script', get_template_directory_uri() . '/assets/js/like-dislike.js', array('jquery'), null, true);
+        wp_localize_script('like-dislike-script', 'like_dislike_ajax', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('like_dislike_nonce')
+        ));
+        wp_enqueue_script('post-like-dislike', get_template_directory_uri() . '/assets/js/post-like-dislike.js', array('jquery'), null, true);
+        wp_localize_script('post-like-dislike', 'ajax_object', array(
+            'ajaxurl' => admin_url('admin-ajax.php')
+        ));
+    }
+    wp_register_script('main', get_template_directory_uri() . '/assets/js/main.js', [], '1.0.0', true);
+    wp_enqueue_script('main');
     wp_register_script('meeting-form', get_template_directory_uri() . '/assets/js/meeting-form.js', [], '1.0.0', true);
     wp_enqueue_script('meeting-form');
     function cyberisho_enqueue_scripts()
@@ -38,33 +55,17 @@ function register_assets()
     }
     add_action('wp_enqueue_scripts', 'cyberisho_enqueue_scripts');
 
-    if (is_front_page()) {
-        wp_register_script('client-items-animation', get_template_directory_uri() . '/assets/js/client-items-animation.js', [], '1.0.0', true);
-        wp_enqueue_script('client-items-animation');
-        wp_register_script('audio-player', get_template_directory_uri() . '/assets/js/audio-player.js', [], '1.0.0', true);
-        wp_enqueue_script('audio-player');
-        wp_register_script('faq-accordion', get_template_directory_uri() . '/assets/js/faq-accordion.js', [], '1.0.0', true);
-        wp_enqueue_script('faq-accordion');
-    }
-    if (is_page('employment')) {
-        wp_register_script('file-uploader', get_template_directory_uri() . '/assets/js/file-uploader.js', [], '1.0.0', true);
-        wp_enqueue_script('file-uploader');
-    }
-    if (is_page('landing')) {
-        wp_register_style('landing-css', get_stylesheet_directory_uri() . '/assets/css/landing.css', [], '1.0.0');
-        wp_enqueue_style('landing-css');
-        wp_register_script('landing-page-js', get_template_directory_uri() . '/assets/js/landing-page-js.js', [], '1.0.0', true);
-        wp_enqueue_script('landing-page-js');
-    }
-    if (is_page('portfolio')) {
-        wp_register_script('portfolio-item', get_template_directory_uri() . '/assets/js/portfolio-item.js', [], '1.0.0', true);
-        wp_enqueue_script('portfolio-item');
-    }
-    if (is_page('about-us')) {
-        wp_register_script('show-text-page-title', get_template_directory_uri() . '/assets/js/show-text-page-title.js', [], '1.0.0', true);
-        wp_enqueue_script('show-text-page-title');
-        wp_register_script('collapse', get_template_directory_uri() . '/assets/js/collapse.js', [], '1.0.0', true);
-        wp_enqueue_script('collapse');
-    }
+function cyberisho_add_ajax_url_to_form()
+{
+    ?>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("custom-comment-form");
+            if (form) {
+                form.setAttribute("data-ajax-url", "<?php echo admin_url('admin-ajax.php'); ?>");
+            }
+        });
+    </script>
+    <?php
 }
 add_action('wp_enqueue_scripts', 'register_assets');
