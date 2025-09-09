@@ -4,7 +4,7 @@ $theme_options = get_option('cyberisho_main_option', []);
 $glossary_options = $theme_options['glossary'];
 $glossary_archive_title = $glossary_options['glossary_archive_title'];
 ?>
-<div class="header-page-title-section">
+<section class="header-page-title-section">
   <div class="container">
     <div class="row">
       <div class="col-12 title-header-text">
@@ -21,5 +21,5 @@ $glossary_archive_title = $glossary_options['glossary_archive_title'];
       </div>
     </div>
   </div>
-</div>
+</section>
 <!-- ************************* end contact us container   *************************-->

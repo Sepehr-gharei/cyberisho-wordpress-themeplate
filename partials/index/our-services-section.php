@@ -1,16 +1,17 @@
 <!--************************* start our services *************************-->
 <?php
-  $theme_options = get_option('cyberisho_main_option', []);
-  $home_options = $theme_options['home'];
-  ?>
-<div class="our-service-section">
+$theme_options = get_option('cyberisho_main_option', []);
+$home_options = $theme_options['home'];
+?>
+<section class="our-service-section">
     <div class="container our-service-container">
         <div class="text-field">
             <strong>خدمات ما</strong>
             <p>
-            <?php
-            echo $home_options['home_services_main_text'];
-            ?> </p>
+                <?php
+                echo $home_options['home_services_main_text'];
+                ?>
+            </p>
         </div>
         <div class="services-item">
             <div class="item">
@@ -89,5 +90,5 @@
             </div>
         </div>
     </div>
-</div>
+</section>
 <!--************************* end our services *************************-->

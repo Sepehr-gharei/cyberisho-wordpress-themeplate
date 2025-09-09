@@ -4,7 +4,7 @@ $theme_options = get_option('cyberisho_main_option', []);
 $home_options = $theme_options['home'];
 
 ?>
-<div class="cyberisho-reasons-section">
+<section class="cyberisho-reasons-section">
       <div class="container cyberisho-reasons-container">
         <div class="text-wrapper">
           <div class="icon">
@@ -65,5 +65,5 @@ $home_options = $theme_options['home'];
           </div>
         </div>
       </div>
-    </div>
+    </section>
 <!--************************* end about cyberisho *************************-->

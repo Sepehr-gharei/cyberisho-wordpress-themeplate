@@ -1,5 +1,5 @@
 <!-- ************************* start glossary items container   *************************-->
-<div class="glossary-items-section">
+<section class="glossary-items-section">
     <div class="glossary-items-container container">
         <div class="row">
             <?php
@@ -7,5 +7,5 @@
             ?>
         </div>
     </div>
-</div>
+</section>
 <!-- ************************* end glossary items container   *************************-->

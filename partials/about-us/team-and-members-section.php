@@ -1,4 +1,4 @@
-<div class="team-and-members-section">
+<section class="team-and-members-section">
     <div class="container team-and-members-container">
         <div class="image-wrapper">
             <?php
@@ -77,4 +77,4 @@
             </div>
         </div>
     </div>
-</div>
+</section>

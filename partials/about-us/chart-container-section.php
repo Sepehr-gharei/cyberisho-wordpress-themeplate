@@ -7,7 +7,7 @@ $chart_footer = $about_options['about_chart_footer'];
 
 ?>
 
-<div class="container-fluid chart-container animated-section">
+<section class="container-fluid chart-container animated-section">
   <div class="row">
     <div class="col-12 col-lg-6 right-side">
       <div class="content-text">
@@ -39,4 +39,4 @@ $chart_footer = $about_options['about_chart_footer'];
       </div>
     </div>
   </div>
-</div>
+</section>

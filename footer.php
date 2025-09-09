@@ -4,6 +4,7 @@ $contact_options = $theme_options['contact'];
 $footer_content_options = $theme_options['footer-content'];
 
 ?>
+</main>
 <footer class="footer-section blue-gradient">
     <div class="footer-container container">
         <div class="top-wrapper">

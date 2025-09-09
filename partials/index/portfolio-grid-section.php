@@ -1,4 +1,4 @@
-<div class="portfolio-grid-section">
+<section class="portfolio-grid-section">
     <div class="portfolio-grid-container container">
         <div class="title">
             <p>نمونه کار ها</p>
@@ -10,4 +10,4 @@
             </div>
         </div>
     </div>
-</div>
+</section>

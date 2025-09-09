@@ -1,4 +1,4 @@
-<div class="client-comment-section">
+<section class="client-comment-section">
   <div class="container client-comment-container">
     <div class="title-wrapper">
       <strong>نظرات مشتریان</strong>
@@ -51,4 +51,4 @@
       ?>
     </div>
   </div>
-</div>
+</section>

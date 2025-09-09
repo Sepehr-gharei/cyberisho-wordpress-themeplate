@@ -1,4 +1,4 @@
-<div class="latest-blog-main-section">
+<section class="latest-blog-main-section">
     <div class="container latest-blog-main-container">
         <div class="title">
             <p>جدیدترین مقالات ما</p>
@@ -17,4 +17,4 @@
             </div>
         </div>
     </div>
-</div>
+</section>

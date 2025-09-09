@@ -1,5 +1,5 @@
 <!--************************* start accordion fag *************************-->
-<div class="accordion-fag-section animated-section">
+<section class="accordion-fag-section animated-section">
   <div class="container">
     <div class="title-container">
       <h2>سوالات متداوم</h2>
@@ -8,5 +8,5 @@
       <?php get_template_part('loop/index/accordion-fag-loop', 'accordion-fag-loop') ?>
     </div>
   </div>
-</div>
+</section>
 <!--************************* end accordion fag *************************-->

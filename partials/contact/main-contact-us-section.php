@@ -9,7 +9,7 @@ $post_id = get_the_ID(); // شناسه صفحه فعلی
 $metro = get_post_meta($post_id, '_location_metro_address', true);
 $brt = get_post_meta($post_id, '_location_brt_address', true);
 ?>
-<div class="main-contact-us-section">
+<section class="main-contact-us-section">
     <div class="main-contact-us-container container">
         <div class="contact-us-items">
             <div class="items-wrapper">
@@ -694,4 +694,4 @@ $brt = get_post_meta($post_id, '_location_brt_address', true);
             </div>
         </div>
     </div>
-</div>
+</section>

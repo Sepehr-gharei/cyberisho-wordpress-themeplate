@@ -5,7 +5,7 @@ $site_info_options = $theme_options['site-info'];
 $home_options = $theme_options['home'];
 
 ?>
-<div class="meetting-text-form-section">
+<section class="meetting-text-form-section">
     <div class="container meetting-text-form-container">
         <div class="text-wrapper">
             <strong><?php echo $home_options['home_meeting_title']; ?></strong>
@@ -46,4 +46,4 @@ $home_options = $theme_options['home'];
             </div>
         </div>
     </div>
-</div>
+</section>

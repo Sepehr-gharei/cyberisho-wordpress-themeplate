@@ -1,10 +1,10 @@
 <!--************************* start header information *************************-->
 <?php
-        $theme_options = get_option('cyberisho_main_option', []);
-        $home_options = $theme_options['home'];
+$theme_options = get_option('cyberisho_main_option', []);
+$home_options = $theme_options['home'];
 
-        ?>
-<div class="header-home-information-section">
+?>
+<section class="header-home-information-section">
     <div class="container header-home-information-container">
         <div class="text-wrapper">
             <h1 class="title"><?php
@@ -50,11 +50,12 @@
             </div>
             <div class="text-field">
                 <p>
-                <?php
-            echo $home_options['home_header_side_text'];
-            ?>   </p>
+                    <?php
+                    echo $home_options['home_header_side_text'];
+                    ?>
+                </p>
             </div>
         </div>
     </div>
-</div>
+</section>
 <!--************************* end header information *************************-->

@@ -4,7 +4,7 @@ $theme_options = get_option('cyberisho_main_option', []);
 $home_options = $theme_options['home'];
 
 ?>
-<div class="home-about-us-section">
+<section class="home-about-us-section">
     <div class="container home-about-us-container">
         <div class="image-wrapper">
             <div class="main-image">
@@ -36,5 +36,5 @@ $home_options = $theme_options['home'];
             ?>">درباره ما</a>
         </div>
     </div>
-</div>
+</section>
 <!--************************* end about us *************************-->

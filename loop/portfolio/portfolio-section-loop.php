@@ -13,7 +13,7 @@ $start_index = ($current_page - 1) * $items_per_page;
 $current_portfolios = array_slice($portfolios, $start_index, $items_per_page);
 
 if (!empty($current_portfolios)): ?>
-    <main class="portfolio-main-item-section">
+    <section class="portfolio-main-item-section">
         <?php foreach ($current_portfolios as $portfolio):
 
             if (!empty($portfolio['name'])):
@@ -180,7 +180,7 @@ if (!empty($current_portfolios)): ?>
                 <?php
             endif;
         endforeach; ?>
-    </main>
+    </section>
 
     <!-- Pagination Navigation -->
     <?php if ($total_pages > 1): ?>

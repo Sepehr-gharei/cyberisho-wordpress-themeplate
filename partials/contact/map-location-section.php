@@ -1,22 +1,22 @@
 <?php
-      // داخل حلقه Loop یا قبل از Loop (اگر از the_content استفاده نکردی)
-      $post_id = get_the_ID(); // شناسه صفحه فعلی
-      
-      $neshan = get_post_meta($post_id, '_location_neshan_address', true);
-      $balad = get_post_meta($post_id, '_location_balad_address', true);
-      $waze = get_post_meta($post_id, '_location_waze_address', true);
-      $map = get_post_meta($post_id, '_location_map_address', true);
-      $metro = get_post_meta($post_id, '_location_metro_address', true);
-      $brt = get_post_meta($post_id, '_location_brt_address', true);
-      $image = get_post_meta($post_id, '_location_image_address', true);
-      ?>
-<div class="map-location-section">
+// داخل حلقه Loop یا قبل از Loop (اگر از the_content استفاده نکردی)
+$post_id = get_the_ID(); // شناسه صفحه فعلی
+
+$neshan = get_post_meta($post_id, '_location_neshan_address', true);
+$balad = get_post_meta($post_id, '_location_balad_address', true);
+$waze = get_post_meta($post_id, '_location_waze_address', true);
+$map = get_post_meta($post_id, '_location_map_address', true);
+$metro = get_post_meta($post_id, '_location_metro_address', true);
+$brt = get_post_meta($post_id, '_location_brt_address', true);
+$image = get_post_meta($post_id, '_location_image_address', true);
+?>
+<section class="map-location-section">
   <div class="container map-location-container">
     <div class="image-section">
       <img src="<?php echo $image ?>" alt="" />
     </div>
     <div class="routers">
-      <a href="<?php echo    $neshan  ?>" class="router">
+      <a href="<?php echo $neshan ?>" class="router">
         <div class="icon">
           <svg width="187pt" height="187pt" viewBox="0 0 187 187" version="1.1" xmlns="http://www.w3.org/2000/svg">
             <g id="#f84648ff">
@@ -43,7 +43,7 @@
         </div>
         <p>مسیر یابی با نشان</p>
       </a>
-      <a href="<?php echo     $balad  ?>" class="router">
+      <a href="<?php echo $balad ?>" class="router">
         <div class="icon">
           <svg width="53" height="53" viewBox="0 0 53 53" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd"
@@ -71,7 +71,7 @@
         </div>
         <p>مسیریابی با بلد</p>
       </a>
-      <a href="<?php echo    $map ?>" class="router">
+      <a href="<?php echo $map ?>" class="router">
         <div class="icon">
           <svg width="294pt" height="300pt" viewBox="0 0 294 300" version="1.1" xmlns="http://www.w3.org/2000/svg">
             <g id="#dc4b3eff">
@@ -110,7 +110,7 @@
         </div>
         <p>مسیریابی با گوگل</p>
       </a>
-      <a href="<?php echo     $waze  ?>" class="router">
+      <a href="<?php echo $waze ?>" class="router">
         <div class="icon">
           <svg width="300pt" height="300pt" viewBox="0 0 300 300" version="1.1" xmlns="http://www.w3.org/2000/svg">
             <g id="#33ccffff">
@@ -137,4 +137,4 @@
       </a>
     </div>
   </div>
-</div>
+</section>

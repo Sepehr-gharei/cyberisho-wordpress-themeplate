@@ -1,5 +1,5 @@
 <!--************************* start work text samples section  *************************-->
-<div class="header-page-title-section">
+<section class="header-page-title-section">
     <div class="container">
         <div class="row">
             <div class="col-12 title-header-text">
@@ -18,5 +18,5 @@
             </div>
         </div>
     </div>
-</div>
+</section>
 <!--************************* end work text samples section  *************************-->
