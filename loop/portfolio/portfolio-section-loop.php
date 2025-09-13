@@ -15,7 +15,6 @@ $current_portfolios = array_slice($portfolios, $start_index, $items_per_page);
 if (!empty($current_portfolios)): ?>
     <section class="portfolio-main-item-section">
         <?php foreach ($current_portfolios as $portfolio):
-
             if (!empty($portfolio['name'])):
                 $main_image = !empty($portfolio['main_image']) ? esc_url($portfolio['main_image']) : '';
                 $desktop_image = !empty($portfolio['desktop_image']) ? esc_url($portfolio['desktop_image']) : '';

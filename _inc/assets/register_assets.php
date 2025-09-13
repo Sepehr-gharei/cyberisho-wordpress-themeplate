@@ -51,10 +51,26 @@ function register_assets()
         wp_enqueue_script('file-uploader');
     }
     if (is_page('landing')) {
+        wp_register_style('swiper-slide-css', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css', [], '1.0.0');
+        wp_enqueue_style('swiper-slide-css');
         wp_register_style('landing-css', get_stylesheet_directory_uri() . '/assets/css/landing.css', [], '1.0.0');
         wp_enqueue_style('landing-css');
-        wp_register_script('landing-page-js', get_template_directory_uri() . '/assets/js/landing-page-js.js', [], '1.0.0', true);
-        wp_enqueue_script('landing-page-js');
+        wp_register_script('swiper-slide-js', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', [], '1.0.0', true);
+        wp_enqueue_script('swiper-slide-js');
+        wp_register_script('comment-review-swiper', get_template_directory_uri() . '/assets/js/comment-review-swiper.js', [], '1.0.0', true);
+        wp_enqueue_script('comment-review-swiper');
+        wp_register_script('portfolioSwiper', get_template_directory_uri() . '/assets/js/portfolioSwiper.js', [], '1.0.0', true);
+        wp_enqueue_script('portfolioSwiper');
+        wp_register_script('landing-audio-player', get_template_directory_uri() . '/assets/js/landing-audio-player.js', [], '1.0.0', true);
+        wp_enqueue_script('landing-audio-player');
+        wp_register_script('swiper-landing-js', get_template_directory_uri() . '/assets/js/swiper-landing-js.js', [], '1.0.0', true);
+        wp_enqueue_script('swiper-landing-js');
+        wp_register_script('comment-review-landing-section-swiper', get_template_directory_uri() . '/assets/js/comment-review-landing-section-swiper.js', [], '1.0.0', true);
+        wp_enqueue_script('comment-review-landing-section-swiper');
+        wp_register_script('website-information-section-toggle', get_template_directory_uri() . '/assets/js/website-information-section-toggle.js', [], '1.0.0', true);
+        wp_enqueue_script('website-information-section-toggle');
+        wp_register_script('faq-accordion', get_template_directory_uri() . '/assets/js/faq-accordion.js', [], '1.0.0', true);
+        wp_enqueue_script('faq-accordion');
     }
     if (is_page('portfolio')) {
         wp_register_script('portfolio-item', get_template_directory_uri() . '/assets/js/portfolio-item.js', [], '1.0.0', true);

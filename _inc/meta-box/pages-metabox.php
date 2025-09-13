@@ -412,1400 +412,421 @@ function save_my_contact_location_metabox($post_id)
 add_action('save_post', 'save_my_contact_location_metabox');
 
 
-
-
-function my_landing_add_page_metabox()
+// بارگذاری رسانه‌نگار وردپرس برای آپلود فایل‌های صوتی
+function enqueue_media_uploader()
 {
-    error_log('my_landing_add_page_metabox function called');
+    wp_enqueue_media();
+}
+add_action('admin_enqueue_scripts', 'enqueue_media_uploader');
+
+// افزودن متاباکس‌ها برای صفحه Landing
+function my_custom_landing_metaboxes()
+{
     global $post;
-
-    if ($post && $post->post_name === 'landing-add') {
-        // Remove default editor
-        remove_post_type_support('page', 'editor');
-
+    if ($post && $post->post_type === 'page' && $post->post_name === 'landing') {
+        // متاباکس برای گردونه
         add_meta_box(
-            'landing_add_page_metabox',
-            'محتوای هدر صفحه Landing Add',
-            'landing_add_page_metabox_callback',
+            'landing_carousel_metabox',
+            'گردونه',
+            'landing_carousel_metabox_callback',
+            'page',
+            'normal',
+            'high'
+        );
+        // متاباکس برای اسلایدر برندها
+        add_meta_box(
+            'landing_brands_slider_metabox',
+            'قسمت اسلاید عکس برندها',
+            'landing_brands_slider_metabox_callback',
+            'page',
+            'normal',
+            'high'
+        );
+        // متاباکس برای چرا سایبریشو
+        add_meta_box(
+            'landing_why_cyberisho_metabox',
+            'چرا طراحی سایت با سایبریشو',
+            'landing_why_cyberisho_metabox_callback',
+            'page',
+            'normal',
+            'high'
+        );
+        // متاباکس برای نمونه کارها
+        add_meta_box(
+            'landing_portfolio_metabox',
+            'قسمت نمونه کارهای ما',
+            'landing_portfolio_metabox_callback',
+            'page',
+            'normal',
+            'high'
+        );
+        // متاباکس برای فرآیند و مراحل اجرا
+        add_meta_box(
+            'landing_process_steps_metabox',
+            'فرآیند و مراحل اجرا',
+            'landing_process_steps_metabox_callback',
+            'page',
+            'normal',
+            'high'
+        );
+        // متاباکس برای پلن‌های قیمتی
+        add_meta_box(
+            'landing_pricing_plans_metabox',
+            'پلن‌های قیمتی',
+            'landing_pricing_plans_metabox_callback',
+            'page',
+            'normal',
+            'high'
+        );
+        // متاباکس برای سوالات متداول
+        add_meta_box(
+            'landing_faq_metabox',
+            'سوالات متداول',
+            'landing_faq_metabox_callback',
+            'page',
+            'normal',
+            'high'
+        );
+        // متاباکس برای اطلاعات محتوایی
+        add_meta_box(
+            'landing_content_info_metabox',
+            'اطلاعاتی محتوایی',
+            'landing_content_info_metabox_callback',
+            'page',
+            'normal',
+            'high'
+        );
+        // متاباکس برای متن شعار آخر صفحه
+        add_meta_box(
+            'landing_slogan_footer_metabox',
+            'متن شعار آخر صفحه',
+            'landing_slogan_footer_metabox_callback',
             'page',
             'normal',
             'high'
         );
     }
 }
-add_action('add_meta_boxes', 'my_landing_add_page_metabox');
+add_action('add_meta_boxes', 'my_custom_landing_metaboxes');
 
-function landing_add_page_metabox_callback($post)
+// کالبک برای متاباکس گردونه
+function landing_carousel_metabox_callback($post)
 {
-    wp_nonce_field('landing_add_metabox_nonce', 'landing_add_nonce');
-
-    // Retrieve saved values
-    $header_top_text = get_post_meta($post->ID, '_landing_add_header_top_text', true);
-    $header_title_text = get_post_meta($post->ID, '_landing_add_header_title_text', true);
-    $header_content = get_post_meta($post->ID, '_landing_add_header_content', true);
-    $video_id = get_post_meta($post->ID, '_landing_add_video_attachment_id', true);
-    $video_url = $video_id ? wp_get_attachment_url($video_id) : '';
-    $thumbnail_id = get_post_meta($post->ID, '_landing_add_thumbnail_attachment_id', true);
-    $thumbnail_url = $thumbnail_id ? wp_get_attachment_image_url($thumbnail_id, 'medium') : '';
-    $reasons_top_text = get_post_meta($post->ID, '_landing_add_reasons_top_text', true);
-    $reasons_header_text = get_post_meta($post->ID, '_landing_add_reasons_header_text', true);
-    $reasons = get_post_meta($post->ID, '_landing_add_reasons', true);
-    $reasons_data = !empty($reasons) ? json_decode($reasons, true) : array_fill(0, 3, ['header' => '', 'content' => '']);
-    $your_role_top_text = get_post_meta($post->ID, '_landing_add_your_role_top_text', true);
-    $your_role_title_text = get_post_meta($post->ID, '_landing_add_your_role_title_text', true);
-    $your_role_content = get_post_meta($post->ID, '_landing_add_your_role_content', true);
-    $cyberisho_top_text = get_post_meta($post->ID, '_landing_add_cyberisho_top_text', true);
-    $cyberisho_title_text = get_post_meta($post->ID, '_landing_add_cyberisho_title_text', true);
-    $cyberisho_reasons = get_post_meta($post->ID, '_landing_add_cyberisho_reasons', true);
-    $cyberisho_reasons_data = !empty($cyberisho_reasons) ? json_decode($cyberisho_reasons, true) : array_fill(0, 1, ['content' => '']);
-    $solutions_top_text = get_post_meta($post->ID, '_landing_add_solutions_top_text', true);
-    $solutions_header_text = get_post_meta($post->ID, '_landing_add_solutions_header_text', true);
-    $solutions_content = get_post_meta($post->ID, '_landing_add_solutions_content', true);
-    $dangers_top_text = get_post_meta($post->ID, '_landing_add_dangers_top_text', true);
-    $dangers_title_text = get_post_meta($post->ID, '_landing_add_dangers_title_text', true);
-    $dangers = get_post_meta($post->ID, '_landing_add_dangers', true);
-    $dangers_data = !empty($dangers) ? json_decode($dangers, true) : array_fill(0, 3, ['content' => '']);
-    $ad_header_text = get_post_meta($post->ID, '_landing_add_ad_header_text', true);
-    $ad_content = get_post_meta($post->ID, '_landing_add_ad_content', true);
-
+    wp_nonce_field('landing_carousel_nonce', 'landing_carousel_nonce');
+    $carousel_items = get_post_meta($post->ID, '_landing_carousel_items', true);
+    $carousel_items_data = !empty($carousel_items) ? json_decode($carousel_items, true) : array_fill(0, 5, ['text' => '', 'audio_url' => '']);
     ?>
-    <div class="landing-add-metabox-container">
-        <!-- Header Content Section -->
+    <div class="landing-carousel-wrapper">
         <div class="landing-field-group">
-            <h3>محتوای هدر صفحه Landing Add</h3>
-            <div class="field-group">
-                <label for="landing_add_header_top_text">متن بالایی</label>
-                <textarea name="landing_add_header_top_text" id="landing_add_header_top_text"
-                    style="width:100%; height:60px;">
-                        <?php echo esc_textarea($header_top_text); ?>
-                    </textarea>
-            </div>
-            <div class="field-group">
-                <label for="landing_add_header_title_text">متن تایتل</label>
-                <textarea name="landing_add_header_title_text" id="landing_add_header_title_text"
-                    style="width:100%; height:60px;">
-                        <?php echo esc_textarea($header_title_text); ?>
-                    </textarea>
-            </div>
-            <div class="field-group">
-                <label for="landing_add_header_content">متن محتوا</label>
-                <?php
-                wp_editor(
-                    wp_kses_post($header_content),
-                    'landing_add_header_content',
-                    array(
-                        'textarea_name' => 'landing_add_header_content',
-                        'textarea_rows' => 10,
-                        'media_buttons' => true,
-                        'teeny' => false,
-                        'quicktags' => array(
-                            'buttons' => 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close,p'
-                        )
-                    )
-                );
-                ?>
-            </div>
-        </div>
-
-        <!-- Reasons Section -->
-        <div class="landing-reasons-wrapper">
-            <h3>محتوای قسمت دلایل داشتن سایت</h3>
-            <div class="field-group">
-                <label for="landing_add_reasons_top_text">متن بالایی دلایل داشتن سایت</label>
-                <textarea name="landing_add_reasons_top_text" id="landing_add_reasons_top_text"
-                    style="width:100%; height:60px;">
-                        <?php echo esc_textarea($reasons_top_text); ?>
-                    </textarea>
-            </div>
-            <div class="field-group">
-                <label for="landing_add_reasons_header_text">هدر دلایل سایت</label>
-                <textarea name="landing_add_reasons_header_text" id="landing_add_reasons_header_text"
-                    style="width:100%; height:60px;">
-                        <?php echo esc_textarea($reasons_header_text); ?>
-                    </textarea>
-            </div>
-            <!-- Video Upload -->
-            <div class="field-group">
-                <label>ویدیو</label>
-                <div class="video-preview">
-                    <?php if ($video_url): ?>
-                        <video controls style="max-width:100%; margin-top:10px;">
-                            <source src=<?php echo esc_url($video_url); ?>" type="video/mp4">
-                            مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.
-                        </video>
-                    <?php endif; ?>
-                </div>
-                <input type="hidden" name="landing_add_video_attachment_id" id="landing_add_video_attachment_id"
-                    value="<?php echo esc_attr($video_id); ?>" />
-                <button type="button" class="button button-secondary" id="upload_video_button">
-                    <?php echo $video_id ? 'تغییر ویدیو' : 'انتخاب ویدیو'; ?>
-                </button>
-                <?php if ($video_id): ?>
-                    <button type="button" class="button button-secondary" id="remove_video_button"
-                        style="margin-top: 10px; color: red;">
-                        حذف ویدیو
-                    </button>
-                <?php endif; ?>
-            </div>
-            <!-- Thumbnail Upload -->
-            <div class="field-group">
-                <label>عکس تامبنیل</label>
-                <div class="thumbnail-preview">
-                    <?php if ($thumbnail_url): ?>
-                        <img src="<?php echo esc_url($thumbnail_url); ?>" alt="Thumbnail Preview"
-                            style="max-width: 100%; margin-top: 10px; border-radius: 8px;" />
-                    <?php endif; ?>
-                </div>
-                <input type="hidden" name="landing_add_thumbnail_attachment_id" id="landing_add_thumbnail_attachment_id"
-                    value="<?php echo esc_attr($thumbnail_id); ?>" />
-                <button type="button" class="button button-secondary" id="upload_thumbnail_button">
-                    <?php echo $thumbnail_id ? 'تغییر تصویر' : 'انتخاب تامبنیل'; ?>
-                </button>
-                <?php if ($thumbnail_id): ?>
-                    <button type="button" class="button button-secondary" id="remove_thumbnail_button"
-                        style="margin-top: 10px; color: red;">
-                        حذف تصویر
-                    </button>
-                <?php endif; ?>
-            </div>
-            <!-- Reasons -->
-            <?php for ($i = 0; $i < 3; $i++): ?>
-                <div class="reason-group">
-                    <h4>دلیل <?php echo $i + 1; ?></h4>
-                    <div class="field-group">
-                        <label for="landing_add_reasons_<?php echo $i; ?>_header">هدر دلیل</label>
-                        <textarea name="landing_add_reasons[<?php echo $i; ?>][header]"
-                            id="landing_add_reasons_<?php echo $i; ?>_header" style="width:100%; height:60px;">
-                                    <?php echo esc_textarea($reasons_data[$i]['header'] ?? ''); ?>
-                                </textarea>
+            <h4>آیتم‌های گردونه</h4>
+            <?php for ($i = 0; $i < 5; $i++): ?>
+                <div class="carousel-item-group" data-index="<?php echo $i; ?>">
+                    <div class="cyberisho-field">
+                        <label>متن آیتم <?php echo $i + 1; ?></label>
+                        <textarea name="carousel_items[<?php echo $i; ?>][text]"
+                            style="width:100%; height:80px;"><?php echo esc_textarea($carousel_items_data[$i]['text'] ?? ''); ?></textarea>
                     </div>
-                    <div class="field-group">
-                        <label for="landing_add_reasons_<?php echo $i; ?>_content">محتوای دلیل</label>
-                        <?php
-                        wp_editor(
-                            wp_kses_post($reasons_data[$i]['content'] ?? ''),
-                            'landing_add_reasons_' . $i . '_content',
-                            array(
-                                'textarea_name' => 'landing_add_reasons[' . $i . '][content]',
-                                'textarea_rows' => 8,
-                                'media_buttons' => true,
-                                'teeny' => false,
-                                'quicktags' => array(
-                                    'buttons' => 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close,p'
-                                )
-                            )
-                        );
-                        ?>
+                    <div class="cyberisho-field">
+                        <label>ویس مربوط به آیتم <?php echo $i + 1; ?></label>
+                        <div class="flex align-items-center">
+                            <button type="button" class="button field-upload-audio"
+                                data-input-id="carousel_items[<?php echo $i; ?>][audio_url]">انتخاب ویس</button>
+                            <input value="<?php echo esc_url($carousel_items_data[$i]['audio_url'] ?? ''); ?>" type="text"
+                                class="field-audio-url" name="carousel_items[<?php echo $i; ?>][audio_url]" readonly />
+                            <div class="field-audio-container">
+                                <?php if (!empty($carousel_items_data[$i]['audio_url'])): ?>
+                                    <audio controls>
+                                        <source src="<?php echo esc_url($carousel_items_data[$i]['audio_url']); ?>"
+                                            type="audio/mpeg">
+                                    </audio>
+                                <?php endif; ?>
+                            </div>
+                            <a class="field-delete-audio <?php echo !empty($carousel_items_data[$i]['audio_url']) ? '' : 'hidden'; ?>"
+                                href="#" data-input-id="carousel_items[<?php echo $i; ?>][audio_url]">حذف ویس</a>
+                        </div>
                     </div>
                 </div>
             <?php endfor; ?>
-        </div>
-
-        <!-- Your Role Section -->
-        <div class="landing-your-role-wrapper">
-            <h3>نقش شما</h3>
-            <div class="field-group">
-                <label for="landing_add_your_role_top_text">متن بالایی</label>
-                <textarea name="landing_add_your_role_top_text" id="landing_add_your_role_top_text"
-                    style="width:100%; height:60px;">
-                        <?php echo esc_textarea($your_role_top_text); ?>
-                    </textarea>
-            </div>
-            <div class="field-group">
-                <label for="landing_add_your_role_title_text">تایتل</label>
-                <textarea name="landing_add_your_role_title_text" id="landing_add_your_role_title_text"
-                    style="width:100%; height:60px;">
-                        <?php echo esc_textarea($your_role_title_text); ?>
-                    </textarea>
-            </div>
-            <div class="field-group">
-                <label for="landing_add_your_role_content">متن محتوا</label>
-                <?php
-                wp_editor(
-                    wp_kses_post($your_role_content),
-                    'landing_add_your_role_content',
-                    array(
-                        'textarea_name' => 'landing_add_your_role_content',
-                        'textarea_rows' => 10,
-                        'media_buttons' => true,
-                        'teeny' => false,
-                        'quicktags' => array(
-                            'buttons' => 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close,p'
-                        )
-                    )
-                );
-                ?>
-            </div>
-        </div>
-
-        <!-- Reasons to Choose Cyberisho Section -->
-        <div class="landing-cyberisho-reasons-wrapper">
-            <h3>دلایل انتخاب سایبریشو</h3>
-            <div class="field-group">
-                <label for="landing_add_cyberisho_top_text">متن بالایی</label>
-                <textarea name="landing_add_cyberisho_top_text" id="landing_add_cyberisho_top_text"
-                    style="width:100%; height:60px;">
-                        <?php echo esc_textarea($cyberisho_top_text); ?>
-                    </textarea>
-            </div>
-            <div class="field-group">
-                <label for="landing_add_cyberisho_title_text">متن تایتل</label>
-                <textarea name="landing_add_cyberisho_title_text" id="landing_add_cyberisho_title_text"
-                    style="width:100%; height:60px;">
-                        <?php echo esc_textarea($cyberisho_title_text); ?>
-                    </textarea>
-            </div>
-            <div id="cyberisho-reasons-container">
-                <?php foreach ($cyberisho_reasons_data as $index => $reason): ?>
-                    <div class="cyberisho-reason-group">
-                        <h4>دلیل <?php echo $index + 1; ?></h4>
-                        <textarea name="landing_add_cyberisho_reasons[<?php echo $index; ?>][content]"
-                            style="width:100%; height:100px;"><?php echo esc_textarea($reason['content'] ?? ''); ?></textarea>
-                        <button type="button" class="button remove-cyberisho-reason-btn"
-                            style="color: red; margin-top: 10px;">حذف دلیل</button>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-            <button type="button" class="button button-primary" id="add-cyberisho-reason-btn">افزودن دلیل</button>
-        </div>
-
-        <!-- Our Solutions Section -->
-        <div class="landing-solutions-wrapper">
-            <h3>راهکارهای ما</h3>
-            <div class="field-group">
-                <label for="landing_add_solutions_top_text">متن بالایی</label>
-                <textarea name="landing_add_solutions_top_text" id="landing_add_solutions_top_text"
-                    style="width:100%; height:60px;">
-                        <?php echo esc_textarea($solutions_top_text); ?>
-                    </textarea>
-            </div>
-            <div class="field-group">
-                <label for="landing_add_solutions_header_text">متن هدر</label>
-                <textarea name="landing_add_solutions_header_text" id="landing_add_solutions_header_text"
-                    style="width:100%; height:60px;">
-                        <?php echo esc_textarea($solutions_header_text); ?>
-                    </textarea>
-            </div>
-            <div class="field-group">
-                <label for="landing_add_solutions_content">متن محتوا</label>
-                <?php
-                wp_editor(
-                    wp_kses_post($solutions_content),
-                    'landing_add_solutions_content',
-                    array(
-                        'textarea_name' => 'landing_add_solutions_content',
-                        'textarea_rows' => 10,
-                        'media_buttons' => true,
-                        'teeny' => false,
-                        'quicktags' => array(
-                            'buttons' => 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close,p'
-                        )
-                    )
-                );
-                ?>
-            </div>
-        </div>
-
-        <!-- Dangers of Not Having a Website Section -->
-        <div class="landing-dangers-wrapper">
-            <h3>خطرات نداشتن سایت</h3>
-            <div class="field-group">
-                <label for="landing_add_dangers_top_text">متن بالایی</label>
-                <textarea name="landing_add_dangers_top_text" id="landing_add_dangers_top_text"
-                    style="width:100%; height:60px;">
-                        <?php echo esc_textarea($dangers_top_text); ?>
-                    </textarea>
-            </div>
-            <div class="field-group">
-                <label for="landing_add_dangers_title_text">متن تایتل</label>
-                <textarea name="landing_add_dangers_title_text" id="landing_add_dangers_title_text"
-                    style="width:100%; height:60px;">
-                        <?php echo esc_textarea($dangers_title_text); ?>
-                    </textarea>
-            </div>
-            <?php for ($i = 0; $i < 3; $i++): ?>
-                <div class="danger-group">
-                    <h4>خطر <?php echo $i + 1; ?></h4>
-                    <div class="field-group">
-                        <label for="landing_add_dangers_<?php echo $i; ?>_content">محتوای خطر</label>
-                        <?php
-                        wp_editor(
-                            wp_kses_post($dangers_data[$i]['content'] ?? ''),
-                            'landing_add_dangers_' . $i . '_content',
-                            array(
-                                'textarea_name' => 'landing_add_dangers[' . $i . '][content]',
-                                'textarea_rows' => 8,
-                                'media_buttons' => true,
-                                'teeny' => false,
-                                'quicktags' => array(
-                                    'buttons' => 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close,p'
-                                )
-                            )
-                        );
-                        ?>
-                    </div>
-                </div>
-            <?php endfor; ?>
-        </div>
-
-        <!-- Advertisement Text (Footer Text) Section -->
-        <div class="landing-ad-wrapper">
-            <h3>متن تبلیغ (متن فوتر)</h3>
-            <div class="field-group">
-                <label for="landing_add_ad_header_text">متن هدر</label>
-                <textarea name="landing_add_ad_header_text" id="landing_add_ad_header_text"
-                    style="width:100%; height:60px;">
-                        <?php echo esc_textarea($ad_header_text); ?>
-                    </textarea>
-            </div>
-            <div class="field-group">
-                <label for="landing_add_ad_content">متن محتوا</label>
-                <?php
-                wp_editor(
-                    wp_kses_post($ad_content),
-                    'landing_add_ad_content',
-                    array(
-                        'textarea_name' => 'landing_add_ad_content',
-                        'textarea_rows' => 10,
-                        'media_buttons' => true,
-                        'teeny' => false,
-                        'quicktags' => array(
-                            'buttons' => 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close,p'
-                        )
-                    )
-                );
-                ?>
-            </div>
         </div>
     </div>
-
     <script>
         jQuery(document).ready(function ($) {
-            // Register custom Quicktags button for <p> tag
-            if (typeof QTags !== 'undefined') {
-                QTags.addButton('p_tag', 'p', '<p>', '</p>', '', 'Paragraph tag', 1);
-            }
-
-            // Video Upload
-            var videoUploader;
-            $('#upload_video_button').on('click', function (e) {
+            $('.field-upload-audio').on('click', function (e) {
                 e.preventDefault();
-                if (videoUploader) {
-                    videoUploader.open();
-                    return;
-                }
-                videoUploader = wp.media.frames.file_frame = wp.media({
-                    title: 'انتخاب ویدیو',
-                    button: { text: 'استفاده از این ویدیو' },
+                var button = $(this);
+                var inputId = button.data('input-id');
+                var inputField = $('input[name="' + inputId + '"]');
+                var audioContainer = button.siblings('.field-audio-container');
+                var deleteLink = button.siblings('.field-delete-audio');
+
+                var frame = wp.media({
+                    title: 'انتخاب فایل صوتی',
+                    button: { text: 'انتخاب' },
                     multiple: false,
-                    library: { type: 'video' }
+                    library: { type: 'audio' }
                 });
-                videoUploader.on('select', function () {
-                    var attachment = videoUploader.state().get('selection').first().toJSON();
-                    $('#landing_add_video_attachment_id').val(attachment.id);
-                    var videoHtml = '<video controls style="max-width:100%; margin-top:10px;"><source src="' + attachment.url + '" type="video/mp4"></video>';
-                    $('.video-preview').html(videoHtml);
-                    $('#remove_video_button').show();
+
+                frame.on('select', function () {
+                    var attachment = frame.state().get('selection').first().toJSON();
+                    inputField.val(attachment.url);
+                    audioContainer.html('<audio controls><source src="' + attachment.url + '" type="' + attachment.mime + '"></audio>');
+                    deleteLink.removeClass('hidden');
                 });
-                videoUploader.open();
+
+                frame.open();
             });
-            $('#remove_video_button').on('click', function (e) {
+
+            $('.field-delete-audio').on('click', function (e) {
                 e.preventDefault();
-                $('#landing_add_video_attachment_id').val('');
-                $('.video-preview').html('');
-                $(this).hide();
+                var inputId = $(this).data('input-id');
+                var inputField = $('input[name="' + inputId + '"]');
+                var audioContainer = $(this).siblings('.field-audio-container');
+                inputField.val('');
+                audioContainer.empty();
+                $(this).addClass('hidden');
             });
-
-            // Thumbnail Upload
-            var thumbnailUploader;
-            $('#upload_thumbnail_button').on('click', function (e) {
-                e.preventDefault();
-                if (thumbnailUploader) {
-                    thumbnailUploader.open();
-                    return;
-                }
-                thumbnailUploader = wp.media.frames.file_frame = wp.media({
-                    title: 'انتخاب تصویر',
-                    button: { text: 'استفاده از این تصویر' },
-                    multiple: false,
-                    library: { type: 'image' }
-                });
-                thumbnailUploader.on('select', function () {
-                    var attachment = thumbnailUploader.state().get('selection').first().toJSON();
-                    $('#landing_add_thumbnail_attachment_id').val(attachment.id);
-                    var imageUrl = attachment.sizes && attachment.sizes.medium ? attachment.sizes.medium.url : attachment.url;
-                    $('.thumbnail-preview').html('<img src="' + imageUrl + '" style="max-width:100%; margin-top: 10px; border-radius: 8px;" />');
-                    $('#remove_thumbnail_button').show();
-                });
-                thumbnailUploader.open();
-            });
-            $('#remove_thumbnail_button').on('click', function (e) {
-                e.preventDefault();
-                $('#landing_add_thumbnail_attachment_id').val('');
-                $('.thumbnail-preview').html('');
-                $('#remove_thumbnail_button').hide();
-            });
-
-            // Add Cyberisho Reason
-            var maxCyberishoReasons = 5;
-            var cyberishoReasonCount = $('.cyberisho-reason-group').length;
-            $('#add-cyberisho-reason-btn').on('click', function () {
-                if (cyberishoReasonCount >= maxCyberishoReasons) {
-                    alert('حداکثر ۵ دلیل مجاز است.');
-                    return;
-                }
-                var newReason = `
-                    <div class="cyberisho-reason-group">
-                        <h4>دلیل ${cyberishoReasonCount + 1}</h4>
-                        <textarea name="landing_add_cyberisho_reasons[${cyberishoReasonCount}][content]" style="width:100%; height:100px;"></textarea>
-                        <button type="button" class="button remove-cyberisho-reason-btn" style="color: red; margin-top: 10px;">حذف دلیل</button>
-                    </div>
-                `;
-                $('#cyberisho-reasons-container').append(newReason);
-                cyberishoReasonCount++;
-            });
-
-            // Remove Cyberisho Reason
-            $(document).on('click', '.remove-cyberisho-reason-btn', function () {
-                if (confirm('آیا از حذف این دلیل مطمئن هستید؟')) {
-                    $(this).closest('.cyberisho-reason-group').remove();
-                    cyberishoReasonCount--;
-                    updateCyberishoReasonIndexes();
-                }
-            });
-
-            // Update Cyberisho Reason Indexes
-            function updateCyberishoReasonIndexes() {
-                $('#cyberisho-reasons-container .cyberisho-reason-group').each(function (index) {
-                    $(this).find('h4').text(`دلیل ${index + 1}`);
-                    $(this).find('textarea').attr('name', `landing_add_cyberisho_reasons[${index}][content]`);
-                });
-            }
         });
     </script>
-
     <style>
-        .landing-add-metabox-container {
-            padding: 15px;
-        }
-
-        .landing-field-group {
+        .landing-carousel-wrapper .landing-field-group {
             margin-bottom: 20px;
         }
 
-        .landing-reasons-wrapper,
-        .landing-your-role-wrapper,
-        .landing-cyberisho-reasons-wrapper,
-        .landing-solutions-wrapper,
-        .landing-dangers-wrapper,
-        .landing-ad-wrapper {
-            margin-top: 30px;
-            border-top: 1px solid #ddd;
-            padding-top: 20px;
+        .landing-carousel-wrapper label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
 
-        .reason-group,
-        .cyberisho-reason-group,
-        .danger-group {
+        .carousel-item-group {
             background: #f9f9f9;
             padding: 15px;
             margin-bottom: 20px;
             border: 1px solid #ddd;
             border-radius: 3px;
         }
+    </style>
+    <?php
+}
 
-        .field-group {
-            margin-bottom: 15px;
+// کالبک برای متاباکس اسلایدر برندها
+function landing_brands_slider_metabox_callback($post)
+{
+    wp_nonce_field('landing_brands_slider_nonce', 'landing_brands_slider_nonce');
+    $projects_count = get_post_meta($post->ID, '_landing_projects_count', true);
+    $slogan_text = get_post_meta($post->ID, '_landing_slogan_text', true);
+    ?>
+    <div class="landing-brands-slider-wrapper">
+        <div class="landing-field-group">
+            <label for="projects_count">تعداد پروژه‌ها</label>
+            <input type="text" name="projects_count" id="projects_count" value="<?php echo esc_attr($projects_count); ?>"
+                style="width:100%;" />
+        </div>
+        <div class="landing-field-group">
+            <label for="slogan_text">متن شعار کنار عکس برندها</label>
+            <textarea name="slogan_text" id="slogan_text"
+                style="width:100%; height:80px;"><?php echo esc_textarea($slogan_text); ?></textarea>
+        </div>
+    </div>
+    <style>
+        .landing-brands-slider-wrapper .landing-field-group {
+            margin-bottom: 20px;
         }
 
-        .field-group label {
+        .landing-brands-slider-wrapper label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
-        }
-
-        .video-preview,
-        .thumbnail-preview {
-            margin-bottom: 10px;
         }
     </style>
     <?php
 }
 
-// Save meta box data
-function save_landing_add_page_metabox($post_id)
+// کالبک برای متاباکس چرا سایبریشو
+function landing_why_cyberisho_metabox_callback($post)
 {
-    // Verify nonce
-    if (!isset($_POST['landing_add_nonce']) || !wp_verify_nonce($_POST['landing_add_nonce'], 'landing_add_metabox_nonce')) {
-        return;
-    }
-
-    // Check user permissions
-    if (!current_user_can('edit_page', $post_id)) {
-        return;
-    }
-
-    // Save header fields
-    if (isset($_POST['landing_add_header_top_text'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_add_header_top_text',
-            sanitize_textarea_field(wp_unslash($_POST['landing_add_header_top_text']))
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_header_top_text');
-    }
-
-    if (isset($_POST['landing_add_header_title_text'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_add_header_title_text',
-            sanitize_textarea_field(wp_unslash($_POST['landing_add_header_title_text']))
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_header_top_text');
-    }
-
-    if (isset($_POST['landing_add_header_content'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_add_header_content',
-            wp_kses_post(wp_unslash($_POST['landing_add_header_content']))
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_header_content');
-    }
-
-    // Save video attachment ID
-    if (isset($_POST['landing_add_video_attachment_id']) && !empty($_POST['landing_add_video_attachment_id'])) {
-        update_post_meta($post_id, '_landing_add_video_attachment_id', intval($_POST['landing_add_video_attachment_id']));
-    } else {
-        delete_post_meta($post_id, '_landing_add_video_attachment_id');
-    }
-
-    // Save thumbnail attachment ID
-    if (isset($_POST['landing_add_thumbnail_attachment_id']) && !empty($_POST['landing_add_thumbnail_attachment_id'])) {
-        update_post_meta($post_id, '_landing_add_thumbnail_attachment_id', intval($_POST['landing_add_thumbnail_attachment_id']));
-    } else {
-        delete_post_meta($post_id, '_landing_add_thumbnail_attachment_id');
-    }
-
-    // Save reasons top text
-    if (isset($_POST['landing_add_reasons_top_text'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_add_reasons_top_text',
-            sanitize_textarea_field(wp_unslash($_POST['landing_add_reasons_top_text']))
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_reasons_top_text');
-    }
-
-    // Save reasons header text
-    if (isset($_POST['landing_add_reasons_header_text'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_add_reasons_header_text',
-            sanitize_textarea_field(wp_unslash($_POST['landing_add_reasons_header_text']))
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_reasons_header_text');
-    }
-
-    // Save reasons
-    if (isset($_POST['landing_add_reasons'])) {
-        $reasons = array_map(function ($reason) {
-            return [
-                'header' => sanitize_textarea_field(wp_unslash($reason['header'] ?? '')),
-                'content' => wp_kses_post(wp_unslash($reason['content'] ?? ''))
-            ];
-        }, $_POST['landing_add_reasons']);
-
-        update_post_meta(
-            $post_id,
-            '_landing_add_reasons',
-            wp_json_encode($reasons, JSON_UNESCAPED_UNICODE)
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_reasons');
-    }
-
-    // Save your role fields
-    if (isset($_POST['landing_add_your_role_top_text'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_add_your_role_top_text',
-            sanitize_textarea_field(wp_unslash($_POST['landing_add_your_role_top_text']))
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_your_role_top_text');
-    }
-
-    if (isset($_POST['landing_add_your_role_title_text'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_add_your_role_title_text',
-            sanitize_textarea_field(wp_unslash($_POST['landing_add_your_role_title_text']))
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_your_role_title_text');
-    }
-
-    if (isset($_POST['landing_add_your_role_content'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_add_your_role_content',
-            wp_kses_post(wp_unslash($_POST['landing_add_your_role_content']))
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_your_role_content');
-    }
-
-    // Save Cyberisho reasons
-    if (isset($_POST['landing_add_cyberisho_reasons'])) {
-        $cyberisho_reasons = array_map(function ($reason) {
-            return [
-                'content' => sanitize_textarea_field(wp_unslash($reason['content'] ?? ''))
-            ];
-        }, $_POST['landing_add_cyberisho_reasons']);
-
-        update_post_meta(
-            $post_id,
-            '_landing_add_cyberisho_reasons',
-            wp_json_encode($cyberisho_reasons, JSON_UNESCAPED_UNICODE)
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_cyberisho_reasons');
-    }
-
-    // Save Cyberisho top text
-    if (isset($_POST['landing_add_cyberisho_top_text'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_add_cyberisho_top_text',
-            sanitize_textarea_field(wp_unslash($_POST['landing_add_cyberisho_top_text']))
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_cyberisho_top_text');
-    }
-
-    // Save Cyberisho title text
-    if (isset($_POST['landing_add_cyberisho_title_text'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_add_cyberisho_title_text',
-            sanitize_textarea_field(wp_unslash($_POST['landing_add_cyberisho_title_text']))
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_cyberisho_title_text');
-    }
-
-    // Save solutions fields
-    if (isset($_POST['landing_add_solutions_top_text'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_add_solutions_top_text',
-            sanitize_textarea_field(wp_unslash($_POST['landing_add_solutions_top_text']))
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_solutions_top_text');
-    }
-
-    // Save solutions header text
-    if (isset($_POST['landing_add_solutions_header_text'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_add_solutions_header_text',
-            sanitize_textarea_field(wp_unslash($_POST['landing_add_solutions_header_text']))
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_solutions_header_text');
-    }
-
-    // Save solutions content
-    if (isset($_POST['landing_add_solutions_content'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_add_solutions_content',
-            wp_kses_post(wp_unslash($_POST['landing_add_solutions_content']))
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_solutions_content');
-    }
-
-    // Save dangers top text
-    if (isset($_POST['landing_add_dangers_top_text'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_add_dangers_top_text',
-            sanitize_textarea_field(wp_unslash($_POST['landing_add_dangers_top_text']))
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_dangers_top_text');
-    }
-
-    // Save dangers title text
-    if (isset($_POST['landing_add_dangers_title_text'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_add_dangers_title_text',
-            sanitize_textarea_field(wp_unslash($_POST['landing_add_dangers_title_text']))
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_dangers_title_text');
-    }
-
-    // Save dangers
-    if (isset($_POST['landing_add_dangers'])) {
-        $dangers = array_map(function ($danger) {
-            return [
-                'content' => wp_kses_post(wp_unslash($danger['content'] ?? ''))
-            ];
-        }, $_POST['landing_add_dangers']);
-
-        update_post_meta(
-            $post_id,
-            '_landing_add_dangers',
-            wp_json_encode($dangers, JSON_UNESCAPED_UNICODE)
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_dangers');
-    }
-
-    // Save advertisement text fields
-    if (isset($_POST['landing_add_ad_header_text'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_add_ad_header_text',
-            sanitize_textarea_field(wp_unslash($_POST['landing_add_ad_header_text']))
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_ad_header_text');
-    }
-
-    // Save advertisement content
-    if (isset($_POST['landing_add_ad_content'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_add_ad_content',
-            wp_kses_post(wp_unslash($_POST['landing_add_ad_content']))
-        );
-    } else {
-        delete_post_meta($post_id, '_landing_add_ad_content');
-    }
-}
-add_action('save_post', 'save_landing_add_page_metabox');
-
-
-
-
-
-// Add meta boxes for 'landing' page template
-function my_custom_landing_metaboxes()
-{
-    global $post;
-
-    if ($post && $post->post_type === 'page') {
-        $page_slug = $post->post_name;
-        if ($page_slug === 'landing') {
-
-            // Meta box for video upload via Media Library
-            add_meta_box(
-                'my_landing_video_metabox',
-                'ویدیو صفحه لندینگ',
-                'my_landing_video_metabox_callback',
-                'page',
-                'normal',
-                'high'
-            );
-
-            // Meta box for thumbnail image upload
-            add_meta_box(
-                'my_landing_thumbnail_metabox',
-                'عکس تامبنیل صفحه لندینگ',
-                'my_landing_thumbnail_metabox_callback',
-                'page',
-                'normal',
-                'high'
-            );
-
-            // Meta box for 4 text containers
-            add_meta_box(
-                'my_landing_containers_metabox',
-                'چهار کانتینر متنی',
-                'my_landing_containers_metabox_callback',
-                'page',
-                'normal',
-                'high'
-            );
-        }
-    }
-}
-add_action('add_meta_boxes', 'my_custom_landing_metaboxes');
-
-
-// Callback for Video Upload Metabox
-function my_landing_video_metabox_callback($post)
-{
-    $video_id = get_post_meta($post->ID, '_landing_video_attachment_id', true);
-    $video_url = $video_id ? wp_get_attachment_url($video_id) : '';
-
-    wp_nonce_field('my_landing_video_nonce', 'landing_video_nonce');
+    wp_nonce_field('landing_why_cyberisho_nonce', 'landing_why_cyberisho_nonce');
+    $why_audio_url = get_post_meta($post->ID, '_landing_why_audio_url', true);
+    $why_items = get_post_meta($post->ID, '_landing_why_items', true);
+    $why_items_data = !empty($why_items) ? json_decode($why_items, true) : array();
     ?>
-    <div class="video-preview">
-        <?php if ($video_url): ?>
-            <video controls style="max-width:100%; margin-top:10px;">
-                <source src="<?php echo esc_url($video_url); ?>" type="video/mp4">
-                مرورگر شما از پخش ویدیو پشتیبانی نمی‌کند.
-            </video>
-        <?php endif; ?>
-    </div>
-
-    <input type="hidden" name="landing_video_attachment_id" id="landing_video_attachment_id"
-        value="<?php echo esc_attr($video_id); ?>" />
-
-    <button type="button" class="button button-secondary" id="upload_video_button">
-        <?php echo $video_id ? 'تغییر ویدیو' : 'انتخاب ویدیو'; ?>
-    </button>
-
-    <?php if ($video_id): ?>
-        <button type="button" class="button button-secondary" id="remove_video_button" style="margin-top: 10px; color: red;">
-            حذف ویدیو
-        </button>
-    <?php endif; ?>
-
-    <script>
-        jQuery(document).ready(function ($) {
-            var mediaUploader;
-
-            $('#upload_video_button').on('click', function (e) {
-                e.preventDefault();
-
-                if (mediaUploader) {
-                    mediaUploader.open();
-                    return;
-                }
-
-                mediaUploader = wp.media.frames.file_frame = wp.media({
-                    title: 'انتخاب ویدیو',
-                    button: {
-                        text: 'استفاده از این ویدیو'
-                    },
-                    multiple: false,
-                    library: {
-                        type: 'video'
-                    }
-                });
-
-                mediaUploader.on('select', function () {
-                    var attachment = mediaUploader.state().get('selection').first().toJSON();
-                    $('#landing_video_attachment_id').val(attachment.id);
-
-                    var videoHtml = '<video controls style="max-width:100%; margin-top:10px;"><source src="' + attachment.url + '" type="video/mp4"></video>';
-                    $('.video-preview').html(videoHtml);
-                    $('#remove_video_button').show();
-                });
-
-                mediaUploader.open();
-            });
-
-            $('#remove_video_button').on('click', function (e) {
-                e.preventDefault();
-                $('#landing_video_attachment_id').val('');
-                $('.video-preview').html('');
-                $(this).hide();
-            });
-        });
-    </script>
-    <?php
-}
-
-
-// Callback for Thumbnail Image Upload Metabox
-function my_landing_thumbnail_metabox_callback($post)
-{
-    $thumbnail_id = get_post_meta($post->ID, '_landing_thumbnail_attachment_id', true);
-    $thumbnail_url = $thumbnail_id ? wp_get_attachment_image_url($thumbnail_id, 'medium') : '';
-
-    wp_nonce_field('my_landing_thumbnail_nonce', 'landing_thumbnail_nonce');
-    ?>
-    <div class="thumbnail-preview">
-        <?php if ($thumbnail_url): ?>
-            <img src="<?php echo esc_url($thumbnail_url); ?>" alt="Thumbnail Preview"
-                style="max-width: 100%; margin-top: 10px; border-radius: 8px;" />
-        <?php endif; ?>
-    </div>
-
-    <input type="hidden" name="landing_thumbnail_attachment_id" id="landing_thumbnail_attachment_id"
-        value="<?php echo esc_attr($thumbnail_id); ?>" />
-
-    <button type="button" class="button button-secondary" id="upload_thumbnail_button">
-        <?php echo $thumbnail_id ? 'تغییر تصویر' : 'انتخاب تامبنیل'; ?>
-    </button>
-
-    <?php if ($thumbnail_id): ?>
-        <button type="button" class="button button-secondary" id="remove_thumbnail_button"
-            style="margin-top: 10px; color: red;">
-            حذف تصویر
-        </button>
-    <?php endif; ?>
-
-    <script>
-        jQuery(document).ready(function ($) {
-            var mediaUploader;
-
-            $('#upload_thumbnail_button').on('click', function (e) {
-                e.preventDefault();
-
-                if (mediaUploader) {
-                    mediaUploader.open();
-                    return;
-                }
-
-                mediaUploader = wp.media.frames.file_frame = wp.media({
-                    title: 'انتخاب تصویر',
-                    button: {
-                        text: 'استفاده از این تصویر'
-                    },
-                    multiple: false,
-                    library: {
-                        type: 'image'
-                    }
-                });
-
-                mediaUploader.on('select', function () {
-                    var attachment = mediaUploader.state().get('selection').first().toJSON();
-                    $('#landing_thumbnail_attachment_id').val(attachment.id);
-
-                    var imageUrl = attachment.sizes && attachment.sizes.medium ? attachment.sizes.medium.url : attachment.url;
-
-                    $('.thumbnail-preview').html('<img src="' + imageUrl + '" style="max-width:100%; margin-top:10px; border-radius:8px;" />');
-                    $('#remove_thumbnail_button').show();
-                });
-
-                mediaUploader.open();
-            });
-
-            $('#remove_thumbnail_button').on('click', function (e) {
-                e.preventDefault();
-                $('#landing_thumbnail_attachment_id').val('');
-                $('.thumbnail-preview').html('');
-                $(this).hide();
-            });
-        });
-    </script>
-    <?php
-}
-
-
-// Callback for 4 Text Containers Metabox
-function my_landing_containers_metabox_callback($post)
-{
-    $container_1 = get_post_meta($post->ID, '_landing_container_1', true);
-    $container_2 = get_post_meta($post->ID, '_landing_container_2', true);
-    $container_3 = get_post_meta($post->ID, '_landing_container_3', true);
-    $container_4 = get_post_meta($post->ID, '_landing_container_4', true);
-
-    wp_nonce_field('my_landing_containers_nonce', 'landing_containers_nonce');
-    ?>
-    <div style="display:flex; flex-direction:column; gap:15px;">
-        <div>
-            <label for="landing_container_1">کانتینر 1:</label>
-            <textarea name="landing_container_1" id="landing_container_1" rows="3"
-                style="width:100%;"><?php echo esc_textarea($container_1); ?></textarea>
-        </div>
-
-        <div>
-            <label for="landing_container_2">کانتینر 2:</label>
-            <textarea name="landing_container_2" id="landing_container_2" rows="3"
-                style="width:100%;"><?php echo esc_textarea($container_2); ?></textarea>
-        </div>
-
-        <div>
-            <label for="landing_container_3">کانتینر 3:</label>
-            <textarea name="landing_container_3" id="landing_container_3" rows="3"
-                style="width:100%;"><?php echo esc_textarea($container_3); ?></textarea>
-        </div>
-
-        <div>
-            <label for="landing_container_4">کانتینر 4:</label>
-            <textarea name="landing_container_4" id="landing_container_4" rows="3"
-                style="width:100%;"><?php echo esc_textarea($container_4); ?></textarea>
-        </div>
-    </div>
-    <?php
-}
-
-
-// Save Metabox Data
-function save_my_landing_metaboxes($post_id)
-{
-    // Check if this is an autosave
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-        return;
-    }
-
-    // Check Nonces
-    if (
-        (isset($_POST['landing_video_nonce']) && !wp_verify_nonce($_POST['landing_video_nonce'], 'my_landing_video_nonce')) ||
-        (isset($_POST['landing_thumbnail_nonce']) && !wp_verify_nonce($_POST['landing_thumbnail_nonce'], 'my_landing_thumbnail_nonce')) ||
-        (isset($_POST['landing_containers_nonce']) && !wp_verify_nonce($_POST['landing_containers_nonce'], 'my_landing_containers_nonce'))
-    ) {
-        return;
-    }
-
-    // Check user capability
-    if (!current_user_can('edit_page', $post_id)) {
-        return;
-    }
-
-    // Save Video Attachment ID
-    if (isset($_POST['landing_video_attachment_id'])) {
-        update_post_meta($post_id, '_landing_video_attachment_id', intval($_POST['landing_video_attachment_id']));
-    } else {
-        delete_post_meta($post_id, '_landing_video_attachment_id');
-    }
-
-    // Save Thumbnail Attachment ID
-    if (isset($_POST['landing_thumbnail_attachment_id'])) {
-        update_post_meta($post_id, '_landing_thumbnail_attachment_id', intval($_POST['landing_thumbnail_attachment_id']));
-    } else {
-        delete_post_meta($post_id, '_landing_thumbnail_attachment_id');
-    }
-
-    // Save Text Containers with character count validation
-    $containers = [
-        'landing_container_1',
-        'landing_container_2',
-        'landing_container_3',
-        'landing_container_4'
-    ];
-
-    $has_error = false;
-
-    foreach ($containers as $container) {
-        if (isset($_POST[$container])) {
-            $text = sanitize_textarea_field($_POST[$container]);
-            $char_count = mb_strlen($text, 'UTF-8');
-
-            if ($char_count > 43) {
-                $has_error = true;
-                set_transient(
-                    'landing_container_error_' . $container,
-                    sprintf(
-                        'متن وارد شده در کانتینر %s باید حداکثر 43 کاراکتر باشد (تعداد کاراکترهای وارد شده: %d).',
-                        str_replace('landing_container_', '', $container),
-                        $char_count
-                    ),
-                    45
-                );
-            } else {
-                update_post_meta($post_id, '_' . $container, $text);
-            }
-        }
-    }
-
-    if ($has_error) {
-        set_transient('landing_containers_validation_error', 'برخی فیلدها ذخیره نشدند. لطفا خطاهای مربوط به تعداد کاراکترها را بررسی کنید.', 45);
-    }
-}
-add_action('save_post', 'save_my_landing_metaboxes');
-
-// Display admin notices for container errors
-function display_landing_container_errors()
-{
-    // Display general validation error
-    if ($error = get_transient('landing_containers_validation_error')) {
-        ?>
-        <div class="notice notice-error is-dismissible">
-            <p><?php echo esc_html($error); ?></p>
-        </div>
-        <?php
-        delete_transient('landing_containers_validation_error');
-    }
-
-    // Display individual container errors
-    for ($i = 1; $i <= 4; $i++) {
-        $container_key = 'landing_container_' . $i;
-        if ($error = get_transient('landing_container_error_' . $container_key)) {
-            ?>
-            <div class="notice notice-error is-dismissible">
-                <p><?php echo esc_html($error); ?></p>
+    <div class="landing-why-cyberisho-wrapper">
+        <!-- Audio Upload -->
+        <div class="landing-field-group">
+            <label for="why_audio_url">ویس مربوط به چرا طراحی سایت با سایبریشو</label>
+            <div class="flex align-items-center">
+                <button type="button" class="button field-upload-audio" data-input-id="why_audio_url">انتخاب ویس</button>
+                <input value="<?php echo esc_url($why_audio_url); ?>" type="text" class="field-audio-url"
+                    name="why_audio_url" readonly />
+                <div class="field-audio-container">
+                    <?php if ($why_audio_url): ?>
+                        <audio controls>
+                            <source src="<?php echo esc_url($why_audio_url); ?>" type="audio/mpeg">
+                        </audio>
+                    <?php endif; ?>
+                </div>
+                <a class="field-delete-audio <?php echo $why_audio_url ? '' : 'hidden'; ?>" href="#"
+                    data-input-id="why_audio_url">حذف ویس</a>
             </div>
-            <?php
-            delete_transient('landing_container_error_' . $container_key);
-        }
-    }
-}
-add_action('admin_notices', 'display_landing_container_errors');
-
-// Add character counter to textareas
-function add_container_character_counter()
-{
-    global $post;
-
-    if ($post && $post->post_type === 'page' && $post->post_name === 'landing') {
-        ?>
-        <script>
-            jQuery(document).ready(function ($) {
-                // Add character counter for each container
-                for (var i = 1; i <= 4; i++) {
-                    var textarea = $('#landing_container_' + i);
-                    var counter = $('<div class="character-counter" style="text-align: left; font-size: 12px; color: #666; margin-top: 5px;"></div>');
-                    textarea.after(counter);
-
-                    // Update counter on input
-                    textarea.on('input', function () {
-                        var text = $(this).val();
-                        var charCount = text.length;
-                        var counter = $(this).next('.character-counter');
-
-                        counter.text('تعداد کاراکترها: ' + charCount + ' (حداکثر 43 کاراکتر مجاز است)');
-
-                        if (charCount > 43) {
-                            counter.css('color', 'red');
-                        } else {
-                            counter.css('color', 'green');
-                        }
-                    });
-
-                    // Trigger input event to update counter initially
-                    textarea.trigger('input');
-                }
-            });
-        </script>
-        <?php
-    }
-}
-add_action('admin_footer', 'add_container_character_counter');
-
-
-
-function my_landing_page_metabox()
-{
-    global $post;
-
-    if ($post) {
-        $page_slug = $post->post_name;
-        if ($page_slug === 'landing') {
-            add_meta_box(
-                'landing_page_metabox',
-                'محتوا صفحه لندینگ',
-                'landing_page_metabox_callback',
-                'page',
-                'normal',
-                'high'
-            );
-        }
-    }
-}
-add_action('add_meta_boxes', 'my_landing_page_metabox');
-function landing_page_metabox_callback($post)
-{
-    wp_nonce_field('landing_metabox_nonce', 'landing_nonce');
-
-    // دریافت مقادیر ذخیره شده
-    $about_text = get_post_meta($post->ID, '_landing_about_text', true);
-    $content_text = get_post_meta($post->ID, '_landing_content_text', true);
-    $containers = get_post_meta($post->ID, '_landing_containers', true);
-    $containers_data = !empty($containers) ? json_decode($containers, true) : array();
-
-    ?>
-    <div class="landing-metabox-container">
-        <!-- فیلدهای اصلی -->
-        <div class="landing-field-group">
-            <h4>درباره صفحه طراحی سایت</h4>
-            <textarea name="landing_about_text"
-                style="width: 100%; height: 100px;"><?php echo esc_textarea($about_text); ?></textarea>
         </div>
-
+        <!-- Why Items -->
         <div class="landing-field-group">
-            <h4>محتوا</h4>
-            <textarea name="landing_content_text"
-                style="width: 100%; height: 100px;"><?php echo esc_textarea($content_text); ?></textarea>
-        </div>
-
-        <!-- کانتینرها -->
-        <div class="landing-containers-wrapper">
-            <h3>محتوای داخل این صفحه</h3>
-            <button type="button" class="button add-container-btn">اضافه کردن کانتینر جدید</button>
-
-            <div class="landing-containers">
-                <?php if (!empty($containers_data)): ?>
-                    <?php foreach ($containers_data as $index => $container): ?>
-                        <div class="landing-container" data-index="<?php echo $index; ?>">
-                            <div class="container-header">
-                                <h4>کانتینر <?php echo $index + 1; ?></h4>
-                                <button type="button" class="button remove-container-btn">حذف کانتینر</button>
+            <h4>آیتم‌های چرا طراحی سایت با سایبریشو</h4>
+            <button type="button" class="button add-why-item-btn">افزودن آیتم جدید</button>
+            <div class="why-items-container">
+                <?php
+                if (!empty($why_items_data)):
+                    foreach ($why_items_data as $index => $item):
+                        ?>
+                        <div class="why-item-group" data-index="<?php echo $index; ?>">
+                            <div class="cyberisho-field">
+                                <label>متن SVG آیتم <?php echo $index + 1; ?></label>
+                                <textarea name="why_items[<?php echo $index; ?>][svg]"
+                                    style="width:100%; height:80px;"><?php echo esc_textarea($item['svg'] ?? ''); ?></textarea>
                             </div>
-
-                            <div class="container-fields">
-                                <!-- هدر کانتینر -->
-                                <div class="landing-field-group">
-                                    <h4>هدر (H4)</h4>
-                                    <input type="text" name="landing_containers[<?php echo $index; ?>][header]"
-                                        value="<?php echo esc_attr($container['header'] ?? ''); ?>" style="width: 100%;">
-                                </div>
-
-                                <!-- آیتم‌ها (محتوا و لیست به ترتیب زمانی) -->
-                                <?php if (!empty($container['items'])): ?>
-                                    <?php foreach ($container['items'] as $item_index => $item): ?>
-                                        <div class="content-group" data-type="<?php echo esc_attr($item['type']); ?>">
-                                            <label><?php echo $item['type'] === 'content' ? 'محتوا' : 'لیست محتوا'; ?>
-                                                <?php echo $item_index + 1; ?></label>
-                                            <textarea
-                                                name="landing_containers[<?php echo $index; ?>][items][<?php echo $item_index; ?>][value]"
-                                                style="width: 100%; height: <?php echo $item['type'] === 'content' ? '100px' : '60px'; ?>;">
-                                                                                                                                                                                                                      <?php echo esc_textarea($item['value']); ?>
-                                                                                                                                                                                                            </textarea>
-                                            <input type="hidden"
-                                                name="landing_containers[<?php echo $index; ?>][items][<?php echo $item_index; ?>][type]"
-                                                value="<?php echo esc_attr($item['type']); ?>">
-                                            <button type="button" class="button remove-content-btn">حذف آیتم</button>
-                                        </div>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-
-                                <!-- دکمه‌های افزودن -->
-                                <div class="container-actions">
-                                    <button type="button" class="button add-content-btn">اضافه کردن محتوا</button>
-                                    <button type="button" class="button add-list-content-btn">اضافه کردن لیست محتوا</button>
-                                </div>
+                            <div class="cyberisho-field">
+                                <label>تایتل آیتم <?php echo $index + 1; ?></label>
+                                <input type="text" name="why_items[<?php echo $index; ?>][title]"
+                                    value="<?php echo esc_attr($item['title'] ?? ''); ?>" style="width:100%;" />
                             </div>
+                            <div class="cyberisho-field">
+                                <label>متن آیتم <?php echo $index + 1; ?></label>
+                                <textarea name="why_items[<?php echo $index; ?>][text]"
+                                    style="width:100%; height:80px;"><?php echo esc_textarea($item['text'] ?? ''); ?></textarea>
+                            </div>
+                            <button type="button" class="button remove-why-item-btn" style="color: red; margin-top: 10px;">حذف
+                                آیتم</button>
                         </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                        <?php
+                    endforeach;
+                else:
+                    for ($i = 0; $i < 4; $i++):
+                        ?>
+                        <div class="why-item-group" data-index="<?php echo $i; ?>">
+                            <div class="cyberisho-field">
+                                <label>متن SVG آیتم <?php echo $i + 1; ?></label>
+                                <textarea name="why_items[<?php echo $i; ?>][svg]" style="width:100%; height:80px;"></textarea>
+                            </div>
+                            <div class="cyberisho-field">
+                                <label>تایتل آیتم <?php echo $i + 1; ?></label>
+                                <input type="text" name="why_items[<?php echo $i; ?>][title]" value="" style="width:100%;" />
+                            </div>
+                            <div class="cyberisho-field">
+                                <label>متن آیتم <?php echo $i + 1; ?></label>
+                                <textarea name="why_items[<?php echo $i; ?>][text]" style="width:100%; height:80px;"></textarea>
+                            </div>
+                            <button type="button" class="button remove-why-item-btn" style="color: red; margin-top: 10px;">حذف
+                                آیتم</button>
+                        </div>
+                        <?php
+                    endfor;
+                endif;
+                ?>
             </div>
         </div>
     </div>
-
     <script>
         jQuery(document).ready(function ($) {
-            // افزودن کانتینر جدید
-            $('.add-container-btn').on('click', function () {
-                var containerIndex = $('.landing-container').length;
-                var newContainer = `
-                <div class="landing-container" data-index="${containerIndex}">
-                    <div class="container-header">
-                        <h4>کانتینر ${containerIndex + 1}</h4>
-                        <button type="button" class="button remove-container-btn">حذف کانتینر</button>
-                    </div>
-                    
-                    <div class="container-fields">
-                        <div class="landing-field-group">
-                            <h4>هدر (H4)</h4>
-                            <input type="text" name="landing_containers[${containerIndex}][header]" style="width: 100%;">
-                        </div>
-                        
-                        <div class="container-actions">
-                            <button type="button" class="button add-content-btn">اضافه کردن محتوا</button>
-                            <button type="button" class="button add-list-content-btn">اضافه کردن لیست محتوا</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-                $('.landing-containers').append(newContainer);
-            });
-
-            // افزودن محتوای جدید
-            $(document).on('click', '.add-content-btn', function () {
-                var container = $(this).closest('.landing-container');
-                var containerIndex = container.data('index');
-                var itemCount = container.find('.content-group').length;
-
-                var newContent = `
-                <div class="content-group" data-type="content">
-                    <label>محتوا ${itemCount + 1}</label>
-                    <textarea name="landing_containers[${containerIndex}][items][${itemCount}][value]" style="width: 100%; height: 100px;"></textarea>
-                    <input type="hidden" name="landing_containers[${containerIndex}][items][${itemCount}][type]" value="content">
-                    <button type="button" class="button remove-content-btn">حذف آیتم</button>
-                </div>
-            `;
-
-                container.find('.container-actions').before(newContent);
-            });
-
-            // افزودن لیست محتوای جدید
-            $(document).on('click', '.add-list-content-btn', function () {
-                var container = $(this).closest('.landing-container');
-                var containerIndex = container.data('index');
-                var itemCount = container.find('.content-group').length;
-
-                var newListContent = `
-                <div class="content-group" data-type="list">
-                    <label>لیست محتوا ${itemCount + 1}</label>
-                    <textarea name="landing_containers[${containerIndex}][items][${itemCount}][value]" style="width: 100%; height: 60px;"></textarea>
-                    <input type="hidden" name="landing_containers[${containerIndex}][items][${itemCount}][type]" value="list">
-                    <button type="button" class="button remove-content-btn">حذف آیتم</button>
-                </div>
-            `;
-
-                container.find('.container-actions').before(newListContent);
-            });
-
-            // حذف کانتینر
-            $(document).on('click', '.remove-container-btn', function () {
-                if (confirm('آیا از حذف این کانتینر مطمئن هستید؟')) {
-                    $(this).closest('.landing-container').remove();
-                    updateContainerIndexes();
+            var maxItems = 10; // Maximum 10 items, minimum 4
+            var itemCount = $('.why-item-group').length;
+            $('.add-why-item-btn').on('click', function () {
+                if (itemCount >= maxItems) {
+                    alert('حداکثر 10 آیتم مجاز است.');
+                    return;
                 }
+                var newItem = `
+                    <div class="why-item-group" data-index="${itemCount}">
+                        <div class="cyberisho-field">
+                            <label>متن SVG آیتم ${itemCount + 1}</label>
+                            <textarea name="why_items[${itemCount}][svg]" style="width:100%; height:80px;"></textarea>
+                        </div>
+                        <div class="cyberisho-field">
+                            <label>تایتل آیتم ${itemCount + 1}</label>
+                            <input type="text" name="why_items[${itemCount}][title]" style="width:100%;" />
+                        </div>
+                        <div class="cyberisho-field">
+                            <label>متن آیتم ${itemCount + 1}</label>
+                            <textarea name="why_items[${itemCount}][text]" style="width:100%; height:80px;"></textarea>
+                        </div>
+                        <button type="button" class="button remove-why-item-btn" style="color: red; margin-top: 10px;">حذف آیتم</button>
+                    </div>
+                `;
+                $('.why-items-container').append(newItem);
+                itemCount++;
             });
-
-            // حذف آیتم
-            $(document).on('click', '.remove-content-btn', function () {
+            $(document).on('click', '.remove-why-item-btn', function () {
+                if (itemCount <= 4) {
+                    alert('حداقل 4 آیتم باید وجود داشته باشد.');
+                    return;
+                }
                 if (confirm('آیا از حذف این آیتم مطمئن هستید؟')) {
-                    var contentGroup = $(this).closest('.content-group');
-                    var container = contentGroup.closest('.landing-container');
-                    contentGroup.remove();
-                    updateItemIndexes(container);
+                    $(this).closest('.why-item-group').remove();
+                    itemCount--;
+                    updateWhyItemIndexes();
                 }
             });
-
-            // به‌روزرسانی اندیس‌های کانتینرها
-            function updateContainerIndexes() {
-                $('.landing-container').each(function (index) {
+            function updateWhyItemIndexes() {
+                $('.why-item-group').each(function (index) {
                     $(this).attr('data-index', index);
-                    $(this).find('.container-header h4').text(`کانتینر ${index + 1}`);
-
-                    $(this).find('[name^="landing_containers"]').each(function () {
-                        var name = $(this).attr('name');
-                        name = name.replace(/landing_containers\[\d+\]/, `landing_containers[${index}]`);
+                    $(this).find('label').each(function () {
+                        var text = $(this).text().replace(/\d+$/, index + 1);
+                        $(this).text(text);
+                    });
+                    $(this).find('[name^="why_items"]').each(function () {
+                        var name = $(this).attr('name').replace(/why_items\[\d+\]/, `why_items[${index}]`);
                         $(this).attr('name', name);
                     });
                 });
             }
+            // مدیریت آپلود ویس برای چرا سایبریشو
+            $('.field-upload-audio').on('click', function (e) {
+                e.preventDefault();
+                var button = $(this);
+                var inputId = button.data('input-id');
+                var inputField = $('input[name="' + inputId + '"]');
+                var audioContainer = button.siblings('.field-audio-container');
+                var deleteLink = button.siblings('.field-delete-audio');
 
-            // به‌روزرسانی اندیس‌های آیتم‌ها
-            function updateItemIndexes(container) {
-                container.find('.content-group').each(function (index) {
-                    var type = $(this).data('type');
-                    var label = type === 'content' ? 'محتوا' : 'لیست محتوا';
-                    $(this).find('label').text(`${label} ${index + 1}`);
-
-                    $(this).find('textarea').attr('name', `landing_containers[${container.data('index')}][items][${index}][value]`);
-                    $(this).find('input[type="hidden"]').attr('name', `landing_containers[${container.data('index')}][items][${index}][type]`);
+                var frame = wp.media({
+                    title: 'انتخاب فایل صوتی',
+                    button: { text: 'انتخاب' },
+                    multiple: false,
+                    library: { type: 'audio' }
                 });
-            }
+
+                frame.on('select', function () {
+                    var attachment = frame.state().get('selection').first().toJSON();
+                    inputField.val(attachment.url);
+                    audioContainer.html('<audio controls><source src="' + attachment.url + '" type="' + attachment.mime + '"></audio>');
+                    deleteLink.removeClass('hidden');
+                });
+
+                frame.open();
+            });
+
+            $('.field-delete-audio').on('click', function (e) {
+                e.preventDefault();
+                var inputId = $(this).data('input-id');
+                var inputField = $('input[name="' + inputId + '"]');
+                var audioContainer = $(this).siblings('.field-audio-container');
+                inputField.val('');
+                audioContainer.empty();
+                $(this).addClass('hidden');
+            });
         });
     </script>
-
     <style>
-        .landing-metabox-container {
-            padding: 15px;
-        }
-
-        .landing-field-group {
+        .landing-why-cyberisho-wrapper .landing-field-group {
             margin-bottom: 20px;
         }
 
-        .landing-containers-wrapper {
-            margin-top: 30px;
-            border-top: 1px solid #ddd;
-            padding-top: 20px;
+        .landing-why-cyberisho-wrapper label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
 
-        .landing-container {
+        .why-item-group {
             background: #f9f9f9;
             padding: 15px;
             margin-bottom: 20px;
@@ -1813,121 +834,760 @@ function landing_page_metabox_callback($post)
             border-radius: 3px;
         }
 
-        .container-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .container-header h4 {
-            margin: 0 15px 0 0;
-            flex: 1;
-            min-width: 100%;
-        }
-
-        .container-fields {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .content-group {
-            background: #fff;
-            padding: 10px;
-            border: 1px solid #eee;
-            border-radius: 3px;
-        }
-
-        .content-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .content-group button {
-            margin-top: 5px;
-        }
-
-        .container-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px dashed #ccc;
+        .why-items-container {
+            margin-top: 20px;
         }
     </style>
     <?php
 }
 
-function save_landing_page_metabox($post_id)
+// کالبک برای متاباکس نمونه کارها
+function landing_portfolio_metabox_callback($post)
 {
-    if (!isset($_POST['landing_nonce']) || !wp_verify_nonce($_POST['landing_nonce'], 'landing_metabox_nonce')) {
+    wp_nonce_field('landing_portfolio_nonce', 'landing_portfolio_nonce');
+    $portfolio_audio_url = get_post_meta($post->ID, '_landing_portfolio_audio_url', true);
+    ?>
+    <div class="landing-portfolio-wrapper">
+        <div class="landing-field-group">
+            <label for="portfolio_audio_url">ویس مربوط به نمونه کارهای ما</label>
+            <div class="flex align-items-center">
+                <button type="button" class="button field-upload-audio" data-input-id="portfolio_audio_url">انتخاب
+                    ویس</button>
+                <input value="<?php echo esc_url($portfolio_audio_url); ?>" type="text" class="field-audio-url"
+                    name="portfolio_audio_url" readonly />
+                <div class="field-audio-container">
+                    <?php if ($portfolio_audio_url): ?>
+                        <audio controls>
+                            <source src="<?php echo esc_url($portfolio_audio_url); ?>" type="audio/mpeg">
+                        </audio>
+                    <?php endif; ?>
+                </div>
+                <a class="field-delete-audio <?php echo $portfolio_audio_url ? '' : 'hidden'; ?>" href="#"
+                    data-input-id="portfolio_audio_url">حذف ویس</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        jQuery(document).ready(function ($) {
+            $('.field-upload-audio').on('click', function (e) {
+                e.preventDefault();
+                var button = $(this);
+                var inputId = button.data('input-id');
+                var inputField = $('input[name="' + inputId + '"]');
+                var audioContainer = button.siblings('.field-audio-container');
+                var deleteLink = button.siblings('.field-delete-audio');
+
+                var frame = wp.media({
+                    title: 'انتخاب فایل صوتی',
+                    button: { text: 'انتخاب' },
+                    multiple: false,
+                    library: { type: 'audio' }
+                });
+
+                frame.on('select', function () {
+                    var attachment = frame.state().get('selection').first().toJSON();
+                    inputField.val(attachment.url);
+                    audioContainer.html('<audio controls><source src="' + attachment.url + '" type="' + attachment.mime + '"></audio>');
+                    deleteLink.removeClass('hidden');
+                });
+
+                frame.open();
+            });
+
+            $('.field-delete-audio').on('click', function (e) {
+                e.preventDefault();
+                var inputId = $(this).data('input-id');
+                var inputField = $('input[name="' + inputId + '"]');
+                var audioContainer = $(this).siblings('.field-audio-container');
+                inputField.val('');
+                audioContainer.empty();
+                $(this).addClass('hidden');
+            });
+        });
+    </script>
+    <style>
+        .landing-portfolio-wrapper .landing-field-group {
+            margin-bottom: 20px;
+        }
+
+        .landing-portfolio-wrapper label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    </style>
+    <?php
+}
+
+// کالبک برای متاباکس فرآیند و مراحل اجرا
+function landing_process_steps_metabox_callback($post)
+{
+    wp_nonce_field('landing_process_steps_nonce', 'landing_process_steps_nonce');
+    $process_audio_url = get_post_meta($post->ID, '_landing_process_audio_url', true);
+    $process_steps = get_post_meta($post->ID, '_landing_process_steps', true);
+    $process_steps_data = !empty($process_steps) ? json_decode($process_steps, true) : array_fill(0, 4, '');
+    ?>
+    <div class="landing-process-steps-wrapper">
+        <div class="landing-field-group">
+            <label for="process_audio_url">ویس مربوط به فرآیند و مراحل اجرا</label>
+            <div class="flex align-items-center">
+                <button type="button" class="button field-upload-audio" data-input-id="process_audio_url">انتخاب
+                    ویس</button>
+                <input value="<?php echo esc_url($process_audio_url); ?>" type="text" class="field-audio-url"
+                    name="process_audio_url" readonly />
+                <div class="field-audio-container">
+                    <?php if ($process_audio_url): ?>
+                        <audio controls>
+                            <source src="<?php echo esc_url($process_audio_url); ?>" type="audio/mpeg">
+                        </audio>
+                    <?php endif; ?>
+                </div>
+                <a class="field-delete-audio <?php echo $process_audio_url ? '' : 'hidden'; ?>" href="#"
+                    data-input-id="process_audio_url">حذف ویس</a>
+            </div>
+        </div>
+        <div class="landing-field-group">
+            <h4>مراحل اجرا</h4>
+            <?php for ($i = 0; $i < 4; $i++): ?>
+                <div class="process-step-group">
+                    <label for="process_step_<?php echo $i; ?>">مرحله اجرا <?php echo $i + 1; ?></label>
+                    <textarea name="process_steps[<?php echo $i; ?>]" id="process_step_<?php echo $i; ?>"
+                        style="width:100%; height:80px;"><?php echo esc_textarea($process_steps_data[$i] ?? ''); ?></textarea>
+                </div>
+            <?php endfor; ?>
+        </div>
+    </div>
+    <script>
+        jQuery(document).ready(function ($) {
+            $('.field-upload-audio').on('click', function (e) {
+                e.preventDefault();
+                var button = $(this);
+                var inputId = button.data('input-id');
+                var inputField = $('input[name="' + inputId + '"]');
+                var audioContainer = button.siblings('.field-audio-container');
+                var deleteLink = button.siblings('.field-delete-audio');
+
+                var frame = wp.media({
+                    title: 'انتخاب فایل صوتی',
+                    button: { text: 'انتخاب' },
+                    multiple: false,
+                    library: { type: 'audio' }
+                });
+
+                frame.on('select', function () {
+                    var attachment = frame.state().get('selection').first().toJSON();
+                    inputField.val(attachment.url);
+                    audioContainer.html('<audio controls><source src="' + attachment.url + '" type="' + attachment.mime + '"></audio>');
+                    deleteLink.removeClass('hidden');
+                });
+
+                frame.open();
+            });
+
+            $('.field-delete-audio').on('click', function (e) {
+                e.preventDefault();
+                var inputId = $(this).data('input-id');
+                var inputField = $('input[name="' + inputId + '"]');
+                var audioContainer = $(this).siblings('.field-audio-container');
+                inputField.val('');
+                audioContainer.empty();
+                $(this).addClass('hidden');
+            });
+        });
+    </script>
+    <style>
+        .landing-process-steps-wrapper .landing-field-group {
+            margin-bottom: 20px;
+        }
+
+        .landing-process-steps-wrapper label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .process-step-group {
+            margin-bottom: 15px;
+        }
+    </style>
+    <?php
+}
+
+// کالبک برای متاباکس پلن‌های قیمتی
+function landing_pricing_plans_metabox_callback($post)
+{
+    wp_nonce_field('landing_pricing_plans_nonce', 'landing_pricing_plans_nonce');
+    $pricing_audio_url = get_post_meta($post->ID, '_landing_pricing_audio_url', true);
+    $pricing_plans = get_post_meta($post->ID, '_landing_pricing_plans', true);
+    $pricing_plans_data = !empty($pricing_plans) ? json_decode($pricing_plans, true) : array_fill(0, 3, ['title' => '', 'features' => array_fill(0, 4, ''), 'footer' => '']);
+    ?>
+    <div class="landing-pricing-plans-wrapper">
+        <!-- Audio Upload -->
+        <div class="landing-field-group">
+            <label for="pricing_audio_url">ویس مربوط به پلن‌های قیمتی ما</label>
+            <div class="flex align-items-center">
+                <button type="button" class="button field-upload-audio" data-input-id="pricing_audio_url">انتخاب
+                    ویس</button>
+                <input value="<?php echo esc_url($pricing_audio_url); ?>" type="text" class="field-audio-url"
+                    name="pricing_audio_url" readonly />
+                <div class="field-audio-container">
+                    <?php if ($pricing_audio_url): ?>
+                        <audio controls>
+                            <source src="<?php echo esc_url($pricing_audio_url); ?>" type="audio/mpeg">
+                        </audio>
+                    <?php endif; ?>
+                </div>
+                <a class="field-delete-audio <?php echo $pricing_audio_url ? '' : 'hidden'; ?>" href="#"
+                    data-input-id="pricing_audio_url">حذف ویس</a>
+            </div>
+        </div>
+        <!-- Pricing Plans -->
+        <div class="landing-field-group">
+            <h4>پلن‌های قیمتی</h4>
+            <?php for ($i = 0; $i < 3; $i++): ?>
+                <div class="pricing-plan-group" data-index="<?php echo $i; ?>">
+                    <h5>پلن قیمتی <?php echo $i + 1; ?></h5>
+                    <div class="cyberisho-field">
+                        <label>تایتل پلن قیمتی <?php echo $i + 1; ?></label>
+                        <input type="text" name="pricing_plans[<?php echo $i; ?>][title]"
+                            value="<?php echo esc_attr($pricing_plans_data[$i]['title'] ?? ''); ?>" style="width:100%;" />
+                    </div>
+                    <div class="cyberisho-field">
+                        <label>امکانات پلن <?php echo $i + 1; ?></label>
+                        <button type="button" class="button add-feature-btn" data-plan-index="<?php echo $i; ?>">افزودن خصوصیت
+                            جدید</button>
+                        <div class="features-container" data-plan-index="<?php echo $i; ?>">
+                            <?php
+                            $features = $pricing_plans_data[$i]['features'] ?? array_fill(0, 4, '');
+                            foreach ($features as $index => $feature):
+                                ?>
+                                <div class="feature-group" data-index="<?php echo $index; ?>">
+                                    <label>خصوصیت <?php echo $index + 1; ?></label>
+                                    <textarea name="pricing_plans[<?php echo $i; ?>][features][<?php echo $index; ?>]"
+                                        style="width:100%; height:60px;"><?php echo esc_textarea($feature); ?></textarea>
+                                    <button type="button" class="button remove-feature-btn"
+                                        style="color: red; margin-top: 10px;">حذف خصوصیت</button>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <div class="cyberisho-field">
+                        <label>متن فوتر پلن <?php echo $i + 1; ?></label>
+                        <textarea name="pricing_plans[<?php echo $i; ?>][footer]"
+                            style="width:100%; height:80px;"><?php echo esc_textarea($pricing_plans_data[$i]['footer'] ?? ''); ?></textarea>
+                    </div>
+                </div>
+            <?php endfor; ?>
+        </div>
+    </div>
+    <script>
+        jQuery(document).ready(function ($) {
+            $('.add-feature-btn').on('click', function () {
+                var planIndex = $(this).data('plan-index');
+                var container = $(this).siblings('.features-container[data-plan-index="' + planIndex + '"]');
+                var featureCount = container.find('.feature-group').length;
+                var newFeature = `
+                    <div class="feature-group" data-index="${featureCount}">
+                        <label>خصوصیت ${featureCount + 1}</label>
+                        <textarea name="pricing_plans[${planIndex}][features][${featureCount}]" style="width:100%; height:60px;"></textarea>
+                        <button type="button" class="button remove-feature-btn" style="color: red; margin-top: 10px;">حذف خصوصیت</button>
+                    </div>
+                `;
+                container.append(newFeature);
+                updateFeatureIndexes(container, planIndex);
+            });
+            $(document).on('click', '.remove-feature-btn', function () {
+                var container = $(this).closest('.features-container');
+                var planIndex = container.data('plan-index');
+                var featureCount = container.find('.feature-group').length;
+                if (featureCount <= 4) {
+                    alert('حداقل 4 خصوصیت باید وجود داشته باشد.');
+                    return;
+                }
+                if (confirm('آیا از حذف این خصوصیت مطمئن هستید؟')) {
+                    $(this).closest('.feature-group').remove();
+                    updateFeatureIndexes(container, planIndex);
+                }
+            });
+            function updateFeatureIndexes(container, planIndex) {
+                container.find('.feature-group').each(function (index) {
+                    $(this).attr('data-index', index);
+                    $(this).find('label').text(`خصوصیت ${index + 1}`);
+                    $(this).find('textarea').attr('name', `pricing_plans[${planIndex}][features][${index}]`);
+                });
+            }
+            // مدیریت آپلود ویس برای پلن‌های قیمتی
+            $('.field-upload-audio').on('click', function (e) {
+                e.preventDefault();
+                var button = $(this);
+                var inputId = button.data('input-id');
+                var inputField = $('input[name="' + inputId + '"]');
+                var audioContainer = button.siblings('.field-audio-container');
+                var deleteLink = button.siblings('.field-delete-audio');
+
+                var frame = wp.media({
+                    title: 'انتخاب فایل صوتی',
+                    button: { text: 'انتخاب' },
+                    multiple: false,
+                    library: { type: 'audio' }
+                });
+
+                frame.on('select', function () {
+                    var attachment = frame.state().get('selection').first().toJSON();
+                    inputField.val(attachment.url);
+                    audioContainer.html('<audio controls><source src="' + attachment.url + '" type="' + attachment.mime + '"></audio>');
+                    deleteLink.removeClass('hidden');
+                });
+
+                frame.open();
+            });
+
+            $('.field-delete-audio').on('click', function (e) {
+                e.preventDefault();
+                var inputId = $(this).data('input-id');
+                var inputField = $('input[name="' + inputId + '"]');
+                var audioContainer = $(this).siblings('.field-audio-container');
+                inputField.val('');
+                audioContainer.empty();
+                $(this).addClass('hidden');
+            });
+        });
+    </script>
+    <style>
+        .landing-pricing-plans-wrapper .landing-field-group {
+            margin-bottom: 20px;
+        }
+
+        .landing-pricing-plans-wrapper label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .pricing-plan-group {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        .pricing-plan-group h5 {
+            margin: 0 0 15px;
+        }
+
+        .features-container {
+            margin-top: 15px;
+        }
+
+        .feature-group {
+            margin-bottom: 15px;
+        }
+    </style>
+    <?php
+}
+
+// کالبک برای متاباکس سوالات متداول
+function landing_faq_metabox_callback($post)
+{
+    wp_nonce_field('landing_faq_nonce', 'landing_faq_nonce');
+    $faq_items = get_post_meta($post->ID, '_landing_faq_items', true);
+    $faq_items_data = !empty($faq_items) ? json_decode($faq_items, true) : array();
+    ?>
+    <div class="landing-faq-wrapper">
+        <div class="landing-field-group">
+            <h4>سوالات متداول</h4>
+            <button type="button" class="button add-faq-item-btn">افزودن سوال جدید</button>
+            <div class="faq-items-container">
+                <?php
+                if (!empty($faq_items_data)):
+                    foreach ($faq_items_data as $index => $item):
+                        ?>
+                        <div class="faq-item-group" data-index="<?php echo $index; ?>">
+                            <div class="cyberisho-field">
+                                <label>تایتل سوال <?php echo $index + 1; ?></label>
+                                <input type="text" name="faq_items[<?php echo $index; ?>][title]"
+                                    value="<?php echo esc_attr($item['title'] ?? ''); ?>" style="width:100%;" />
+                            </div>
+                            <div class="cyberisho-field">
+                                <label>محتوای سوال <?php echo $index + 1; ?></label>
+                                <textarea name="faq_items[<?php echo $index; ?>][content]"
+                                    style="width:100%; height:80px;"><?php echo esc_textarea($item['content'] ?? ''); ?></textarea>
+                            </div>
+                            <button type="button" class="button remove-faq-item-btn" style="color: red; margin-top: 10px;">حذف
+                                سوال</button>
+                        </div>
+                        <?php
+                    endforeach;
+                endif;
+                ?>
+            </div>
+        </div>
+    </div>
+    <script>
+        jQuery(document).ready(function ($) {
+            var maxFaqItems = 20; // Maximum 20 FAQ items
+            var faqItemCount = $('.faq-item-group').length;
+            $('.add-faq-item-btn').on('click', function () {
+                if (faqItemCount >= maxFaqItems) {
+                    alert('حداکثر 20 سوال مجاز است.');
+                    return;
+                }
+                var newFaqItem = `
+                    <div class="faq-item-group" data-index="${faqItemCount}">
+                        <div class="cyberisho-field">
+                            <label>تایتل سوال ${faqItemCount + 1}</label>
+                            <input type="text" name="faq_items[${faqItemCount}][title]" style="width:100%;" />
+                        </div>
+                        <div class="cyberisho-field">
+                            <label>محتوای سوال ${faqItemCount + 1}</label>
+                            <textarea name="faq_items[${faqItemCount}][content]" style="width:100%; height:80px;"></textarea>
+                        </div>
+                        <button type="button" class="button remove-faq-item-btn" style="color: red; margin-top: 10px;">حذف سوال</button>
+                    </div>
+                `;
+                $('.faq-items-container').append(newFaqItem);
+                faqItemCount++;
+            });
+            $(document).on('click', '.remove-faq-item-btn', function () {
+                if (confirm('آیا از حذف این سوال مطمئن هستید؟')) {
+                    $(this).closest('.faq-item-group').remove();
+                    updateFaqItemIndexes();
+                }
+            });
+            function updateFaqItemIndexes() {
+                $('.faq-item-group').each(function (index) {
+                    $(this).attr('data-index', index);
+                    $(this).find('label').each(function () {
+                        var text = $(this).text().replace(/\d+$/, index + 1);
+                        $(this).text(text);
+                    });
+                    $(this).find('[name^="faq_items"]').each(function () {
+                        var name = $(this).attr('name').replace(/faq_items\[\d+\]/, `faq_items[${index}]`);
+                        $(this).attr('name', name);
+                    });
+                });
+                faqItemCount = $('.faq-item-group').length;
+            }
+        });
+    </script>
+    <style>
+        .landing-faq-wrapper .landing-field-group {
+            margin-bottom: 20px;
+        }
+
+        .landing-faq-wrapper label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .faq-item-group {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        .faq-items-container {
+            margin-top: 20px;
+        }
+    </style>
+    <?php
+}
+
+// کالبک برای متاباکس اطلاعات محتوایی
+function landing_content_info_metabox_callback($post)
+{
+    wp_nonce_field('landing_content_info_nonce', 'landing_content_info_nonce');
+    $content_info = get_post_meta($post->ID, '_landing_content_info', true);
+    $settings = array(
+        'textarea_name' => 'content_info',
+        'media_buttons' => false,
+        'textarea_rows' => 15,
+        'teeny' => false,
+        'tinymce' => array(
+            'valid_elements' => 'p,h2,h3,h4,h5,li,ul,strong,b,em,i'
+        ),
+        'quicktags' => array(
+            'buttons' => 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close,p,h2,h3,h4,h5'
+        )
+    );
+    ?>
+    <div class="landing-content-info-wrapper">
+        <div class="landing-field-group">
+            <label>اطلاعاتی محتوایی</label>
+            <?php wp_editor($content_info, 'content_info', $settings); ?>
+        </div>
+    </div>
+    <style>
+        .landing-content-info-wrapper .landing-field-group {
+            margin-bottom: 20px;
+        }
+
+        .landing-content-info-wrapper label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    </style>
+    <?php
+}
+
+// کالبک برای متاباکس متن شعار آخر صفحه
+function landing_slogan_footer_metabox_callback($post)
+{
+    wp_nonce_field('landing_slogan_footer_nonce', 'landing_slogan_footer_nonce');
+    $slogan_footer_title = get_post_meta($post->ID, '_landing_slogan_footer_title', true);
+    $slogan_footer_content = get_post_meta($post->ID, '_landing_slogan_footer_content', true);
+    $settings = array(
+        'textarea_name' => 'slogan_footer_content',
+        'media_buttons' => false,
+        'textarea_rows' => 10,
+        'teeny' => false,
+        'tinymce' => array(
+            'valid_elements' => 'p,h2,h3,h4,h5,li,ul,strong,b,em,i'
+        ),
+        'quicktags' => array(
+            'buttons' => 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close,p,h2,h3,h4,h5'
+        )
+    );
+    ?>
+    <div class="landing-slogan-footer-wrapper">
+        <div class="landing-field-group">
+            <label for="slogan_footer_title">تایتل</label>
+            <input type="text" name="slogan_footer_title" id="slogan_footer_title"
+                value="<?php echo esc_attr($slogan_footer_title); ?>" style="width:100%;" />
+        </div>
+        <div class="landing-field-group">
+            <label>محتوا</label>
+            <?php wp_editor($slogan_footer_content, 'slogan_footer_content', $settings); ?>
+        </div>
+    </div>
+    <style>
+        .landing-slogan-footer-wrapper .landing-field-group {
+            margin-bottom: 20px;
+        }
+
+        .landing-slogan-footer-wrapper label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    </style>
+    <?php
+}
+
+// ذخیره داده‌های متاباکس‌ها
+function save_my_landing_metaboxes($post_id)
+{
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
         return;
     }
-
+    // بررسی نانس‌ها
+    if (
+        (isset($_POST['landing_carousel_nonce']) && !wp_verify_nonce($_POST['landing_carousel_nonce'], 'landing_carousel_nonce')) ||
+        (isset($_POST['landing_brands_slider_nonce']) && !wp_verify_nonce($_POST['landing_brands_slider_nonce'], 'landing_brands_slider_nonce')) ||
+        (isset($_POST['landing_why_cyberisho_nonce']) && !wp_verify_nonce($_POST['landing_why_cyberisho_nonce'], 'landing_why_cyberisho_nonce')) ||
+        (isset($_POST['landing_portfolio_nonce']) && !wp_verify_nonce($_POST['landing_portfolio_nonce'], 'landing_portfolio_nonce')) ||
+        (isset($_POST['landing_process_steps_nonce']) && !wp_verify_nonce($_POST['landing_process_steps_nonce'], 'landing_process_steps_nonce')) ||
+        (isset($_POST['landing_pricing_plans_nonce']) && !wp_verify_nonce($_POST['landing_pricing_plans_nonce'], 'landing_pricing_plans_nonce')) ||
+        (isset($_POST['landing_faq_nonce']) && !wp_verify_nonce($_POST['landing_faq_nonce'], 'landing_faq_nonce')) ||
+        (isset($_POST['landing_content_info_nonce']) && !wp_verify_nonce($_POST['landing_content_info_nonce'], 'landing_content_info_nonce')) ||
+        (isset($_POST['landing_slogan_footer_nonce']) && !wp_verify_nonce($_POST['landing_slogan_footer_nonce'], 'landing_slogan_footer_nonce'))
+    ) {
+        return;
+    }
+    // بررسی مجوز کاربر
     if (!current_user_can('edit_page', $post_id)) {
         return;
     }
-
-    // ذخیره فیلدهای اصلی
-    if (isset($_POST['landing_about_text'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_about_text',
-            sanitize_textarea_field(wp_unslash($_POST['landing_about_text']))
-        );
-    }
-
-    if (isset($_POST['landing_content_text'])) {
-        update_post_meta(
-            $post_id,
-            '_landing_content_text',
-            sanitize_textarea_field(wp_unslash($_POST['landing_content_text']))
-        );
-    }
-
-    // ذخیره کانتینرها
-    if (isset($_POST['landing_containers'])) {
-        $containers = $_POST['landing_containers'];
-        $clean_containers = array();
-
-        foreach ($containers as $container) {
-            $clean_container = array(
-                'header' => sanitize_text_field(wp_unslash($container['header'] ?? '')),
-                'items' => array()
-            );
-
-            // ذخیره آیتم‌ها (محتوا و لیست)
-            if (!empty($container['items'])) {
-                foreach ($container['items'] as $item) {
-                    $clean_item = array(
-                        'type' => sanitize_text_field(wp_unslash($item['type'])),
-                        'value' => sanitize_textarea_field(wp_unslash($item['value']))
-                    );
-                    if (!empty(trim($clean_item['value'])) && in_array($clean_item['type'], ['content', 'list'])) {
-                        $clean_container['items'][] = $clean_item;
-                    }
-                }
+    // ذخیره گردونه
+    if (isset($_POST['carousel_items']) && is_array($_POST['carousel_items'])) {
+        $carousel_items = array_map(function ($item) {
+            $text = isset($item['text']) ? sanitize_textarea_field($item['text']) : '';
+            $audio_url = isset($item['audio_url']) ? esc_url_raw($item['audio_url']) : '';
+            // اعتبارسنجی URL
+            if (!empty($audio_url) && filter_var($audio_url, FILTER_VALIDATE_URL)) {
+                return [
+                    'text' => $text,
+                    'audio_url' => $audio_url
+                ];
             }
-
-            $clean_containers[] = $clean_container;
-        }
-
-        update_post_meta(
-            $post_id,
-            '_landing_containers',
-            wp_json_encode($clean_containers, JSON_UNESCAPED_UNICODE)
-        );
+            return [
+                'text' => $text,
+                'audio_url' => ''
+            ];
+        }, $_POST['carousel_items']);
+        update_post_meta($post_id, '_landing_carousel_items', wp_json_encode($carousel_items, JSON_UNESCAPED_UNICODE));
     } else {
-        delete_post_meta($post_id, '_landing_containers');
+        // به جای حذف، آرایه پیش‌فرض ذخیره شود
+        update_post_meta($post_id, '_landing_carousel_items', wp_json_encode(array_fill(0, 5, ['text' => '', 'audio_url' => '']), JSON_UNESCAPED_UNICODE));
+    }
+    // ذخیره اسلایدر برندها
+    if (isset($_POST['projects_count'])) {
+        update_post_meta($post_id, '_landing_projects_count', sanitize_text_field($_POST['projects_count']));
+    } else {
+        delete_post_meta($post_id, '_landing_projects_count');
+    }
+    if (isset($_POST['slogan_text'])) {
+        update_post_meta($post_id, '_landing_slogan_text', sanitize_textarea_field($_POST['slogan_text']));
+    } else {
+        delete_post_meta($post_id, '_landing_slogan_text');
+    }
+    // ذخیره چرا سایبریشو
+    if (isset($_POST['why_audio_url'])) {
+        $why_audio_url = esc_url_raw($_POST['why_audio_url']);
+        if (filter_var($why_audio_url, FILTER_VALIDATE_URL)) {
+            update_post_meta($post_id, '_landing_why_audio_url', $why_audio_url);
+        } else {
+            delete_post_meta($post_id, '_landing_why_audio_url');
+        }
+    } else {
+        delete_post_meta($post_id, '_landing_why_audio_url');
+    }
+    if (isset($_POST['why_items'])) {
+        $why_items = array_map(function ($item) {
+            return [
+                'svg' => $item['svg'] ?? '',
+                'title' => sanitize_text_field($item['title'] ?? ''),
+                'text' => sanitize_textarea_field($item['text'] ?? '')
+            ];
+        }, $_POST['why_items']);
+        update_post_meta($post_id, '_landing_why_items', wp_json_encode($why_items, JSON_UNESCAPED_UNICODE));
+    } else {
+        delete_post_meta($post_id, '_landing_why_items');
+    }
+    // ذخیره نمونه کارها
+    if (isset($_POST['portfolio_audio_url'])) {
+        $portfolio_audio_url = esc_url_raw($_POST['portfolio_audio_url']);
+        if (filter_var($portfolio_audio_url, FILTER_VALIDATE_URL)) {
+            update_post_meta($post_id, '_landing_portfolio_audio_url', $portfolio_audio_url);
+        } else {
+            delete_post_meta($post_id, '_landing_portfolio_audio_url');
+        }
+    } else {
+        delete_post_meta($post_id, '_landing_portfolio_audio_url');
+    }
+    // ذخیره فرآیند و مراحل اجرا
+    if (isset($_POST['process_audio_url'])) {
+        $process_audio_url = esc_url_raw($_POST['process_audio_url']);
+        if (filter_var($process_audio_url, FILTER_VALIDATE_URL)) {
+            update_post_meta($post_id, '_landing_process_audio_url', $process_audio_url);
+        } else {
+            delete_post_meta($post_id, '_landing_process_audio_url');
+        }
+    } else {
+        delete_post_meta($post_id, '_landing_process_audio_url');
+    }
+    if (isset($_POST['process_steps'])) {
+        $process_steps = array_map('sanitize_textarea_field', $_POST['process_steps']);
+        update_post_meta($post_id, '_landing_process_steps', wp_json_encode($process_steps, JSON_UNESCAPED_UNICODE));
+    } else {
+        delete_post_meta($post_id, '_landing_process_steps');
+    }
+    // ذخیره پلن‌های قیمتی
+    if (isset($_POST['pricing_audio_url'])) {
+        $pricing_audio_url = esc_url_raw($_POST['pricing_audio_url']);
+        if (filter_var($pricing_audio_url, FILTER_VALIDATE_URL)) {
+            update_post_meta($post_id, '_landing_pricing_audio_url', $pricing_audio_url);
+        } else {
+            delete_post_meta($post_id, '_landing_pricing_audio_url');
+        }
+    } else {
+        delete_post_meta($post_id, '_landing_pricing_audio_url');
+    }
+    if (isset($_POST['pricing_plans'])) {
+        $pricing_plans = array_map(function ($plan) {
+            $features = array_map('sanitize_textarea_field', $plan['features'] ?? array_fill(0, 4, ''));
+            return [
+                'title' => sanitize_text_field($plan['title'] ?? ''),
+                'features' => array_slice($features, 0, 20), // محدود به 20 خصوصیت برای ایمنی
+                'footer' => sanitize_textarea_field($plan['footer'] ?? '')
+            ];
+        }, $_POST['pricing_plans']);
+        update_post_meta($post_id, '_landing_pricing_plans', wp_json_encode($pricing_plans, JSON_UNESCAPED_UNICODE));
+    } else {
+        delete_post_meta($post_id, '_landing_pricing_plans');
+    }
+    // ذخیره سوالات متداول
+    if (isset($_POST['faq_items'])) {
+        $faq_items = array_map(function ($item) {
+            return [
+                'title' => sanitize_text_field($item['title'] ?? ''),
+                'content' => sanitize_textarea_field($item['content'] ?? '')
+            ];
+        }, $_POST['faq_items']);
+        update_post_meta($post_id, '_landing_faq_items', wp_json_encode($faq_items, JSON_UNESCAPED_UNICODE));
+    } else {
+        delete_post_meta($post_id, '_landing_faq_items');
+    }
+    // ذخیره اطلاعات محتوایی
+    if (isset($_POST['content_info'])) {
+        $allowed_tags = wp_kses_allowed_html('post');
+        $allowed_tags = array_intersect_key($allowed_tags, array_flip(['p', 'h2', 'h3', 'h4', 'h5', 'li', 'ul', 'strong', 'b', 'em', 'i']));
+        update_post_meta($post_id, '_landing_content_info', wp_kses($_POST['content_info'], $allowed_tags));
+    } else {
+        delete_post_meta($post_id, '_landing_content_info');
+    }
+    // ذخیره متن شعار آخر صفحه
+    if (isset($_POST['slogan_footer_title'])) {
+        update_post_meta($post_id, '_landing_slogan_footer_title', sanitize_text_field($_POST['slogan_footer_title']));
+    } else {
+        delete_post_meta($post_id, '_landing_slogan_footer_title');
+    }
+    if (isset($_POST['slogan_footer_content'])) {
+        $allowed_tags = wp_kses_allowed_html('post');
+        $allowed_tags = array_intersect_key($allowed_tags, array_flip(['p', 'h2', 'h3', 'h4', 'h5', 'li', 'ul', 'strong', 'b', 'em', 'i']));
+        update_post_meta($post_id, '_landing_slogan_footer_content', wp_kses($_POST['slogan_footer_content'], $allowed_tags));
+    } else {
+        delete_post_meta($post_id, '_landing_slogan_footer_content');
     }
 }
-add_action('save_post', 'save_landing_page_metabox');
+add_action('save_post', 'save_my_landing_metaboxes');
 
+// نمایش پیام‌های خطا برای URLهای نامعتبر
+add_action('admin_notices', function () {
+    if (isset($_POST['carousel_items']) && is_array($_POST['carousel_items'])) {
+        foreach ($_POST['carousel_items'] as $index => $item) {
+            if (!empty($item['audio_url']) && !filter_var($item['audio_url'], FILTER_VALIDATE_URL)) {
+                echo '<div class="error"><p>خطا: آدرس فایل صوتی آیتم ' . ($index + 1) . ' نامعتبر است.</p></div>';
+            }
+        }
+    }
+    if (isset($_POST['why_audio_url']) && !empty($_POST['why_audio_url']) && !filter_var($_POST['why_audio_url'], FILTER_VALIDATE_URL)) {
+        echo '<div class="error"><p>خطا: آدرس فایل صوتی بخش "چرا سایبریشو" نامعتبر است.</p></div>';
+    }
+    if (isset($_POST['portfolio_audio_url']) && !empty($_POST['portfolio_audio_url']) && !filter_var($_POST['portfolio_audio_url'], FILTER_VALIDATE_URL)) {
+        echo '<div class="error"><p>خطا: آدرس فایل صوتی بخش "نمونه کارها" نامعتبر است.</p></div>';
+    }
+    if (isset($_POST['process_audio_url']) && !empty($_POST['process_audio_url']) && !filter_var($_POST['process_audio_url'], FILTER_VALIDATE_URL)) {
+        echo '<div class="error"><p>خطا: آدرس فایل صوتی بخش "فرآیند و مراحل اجرا" نامعتبر است.</p></div>';
+    }
+    if (isset($_POST['pricing_audio_url']) && !empty($_POST['pricing_audio_url']) && !filter_var($_POST['pricing_audio_url'], FILTER_VALIDATE_URL)) {
+        echo '<div class="error"><p>خطا: آدرس فایل صوتی بخش "پلن‌های قیمتی" نامعتبر است.</p></div>';
+    }
+});
 
-// افزودن متاباکس‌ها برای صفحه Employment
+function allow_svg_tags($tags)
+{
+    $tags['svg'] = array(
+        'class' => true,
+        'width' => true,
+        'height' => true,
+        'viewbox' => true,
+        'xmlns' => true,
+        'fill' => true,
+    );
+    $tags['path'] = array(
+        'fill' => true,
+        'opacity' => true,
+        'd' => true,
+    );
+    return $tags;
+}
+add_filter('wp_kses_allowed_html', 'allow_svg_tags', 10, 2);
 function my_employment_page_metabox()
 {
     global $post;

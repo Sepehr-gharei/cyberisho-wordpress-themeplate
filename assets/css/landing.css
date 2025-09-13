@@ -1208,6 +1208,7 @@
   border-radius: 999px;
   background: var(--background-medium-blue-color);
   outline: none;
+  cursor: pointer;
 }
 .website-information-section {
   margin: 120px 0;
@@ -1223,7 +1224,7 @@
   border-radius: 20px;
   border: 1px solid var(--border-header-nav-color);
   backdrop-filter: blur(2px);
-  padding: 20px 30px;
+  padding: 20px 30px 45px 30px;
   z-index: 1;
 }
 .website-information-section .website-information-container .purple-ball-icon {
@@ -1287,11 +1288,13 @@
   mask-position: top;
   mask-size: 100% 100%;
 }
-.website-information-section .text-content .text-field {
-  margin-bottom: 20px;
-}
-.website-information-section .text-content .text-field h3 {
+
+.website-information-section .text-content h3 {
   font-size: 28px;
+  margin-top: 20px;
+}
+.website-information-section .text-content h3:first-of-type {
+  margin-top: 0;
 }
 .website-information-section .text-content.expanded {
   height: auto;
@@ -1299,7 +1302,6 @@
   -webkit-mask-image: none;
   mask-image: none;
 }
-
 .website-information-section .toggle-btn {
   color: var(--background-medium-blue-color);
   border: none;
@@ -1311,7 +1313,7 @@
   margin: 0 auto;
   transition: all 0.3s ease;
   background-color: unset;
-  bottom: 15px;
+  bottom: 0px;
   left: 50%;
   transform: translatex(-50%);
   position: absolute;
@@ -1502,7 +1504,7 @@
     position: absolute;
     rotate: -90deg;
     right: 50%;
-    transform: translatey(30%);
+    transform: translatey(35%);
     top: -6%;
   }
   .implementation-steps-section .main-content .arrow-item.arrow-two {
@@ -1575,15 +1577,15 @@
     top: 40%;
     width: 130px;
     height: 74px;
-    left: -2px;
+    left: -10px;
   }
   .spinning-wheel-section .wheel-container .pointer {
-    top: 41%;
-    right: 20px;
+    top: 44%;
+    right: 18px;
   }
   .spinning-wheel-section .wheel-container .pointer .right-pointer {
-    top: -10px;
-    left: 10px;
+    top: -7px;
+    left: 9px;
     position: absolute;
     z-index: -1;
     width: 9px;
@@ -1616,6 +1618,10 @@
     display: flex;
     flex-direction: column;
   }
+  .cyberisho-slogan-section .cyberisho-slogan-container .text-wrapper {
+    width: 340px;
+    text-align: justify;
+  }
   .specifications-item-section .main-items .item .icon-wrapper {
     width: 100%;
     padding: 10px 60px;
@@ -1637,6 +1643,13 @@
   }
   .specifications-item-section .main-items .purple-ball-icon.item-three {
     right: 59%;
+  }
+  .call-request-landing-section
+    .call-request-landing-container
+    .form-wrapper
+    .input-field {
+    width: 320px;
+    position: relative;
   }
   .implementation-steps-section .main-content .dot-wrapper {
     position: absolute;
