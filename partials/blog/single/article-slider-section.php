@@ -1,22 +1,16 @@
 <!--************************* start article slider *************************-->
 <div class="article-slider animated-section shadow-around">
-  <div class="container title-container">
-    <h2>مقالات مرتبط</h2>
-  </div>
-  <div class="container-fluid container-article-slider" dir="ltr">
-    <div class="panorama-slider">
-      <div class="swiper">
-        <div class="swiper-wrapper">
-          <?php 
-          get_template_part('loop/blog/single/article-slider-loop', 'article-slider-loop');
-          ?>
-        </div>
-        <!-- <div class="swiper-pagination"></div> -->
+  <div class="container-fluid container-article-slider">
+    <div class="swiper-single-page">
+      <div class="swiper-wrapper">
+        <?php 
+        get_template_part('loop/blog/single/article-slider-loop', 'article-slider-loop');
+        ?>
       </div>
     </div>
   </div>
   <div class="footer-container">
-    <a href="">مشاهده همه</a>
+    <a href="">مشاهده مقالات ورپرس</a>
   </div>
 </div>
 <!--************************* end article slider *************************-->

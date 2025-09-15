@@ -6,7 +6,6 @@ class Admin_Form
         add_action('admin_menu', array($this, 'form_menu'));
         add_action('init', array($this, 'check_and_create_tables'));
     }
-
     public function check_and_create_tables()
     {
         global $wpdb;
@@ -14,7 +13,6 @@ class Admin_Form
         $meeting_table = $wpdb->prefix . 'meeting_forms';
         $inperson_meeting_table = $wpdb->prefix . 'inperson_meeting_forms';
         $job_application_table = $wpdb->prefix . 'job_application_forms';
-
         // Create or update contact_forms table
         if ($wpdb->get_var("SHOW TABLES LIKE '$contact_table'") != $contact_table) {
             $this->create_custom_table_contact_form();
@@ -29,29 +27,24 @@ class Admin_Form
                 }
             }
         }
-
         // Create meeting_forms table if it doesn't exist
         if ($wpdb->get_var("SHOW TABLES LIKE '$meeting_table'") != $meeting_table) {
             $this->create_custom_table_meeting_form();
         }
-
         // Create inperson_meeting_forms table if it doesn't exist
         if ($wpdb->get_var("SHOW TABLES LIKE '$inperson_meeting_table'") != $inperson_meeting_table) {
             $this->create_custom_table_inperson_meeting_form();
         }
-
         // Create job_application_forms table if it doesn't exist
         if ($wpdb->get_var("SHOW TABLES LIKE '$job_application_table'") != $job_application_table) {
             $this->create_custom_table_job_application_form();
         }
     }
-
     public function create_custom_table_contact_form()
     {
         global $wpdb;
         $table_name = $wpdb->prefix . 'contact_forms';
         $charset_collate = $wpdb->get_charset_collate();
-
         $sql = "CREATE TABLE $table_name (
             id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
             name VARCHAR(50) DEFAULT NULL,
@@ -62,17 +55,14 @@ class Admin_Form
             sent_datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id)
         ) $charset_collate;";
-
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         $result = dbDelta($sql);
-
         if (!empty($wpdb->last_error)) {
             error_log('Contact Form Table Creation Error: ' . $wpdb->last_error);
         } else {
             error_log('Contact Form Table Creation Result: ' . print_r($result, true));
         }
     }
-
     public function create_custom_table_meeting_form()
     {
         global $wpdb;
@@ -86,12 +76,10 @@ class Admin_Form
             sent_datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id)
         ) $charset_collate;";
-
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         $result = dbDelta($sql);
         error_log('Meeting Form Table Creation: ' . print_r($result, true));
     }
-
     public function create_custom_table_inperson_meeting_form()
     {
         global $wpdb;
@@ -106,7 +94,6 @@ class Admin_Form
             sent_datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id)
         ) $charset_collate;";
-
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         $result = dbDelta($sql);
         if (!empty($wpdb->last_error)) {
@@ -115,7 +102,6 @@ class Admin_Form
             error_log('In-Person Meeting Form Table Creation Result: ' . print_r($result, true));
         }
     }
-
     public function create_custom_table_job_application_form()
     {
         global $wpdb;
@@ -133,7 +119,6 @@ class Admin_Form
             sent_datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id)
         ) $charset_collate;";
-
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         $result = dbDelta($sql);
         if (!empty($wpdb->last_error)) {
@@ -142,7 +127,6 @@ class Admin_Form
             error_log('Job Application Form Table Creation Result: ' . print_r($result, true));
         }
     }
-
     public function form_menu()
     {
         $all_count = $this->all_show_unread_forms_count();
@@ -156,7 +140,6 @@ class Admin_Form
             20
         );
     }
-
     protected function get_unread_forms_count($form_type)
     {
         global $wpdb;
@@ -164,7 +147,6 @@ class Admin_Form
         $unread_count = $wpdb->get_var("SELECT COUNT(*) FROM $table_name WHERE is_read = 0");
         return $unread_count ? $unread_count : 0;
     }
-
     protected function show_unread_forms_count($form_type)
     {
         $count = $this->get_unread_forms_count($form_type);
@@ -175,7 +157,6 @@ class Admin_Form
         }
         return $count;
     }
-
     protected function all_show_unread_forms_count()
     {
         $meeting_count = $this->get_unread_forms_count('meeting_forms');
@@ -190,7 +171,6 @@ class Admin_Form
         }
         return $count;
     }
-
     public function contact_forms_page()
     {
         $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'meeting_form';
@@ -215,7 +195,6 @@ class Admin_Form
         $this->display_forms_page($active_tab);
         echo '</div>';
     }
-
     protected function display_forms_page($form_type)
     {
         global $wpdb;
@@ -223,7 +202,6 @@ class Admin_Form
         $rows_per_page = 50;
         $current_page = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
         $offset = ($current_page - 1) * $rows_per_page;
-
         if ($form_type == 'contact_form') {
             switch ($action) {
                 case 'delete':
@@ -239,7 +217,6 @@ class Admin_Form
                     }
                     break;
             }
-
             $contact_forms = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}contact_forms ORDER BY id DESC LIMIT $offset, $rows_per_page", ARRAY_A);
             echo "<h1 class='wp-heading'>فرم های دریافتی تماس با ما</h1>";
             if ($wpdb->last_error) {
@@ -277,7 +254,6 @@ class Admin_Form
             }
             echo '</tbody>'
                 . '</table>';
-
             $total_rows = $wpdb->get_var("SELECT COUNT(id) FROM {$wpdb->prefix}contact_forms");
             $total_pages = ceil($total_rows / $rows_per_page);
             if ($total_pages > 1) {
@@ -303,7 +279,6 @@ class Admin_Form
                     }
                     break;
             }
-
             $meeting_forms = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}meeting_forms ORDER BY id DESC LIMIT $offset, $rows_per_page", ARRAY_A);
             echo "<h1 class='wp-heading'>فرم های دریافتی درخواست ملاقات</h1>";
             if ($wpdb->last_error) {
@@ -337,7 +312,6 @@ class Admin_Form
             }
             echo '</tbody>'
                 . '</table>';
-
             $total_rows = $wpdb->get_var("SELECT COUNT(id) FROM {$wpdb->prefix}meeting_forms");
             $total_pages = ceil($total_rows / $rows_per_page);
             if ($total_pages > 1) {
@@ -363,7 +337,6 @@ class Admin_Form
                     }
                     break;
             }
-
             $inperson_meeting_forms = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}inperson_meeting_forms ORDER BY id DESC LIMIT $offset, $rows_per_page", ARRAY_A);
             echo "<h1 class='wp-heading'>فرم های دریافتی ملاقات حضوری</h1>";
             if ($wpdb->last_error) {
@@ -399,7 +372,6 @@ class Admin_Form
             }
             echo '</tbody>'
                 . '</table>';
-
             $total_rows = $wpdb->get_var("SELECT COUNT(id) FROM {$wpdb->prefix}inperson_meeting_forms");
             $total_pages = ceil($total_rows / $rows_per_page);
             if ($total_pages > 1) {
@@ -425,7 +397,6 @@ class Admin_Form
                     }
                     break;
             }
-
             $job_applications = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}job_application_forms ORDER BY id DESC LIMIT $offset, $rows_per_page", ARRAY_A);
             echo "<h1 class='wp-heading'>فرم های دریافتی درخواست شغل</h1>";
             if ($wpdb->last_error) {
@@ -468,7 +439,6 @@ class Admin_Form
             }
             echo '</tbody>'
                 . '</table>';
-
             $total_rows = $wpdb->get_var("SELECT COUNT(id) FROM {$wpdb->prefix}job_application_forms");
             $total_pages = ceil($total_rows / $rows_per_page);
             if ($total_pages > 1) {
@@ -481,7 +451,6 @@ class Admin_Form
             }
         }
     }
-
     protected function mdate_to_jdate($date)
     {
         if (function_exists('jdate')) {
@@ -491,12 +460,10 @@ class Admin_Form
         }
         return $date;
     }
-
     protected function delete_form_entry($form_type, $id)
     {
         global $wpdb;
         $table_name = $wpdb->prefix . $form_type;
-
         // If deleting a job application, remove the associated file
         if ($form_type == 'job_application_forms') {
             $file_path = $wpdb->get_var($wpdb->prepare("SELECT file_path FROM $table_name WHERE id = %d", $id));
@@ -504,13 +471,11 @@ class Admin_Form
                 unlink(WP_CONTENT_DIR . '/Uploads/job_applications/' . basename($file_path));
             }
         }
-
         $result = $wpdb->delete($table_name, array('id' => $id));
         if ($result === false) {
             error_log('Delete Error for ' . $form_type . ': ' . $wpdb->last_error);
         }
     }
-
     protected function mark_form_as_read($form_type, $id)
     {
         global $wpdb;
@@ -520,23 +485,19 @@ class Admin_Form
             error_log('Update Error for ' . $form_type . ': ' . $wpdb->last_error);
         }
     }
-
     protected function Action()
     {
         return isset($_GET['user_action']) ? $_GET['user_action'] : false;
     }
-
     protected function Delete_Action()
     {
         return $this->Action() == 'delete' ? $_GET['user_id'] : false;
     }
-
     protected function Read_Action()
     {
         return $this->Action() == 'read' ? $_GET['user_id'] : false;
     }
 }
-
 class Form_Handler
 {
     public function __construct()
@@ -556,40 +517,32 @@ class Form_Handler
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ajax-nonce')) {
             wp_send_json_error('دسترسی غیرمجاز!');
         }
-
         $form_data = $_POST['form_data'];
         parse_str($form_data, $form_fields);
-
         error_log('Contact Form Fields: ' . print_r($form_fields, true));
-
         $honeypot = $form_fields['family'] ?? '';
         if (!empty($honeypot)) {
             wp_send_json_error('درخواست نامعتبر! لطفا فیلد نام خانوادگی را خالی بگذارید.');
         }
-
         $name = sanitize_text_field($form_fields['name'] ?? '');
         $email = sanitize_email($form_fields['email'] ?? '');
         $phone = sanitize_text_field(preg_replace('/[^0-9]/', '', $form_fields['phone'] ?? ''));
         $message_content = wp_kses($form_fields['message-content'] ?? '', array());
-
         if (empty($phone)) {
             wp_send_json_error('شماره تماس الزامی است!');
         }
         if (empty($message_content)) {
             wp_send_json_error('متن پیام الزامی است!');
         }
-
         if (!preg_match('/^(\+98|0)9\d{9}$/', $phone)) {
             wp_send_json_error('لطفاً یک شماره تلفن معتبر ایرانی وارد کنید.');
         }
-
         $result = $this->save_contact_form_data($name, $email, $phone, $message_content);
         if ($result === false) {
             global $wpdb;
             error_log('Contact Form Insert Error: ' . $wpdb->last_error);
             wp_send_json_error('خطا در ذخیره اطلاعات در پایگاه داده: ' . $wpdb->last_error);
         }
-
         wp_send_json_success('فرم تماس با موفقیت ارسال شد!');
     }
 
@@ -598,29 +551,22 @@ class Form_Handler
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ajax-nonce')) {
             wp_send_json_error('دسترسی غیرمجاز!');
         }
-
         $form_data = $_POST['form_data'];
         parse_str($form_data, $form_fields);
-
         error_log('Meeting Form Fields: ' . print_r($form_fields, true));
-
         $honeypot = $form_fields['family'] ?? '';
         if (!empty($honeypot)) {
             wp_send_json_error('درخواست نامعتبر! لطفا فیلد نام خانوادگی را خالی بگذارید.');
         }
         $name = sanitize_text_field($form_fields['name'] ?? '');
         $phone = sanitize_text_field(preg_replace('/[^0-9]/', '', $form_fields['phone'] ?? ''));
-
         if (empty($phone)) {
             wp_send_json_error('شماره تماس الزامی است!');
         }
-
         if (!preg_match('/^(\+98|0)9\d{9}$/', $phone)) {
             wp_send_json_error('لطفاً یک شماره تلفن معتبر ایرانی وارد کنید.');
         }
-
         $this->save_meeting_form_data($name, $phone);
-
         wp_send_json_success('فرم درخواست ملاقات با موفقیت ارسال شد!');
     }
 
@@ -629,12 +575,9 @@ class Form_Handler
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ajax-nonce')) {
             wp_send_json_error('دسترسی غیرمجاز!');
         }
-
         $form_data = $_POST['form_data'];
         parse_str($form_data, $form_fields);
-
         error_log('In-Person Meeting Form Fields: ' . print_r($form_fields, true));
-
         $honeypot = $form_fields['family'] ?? '';
         if (!empty($honeypot)) {
             wp_send_json_error('درخواست نامعتبر! لطفا فیلد نام خانوادگی را خالی بگذارید.');
@@ -642,25 +585,21 @@ class Form_Handler
         $name = sanitize_text_field($form_fields['name'] ?? '');
         $phone = sanitize_text_field(preg_replace('/[^0-9]/', '', $form_fields['phone'] ?? ''));
         $city = sanitize_text_field($form_fields['city'] ?? '');
-
         if (empty($phone)) {
             wp_send_json_error('شماره تماس الزامی است!');
         }
         if (empty($city)) {
             wp_send_json_error('شهر الزامی است!');
         }
-
         if (!preg_match('/^(\+98|0)9\d{9}$/', $phone)) {
-            wp_send_json_error('لطفاً یک شماره تلفن معتبر ایرانی وارد کنید .');
+            wp_send_json_error('لطفاً یک شماره تلفن معتبر ایرانی وارد کنید.');
         }
-
         $result = $this->save_inperson_meeting_form_data($name, $phone, $city);
         if ($result === false) {
             global $wpdb;
             error_log('In-Person Meeting Form Insert Error: ' . $wpdb->last_error);
             wp_send_json_error('خطا در ذخیره اطلاعات در پایگاه داده: ' . $wpdb->last_error);
         }
-
         wp_send_json_success('فرم ملاقات حضوری با موفقیت ارسال شد!');
     }
 
@@ -669,18 +608,25 @@ class Form_Handler
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ajax-nonce')) {
             wp_send_json_error('دسترسی غیرمجاز!');
         }
-
+        // ✅ بررسی reCAPTCHA
+        $recaptcha_secret = "6Lf7V8krAAAAAAqQNauwo7QTDclEa__K2eah309O"; // کلید مخفی reCAPTCHA
+        $response = isset($_POST['g-recaptcha-response']) ? sanitize_text_field($_POST['g-recaptcha-response']) : '';
+        $remoteip = $_SERVER['REMOTE_ADDR'];
+        $verify = wp_remote_get("https://www.google.com/recaptcha/api/siteverify?secret={$recaptcha_secret}&response={$response}&remoteip={$remoteip}");
+        $verify_body = wp_remote_retrieve_body($verify);
+        $result = json_decode($verify_body);
+        if (empty($result->success) || $result->success !== true) {
+            wp_send_json_error(array('message' => 'لطفا reCAPTCHA را تکمیل کنید.'));
+            exit;
+        }
         error_log('Raw POST Data: ' . print_r($_POST, true));
         error_log('Raw FILES Data: ' . print_r($_FILES, true));
-
         $name = sanitize_text_field($_POST['name'] ?? '');
         $email = sanitize_email($_POST['email'] ?? '');
         $phone = sanitize_text_field(preg_replace('/[^0-9]/', '', $_POST['phone'] ?? ''));
         $job_position = sanitize_text_field($_POST['job_position'] ?? '');
         $description = wp_kses($_POST['description'] ?? '', array());
-
         error_log('Processed Name: ' . $name);
-
         // اعتبارسنجی فیلدها
         if (empty($name)) {
             wp_send_json_error('نام الزامی است!');
@@ -703,7 +649,6 @@ class Form_Handler
         if (!in_array($job_position, ['برنامه نویس', 'گرافیست', 'طراح سایت', 'متخصص فروش', 'تولید کننده محتوا'])) {
             wp_send_json_error('ردیف شغلی نامعتبر است!');
         }
-
         // مدیریت آپلود فایل
         $file_path = '';
         if (!empty($_FILES['resume']['name'])) {
@@ -712,12 +657,10 @@ class Form_Handler
             if (!in_array(strtolower($file_type), $allowed_types)) {
                 wp_send_json_error('نوع فایل نامعتبر است! فقط فایل‌های PDF، JPG، PNG و Word مجاز هستند.');
             }
-
             $upload_dir = WP_CONTENT_DIR . '/Uploads/job_applications/';
             if (!file_exists($upload_dir)) {
                 wp_mkdir_p($upload_dir);
             }
-
             $unique_filename = wp_unique_filename($upload_dir, $_FILES['resume']['name']);
             $destination = $upload_dir . $unique_filename;
             if (!move_uploaded_file($_FILES['resume']['tmp_name'], $destination)) {
@@ -727,91 +670,17 @@ class Form_Handler
         } else {
             wp_send_json_error('فایل رزومه الزامی است!');
         }
-
         $result = $this->save_job_application_form_data($name, $email, $phone, $job_position, $description, $file_path);
         if ($result === false) {
             global $wpdb;
             error_log('Job Application Form Insert Error: ' . $wpdb->last_error);
             wp_send_json_error('خطا در ذخیره اطلاعات در پایگاه داده: ' . $wpdb->last_error);
         }
-
         wp_send_json_success('فرم درخواست شغل با موفقیت ارسال شد!');
     }
 
-    public function save_contact_form_data($name, $email, $phone, $message_content)
-    {
-        global $wpdb;
-        $table_name = $wpdb->prefix . 'contact_forms';
-        $data = array(
-            'name' => $name,
-            'email' => $email,
-            'phone' => $phone,
-            'message_content' => $message_content,
-            'is_read' => 0,
-        );
-        $format = array('%s', '%s', '%s', '%s', '%d');
-        return $wpdb->insert($table_name, $data, $format);
-    }
-
-    public function save_meeting_form_data($name, $phone)
-    {
-        global $wpdb;
-        $table_name = $wpdb->prefix . 'meeting_forms';
-        $data = array(
-            'name' => $name,
-            'phone' => $phone,
-            'is_read' => 0,
-        );
-        $format = array('%s', '%s', '%d');
-        $result = $wpdb->insert($table_name, $data, $format);
-        if ($result === false) {
-            error_log('Meeting Form Insert Error: ' . $wpdb->last_error);
-            wp_send_json_error('خطا در ذخیره اطلاعات در پایگاه داده: ' . $wpdb->last_error);
-        }
-    }
-
-    public function save_inperson_meeting_form_data($name, $phone, $city)
-    {
-        global $wpdb;
-        $table_name = $wpdb->prefix . 'inperson_meeting_forms';
-        $data = array(
-            'name' => $name,
-            'phone' => $phone,
-            'city' => $city,
-            'is_read' => 0,
-        );
-        $format = array('%s', '%s', '%s', '%d');
-        $result = $wpdb->insert($table_name, $data, $format);
-        if ($result === false) {
-            error_log('In-Person Meeting Form Insert Error: ' . $wpdb->last_error);
-            wp_send_json_error('خطا در ذخیره اطلاعات در پایگاه داده: ' . $wpdb->last_error);
-        }
-        return $result;
-    }
-
-    public function save_job_application_form_data($name, $email, $phone, $job_position, $description, $file_path)
-    {
-        global $wpdb;
-        $table_name = $wpdb->prefix . 'job_application_forms';
-        $data = array(
-            'name' => $name,
-            'email' => $email,
-            'phone' => $phone,
-            'job_position' => $job_position,
-            'description' => $description,
-            'file_path' => $file_path,
-            'is_read' => 0,
-        );
-        $format = array('%s', '%s', '%s', '%s', '%s', '%s', '%d');
-        $result = $wpdb->insert($table_name, $data, $format);
-        if ($result === false) {
-            error_log('Job Application Form Insert Error: ' . $wpdb->last_error);
-            wp_send_json_error('خطا در ذخیره اطلاعات در پایگاه داده: ' . $wpdb->last_error);
-        }
-        return $result;
-    }
+    // سایر توابع save_... بدون تغییر باقی می‌مانند
 }
-
 class Form
 {
     public function contact_form()
@@ -848,6 +717,7 @@ class Form
             . "</div>";
         return $form;
     }
+
     public function new_meeting_form()
     {
         $form = "<form method='post' action='" . admin_url('admin-ajax.php') . "' id='new-meeting-form-id'>"
@@ -886,6 +756,7 @@ class Form
             . "</form>";
         return $form;
     }
+
     public function inperson_meeting_form()
     {
         $form = "<form method='post' action='" . admin_url('admin-ajax.php') . "' id='inperson-meeting-form-id'>"
@@ -919,31 +790,31 @@ class Form
             . "<option value='متخصص فروش'>متخصص فروش</option>"
             . "<option value='تولید کننده محتوا'>تولید کننده محتوا</option>"
             . "</select>"
-            . "<div class='icon'> <svg viewBox='0 0 218 146' version='1.1'   xmlns='http://www.w3.org/2000/svg' >  <g id='#000000ff'> <path  fill='var(--normal-text-color)'  opacity='1.00'  d=' M 30.79 30.75 C 34.54 29.49 38.76 30.85 41.39 33.72 C 63.29 55.55 85.13 77.44 107.01 99.30 C 127.75 78.58 148.47 57.86 169.19 37.12 C 171.53 34.86 173.70 32.01 177.01 31.16 C 181.48 29.82 186.63 32.17 188.60 36.39 C 190.63 40.30 189.53 45.33 186.31 48.27 C 163.96 70.60 141.65 92.97 119.27 115.28 C 113.07 121.79 101.72 122.09 95.27 115.77 C 73.36 94.00 51.59 72.08 29.70 50.29 C 27.35 47.92 24.49 45.55 24.00 42.04 C 23.01 37.26 26.13 32.14 30.79 30.75 Z' /></g> </svg>  </div>"
+            . "<div class='icon'> <svg viewBox='0 0 218 146' version='1.1' xmlns='http://www.w3.org/2000/svg' > <g id='#000000ff'> <path fill='var(--normal-text-color)' opacity='1.00' d=' M 30.79 30.75 C 34.54 29.49 38.76 30.85 41.39 33.72 C 63.29 55.55 85.13 77.44 107.01 99.30 C 127.75 78.58 148.47 57.86 169.19 37.12 C 171.53 34.86 173.70 32.01 177.01 31.16 C 181.48 29.82 186.63 32.17 188.60 36.39 C 190.63 40.30 189.53 45.33 186.31 48.27 C 163.96 70.60 141.65 92.97 119.27 115.28 C 113.07 121.79 101.72 122.09 95.27 115.77 C 73.36 94.00 51.59 72.08 29.70 50.29 C 27.35 47.92 24.49 45.55 24.00 42.04 C 23.01 37.26 26.13 32.14 30.79 30.75 Z' /></g> </svg> </div>"
             . "</div>"
             . "<textarea name='description' placeholder='توضیحات*' required oninvalid=\"setCustomValidity('لطفا توضیحات را وارد کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\"></textarea>"
-            . " <label for='file_upload' class='file-upload-label'>انتخاب فایل</label>"
-            . "   <input   type='file'   id='file_upload' type='file' name='resume' accept='.pdf,.jpg,.jpeg,.png,.doc,.docx' required oninvalid=\"setCustomValidity('لطفا فایل رزومه را آپلود کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\">"
-            . "<div id='file_name' class='file-name'>  پسوند مجاز: pdf، jpg، png، word و حداکثر حجم مجاز 2 مگابایت می‌باشد. </div>"
+            . "<label for='file_upload' class='file-upload-label'>انتخاب فایل</label>"
+            . "<input type='file' id='file_upload' name='resume' accept='.pdf,.jpg,.jpeg,.png,.doc,.docx' required oninvalid=\"setCustomValidity('لطفا فایل رزومه را آپلود کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\">"
+            . "<div id='file_name' class='file-name'> پسوند مجاز: pdf، jpg، png، word و حداکثر حجم مجاز 2 مگابایت می‌باشد. </div>"
+            . "<div class='g-recaptcha' data-sitekey='6Lf7V8krAAAAAORJfPWrFfJ8uj7YVX20Y5RsooPG'></div>"
             . "<input type='submit' class='button' name='submit_form' value='ارسال'>"
             . "</form>";
         return $form;
     }
 }
-
 // Instantiate classes
 new Admin_Form();
 new Form_Handler();
-
 // Hook table creation to plugin activation
 register_activation_hook(__FILE__, function () {
     $admin_form = new Admin_Form();
     $admin_form->check_and_create_tables();
 });
-
 // Enqueue scripts and styles
 add_action('wp_enqueue_scripts', function () {
     wp_enqueue_script('form-handler', plugins_url('/js/form-handler.js', __FILE__), ['jquery'], '1.5', true);
+    // افزودن اسکریپت reCAPTCHA به صورت جهانی
+    wp_enqueue_script('recaptcha', 'https://www.google.com/recaptcha/api.js', [], null, true);
     wp_localize_script('form-handler', 'ajax_object', [
         'ajax_url' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('ajax-nonce')

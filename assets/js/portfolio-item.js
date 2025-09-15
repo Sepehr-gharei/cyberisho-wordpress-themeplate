@@ -160,6 +160,13 @@ document.addEventListener("DOMContentLoaded", function () {
       setTimeout(() => {
         let { contentHeight, viewportHeight } = getDimensions();
 
+        // Calculate thumb height based on content and viewport ratio
+        const thumbHeight = Math.max(
+          20,
+          (viewportHeight / contentHeight) * viewportHeight
+        ); // Minimum height of 20px for usability
+        thumb.style.height = `${thumbHeight}px`;
+
         let isDragging = false;
         let startY = 0;
         let startScrollTop = 0;
@@ -168,10 +175,10 @@ document.addEventListener("DOMContentLoaded", function () {
           const { contentHeight, viewportHeight } = getDimensions();
           const scrollRatio =
             image.scrollTop / (contentHeight - viewportHeight);
-          const thumbTop = scrollRatio * (viewportHeight - 15);
+          const thumbTop = scrollRatio * (viewportHeight - thumbHeight);
           thumb.style.top = `${Math.max(
             0,
-            Math.min(thumbTop, viewportHeight - 15)
+            Math.min(thumbTop, viewportHeight - thumbHeight)
           )}px`;
         }
 
@@ -179,7 +186,7 @@ document.addEventListener("DOMContentLoaded", function () {
           const { contentHeight, viewportHeight } = getDimensions();
           const deltaY = clientY - startY;
           const scrollDelta =
-            (deltaY / (viewportHeight - 15)) * (contentHeight - viewportHeight);
+            (deltaY / (viewportHeight - thumbHeight)) * (contentHeight - viewportHeight);
           image.scrollTop = Math.max(
             0,
             Math.min(

@@ -59,6 +59,6 @@ $faq_items_data = !empty($faq_items) ? json_decode($faq_items, true) : array();
             </div>
           </div>
         <?php endif; ?>
+      </div>
     </div>
-  </div>
 </section>

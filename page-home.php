@@ -9,3 +9,4 @@
 <?php get_template_part('partials/index/accordion-fag-section', 'accordion-fag-section') ?>
 <?php get_template_part('partials/index/latest-blog-main-section', 'latest-blog-main-section') ?>
 <?php get_footer(); ?>
+

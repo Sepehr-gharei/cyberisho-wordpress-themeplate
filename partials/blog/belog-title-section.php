@@ -25,11 +25,7 @@
                 <?php get_template_part('loop/blog/blog-title-category-loop', 'blog-title-category-loop') ?>
 
                 </div>
-                <div class="custom-scrollbar" id="custom-scrollbar">
-                  <div class="scrollbar-thumb" id="scrollbar-thumb">
-                    <div class="inside"></div>
-                  </div>
-                </div>
+               
               </div>
             </div>
           </div>
