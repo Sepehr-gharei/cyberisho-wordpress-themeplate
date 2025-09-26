@@ -20,6 +20,7 @@
 </head>
 
 <body dir="rtl">
+	 <div class="body-overlay"></div>
   <svg style="display: none">
     <symbol id="logo-icon" viewBox="0 0 1920 739">
       <g id="#2a00c4ff">
@@ -190,3 +191,4 @@
     <span id="alertMessageRed"></span>
   </div>
   <main>
+	  

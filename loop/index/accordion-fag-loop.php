@@ -17,7 +17,7 @@ if (!empty($faq_items) && is_array($faq_items)) {
         <div class="col-12 wrapper-text">
           <button class="accordion-header">
             <div class="icon">
-              <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0.00 0.00 12.00 20.00">
+              <svg  version="1.1" viewBox="0.00 0.00 12.00 20.00">
                 <path fill="#000000" d="
                           M 12.00 5.72
                           L 12.00 7.20

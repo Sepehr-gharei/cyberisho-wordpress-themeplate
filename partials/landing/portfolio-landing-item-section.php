@@ -37,7 +37,13 @@
       </div>
     </div>
     <div class="button-wrapper">
-      <a href="">مشاهده همه نمونه کار ها</a>
+      <a class="main-btn-blue" href=" <?php
+            $page = get_page_by_path('portfolio');
+            if ($page) {
+                $portfolio_url = get_permalink($page->ID);
+                echo $portfolio_url;
+            }
+            ?>">مشاهده همه نمونه کار ها</a>
     </div>
   </div>
 </section>

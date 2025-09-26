@@ -27,7 +27,7 @@ $home_options = $theme_options['home'];
                     ?>
                 </p>
             </div>
-            <a href=" <?php
+            <a class="main-btn-get-blue" href=" <?php
             $page = get_page_by_path('about-us');
             if ($page) {
                 $about_url = get_permalink($page->ID);

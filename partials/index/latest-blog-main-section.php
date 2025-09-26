@@ -12,7 +12,7 @@
                     <?php get_template_part('loop/index/lastest-blog-left-side-loop', 'lastest-blog-left-side-loop') ?>
                 </div>
                 <div class="redirect-link">
-                    <a href="">مشاهده همه مقالات</a>
+                    <a class="main-btn-get-blue" href="">مشاهده همه مقالات</a>
                 </div>
             </div>
         </div>

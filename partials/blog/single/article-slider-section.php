@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="footer-container">
-    <a href="">مشاهده مقالات ورپرس</a>
+    <a class="main-btn-blue" href="">مشاهده مقالات ورپرس</a>
   </div>
 </div>
 <!--************************* end article slider *************************-->

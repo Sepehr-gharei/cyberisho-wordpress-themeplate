@@ -74,7 +74,7 @@ get_footer();
     const border = player.querySelector(".progress-border");
     const result = wheelContainer.querySelector("#result");
     let playing = false;
-    const playSVG = `<div class="inside"><svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    const playSVG = `<div class="inside"><svg viewBox="0 0 48 48" fill="none">
 <rect width="48" height="48" fill="var(--background-color)" fill-opacity="0.01"/>
 <path d="M16 12V36" stroke="var(--background-color)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M32 12V36" stroke="var(--background-color)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>

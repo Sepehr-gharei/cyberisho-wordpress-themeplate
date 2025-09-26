@@ -39,7 +39,7 @@ if (!empty($recent_testimonials)): ?>
                           C32.959,4.524,30,9.547,30,15v300C30,320.453,32.959,325.476,37.728,328.12z" fill="black">
                         </path>
                     </svg>
-                    <svg class="pause-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="pause-svg" viewBox="0 0 48 48" fill="none">
                         <rect width="48" height="48" fill="none"></rect>
                         <path d="M16 12V36" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
                         <path d="M32 12V36" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>

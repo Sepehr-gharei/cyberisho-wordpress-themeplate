@@ -34,13 +34,13 @@ $process_audio_url = get_post_meta(get_the_ID(), '_landing_process_audio_url', t
         </p>
       </div>
       <div class="arrow-item arrow-one">
-        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="9px" height="14px">
+        <svg  width="9px" height="14px">
           <image x="0px" y="0px" width="9px" height="14px"
             xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAOCAQAAABXnf4jAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQfpCQYQOBTEhxaxAAAAT0lEQVQY063PsQnAMBBD0Q9pMs5tFI+UETxJqgx0lcGV3LiQDelynR4CceB3E0umIpI4DC7gpHtDiPoJzw7vDtAQovt8TMwV8w8s/mOQFBja4TDS7tbBzwAAAABJRU5ErkJggg==" />
         </svg>
       </div>
       <div class="arrow-item arrow-two">
-        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="9px" height="14px">
+        <svg width="9px" height="14px">
           <image x="0px" y="0px" width="9px" height="14px"
             xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAOCAQAAABXnf4jAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQfpCQYQOBTEhxaxAAAAT0lEQVQY063PsQnAMBBD0Q9pMs5tFI+UETxJqgx0lcGV3LiQDelynR4CceB3E0umIpI4DC7gpHtDiPoJzw7vDtAQovt8TMwV8w8s/mOQFBja4TDS7tbBzwAAAABJRU5ErkJggg==" />
         </svg>

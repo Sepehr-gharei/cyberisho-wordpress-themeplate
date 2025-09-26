@@ -28,7 +28,7 @@
             <input type="hidden" name="comment_parent" id="comment_parent" value="0" />
             <input type="hidden" name="action" value="custom_ajax_comment" />
             <?php wp_nonce_field('custom_ajax_comment_nonce', 'security'); ?>
-            <input type="submit" class="button" value="ارسال دیدگاه" />
+            <input type="submit" class="button main-btn-blue" value="ارسال دیدگاه" />
             <div id="ajax-response"></div>
           </form>
         <?php else: ?>

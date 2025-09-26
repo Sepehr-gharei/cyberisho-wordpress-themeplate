@@ -1,3 +1,4 @@
+// جاوااسکریپت برای مدیریت انیمیشن، responsive و جایگزینی
 document.addEventListener('DOMContentLoaded', function() {
     const gridSection = document.querySelector('.grid-section');
     let items = Array.from(gridSection.querySelectorAll('.item'));

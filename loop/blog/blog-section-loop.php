@@ -76,14 +76,14 @@ if ($loop->have_posts()):
             'current' => max(1, $paged),
             'total' => $loop->max_num_pages,
             'prev_text' => __('
-                <svg width="218pt" height="146pt" viewBox="0 0 218 146" xmlns="http://www.w3.org/2000/svg">
+                <svg width="218pt" height="146pt" viewBox="0 0 218 146" >
                     <g id="#000000ff">
                         <path fill="var(--normal-text-color)" d="M 30.79 30.75 ... Z"></path>
                     </g>
                 </svg>
             '),
             'next_text' => __('
-                <svg width="218pt" height="146pt" viewBox="0 0 218 146" xmlns="http://www.w3.org/2000/svg">
+                <svg width="218pt" height="146pt" viewBox="0 0 218 146" >
                     <g id="#000000ff">
                         <path fill="var(--normal-text-color)" d="M 30.79 30.75 ... Z"></path>
                     </g>

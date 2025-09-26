@@ -47,7 +47,13 @@ $pricing_audio_url = get_post_meta(get_the_ID(), '_landing_pricing_audio_url', t
       <?php endforeach; ?>
     </div>
     <div class="button">
-      <a href="">مشاوره و ثبت سفارش</a>
+      <a class="main-btn-blue" href=" <?php
+            $page = get_page_by_path('contact');
+            if ($page) {
+                $contact_url = get_permalink($page->ID);
+                echo $contact_url;
+            }
+            ?>">مشاوره و ثبت سفارش</a>
     </div>
   </div>
 </section>

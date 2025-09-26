@@ -15,7 +15,7 @@ $home_options = $theme_options['home'];
                 echo $home_options['home_header_title_content'];
                 ?>
             </p>
-            <a href=" <?php
+            <a class="main-btn-blue" href=" <?php
             $page = get_page_by_path('portfolio');
             if ($page) {
                 $portfolio_url = get_permalink($page->ID);

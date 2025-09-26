@@ -695,7 +695,7 @@ class Form
             . "<input type='email' name='email' placeholder='ایمیل'>"
             . "<input type='text' name='phone' placeholder='تلفن*' pattern='[0-9]{10,11}' required oninvalid=\"setCustomValidity('لطفا شماره تماس خود را به فرمت صحیح وارد کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\">"
             . "<textarea name='message-content' placeholder='متن پیام*' cols='30' required></textarea>"
-            . "<input type='submit' class='submit' name='submit_form' value='ارسال پیام'>"
+            . "<input type='submit' class='submit main-btn-blue' name='submit_form' value='ارسال پیام'>"
             . "</form>";
         return $form;
     }
@@ -712,7 +712,7 @@ class Form
             . "</div>"
             . "<input type='text' name='name' placeholder='نام شما'>"
             . "<input type='text' name='phone' placeholder='شماره تماس*' pattern='[0-9]{10,11}' required oninvalid=\"setCustomValidity('لطفا شماره تماس خود را به فرمت صحیح وارد کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\">"
-            . "<input type='submit' class='submit' name='submit_form' value='ثبت'>"
+            . "<input type='submit' class='submit main-btn-blue' name='submit_form' value='ثبت'>"
             . "</form>"
             . "</div>";
         return $form;
@@ -751,7 +751,7 @@ class Form
             . "<input type='text' name='family'>"
             . "</div>"
             . "<div class='button-field'>"
-            . "<input type='submit' class='submit' name='submit_form' value='ارســال فرم'>"
+            . "<input type='submit' class='submit main-btn-blue' name='submit_form' value='ارســال فرم'>"
             . "</div>"
             . "</form>";
         return $form;
@@ -768,7 +768,7 @@ class Form
             . "<input type='text' name='name' placeholder='نام شما'>"
             . "<input type='text' name='phone' placeholder='شماره تلفن*' pattern='[0-9]{10,11}' required oninvalid=\"setCustomValidity('لطفا شماره تماس خود را به فرمت صحیح وارد کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\">"
             . "<input type='text' name='city' placeholder='شهر شما*' required oninvalid=\"setCustomValidity('لطفا شهر خود را وارد کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\">"
-            . "<input type='submit' class='submit' name='submit_form' value='ثبت درخواست'>"
+            . "<input type='submit' class='submit main-btn-blue' name='submit_form' value='ثبت درخواست'>"
             . "</form>";
         return $form;
     }
@@ -797,7 +797,7 @@ class Form
             . "<input type='file' id='file_upload' name='resume' accept='.pdf,.jpg,.jpeg,.png,.doc,.docx' required oninvalid=\"setCustomValidity('لطفا فایل رزومه را آپلود کنید')\" onchange=\"try{setCustomValidity('')}catch(e){}\">"
             . "<div id='file_name' class='file-name'> پسوند مجاز: pdf، jpg، png، word و حداکثر حجم مجاز 2 مگابایت می‌باشد. </div>"
             . "<div class='g-recaptcha' data-sitekey='6Lf7V8krAAAAAORJfPWrFfJ8uj7YVX20Y5RsooPG'></div>"
-            . "<input type='submit' class='button' name='submit_form' value='ارسال'>"
+            . "<input type='submit' class='button main-btn-blue' name='submit_form' value='ارسال'>"
             . "</form>";
         return $form;
     }
