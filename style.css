@@ -1259,8 +1259,10 @@ footer .footer-container .copy-right-text {
   .team-and-members-section .team-and-members-container .text-wrapper {
     height: 340px;
   }
-  .team-and-members-section .text-wrapper .top-text strong {
-    padding: 80px;
+  .team-and-members-section .text-wrapper .top-text p {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
   }
 }
 @media (max-width: 430px) {
@@ -1719,16 +1721,16 @@ footer .footer-container .copy-right-text {
     width: 30%;
   }
 }
-header .sidebar svg {
+.sidebar svg {
   width: 30px;
   height: 30px;
 }
 /* استایل سایدبار */
-header .sidebar {
+.sidebar {
   height: 100%;
   width: 0;
   position: fixed;
-  top: 0;
+
   right: -300px;
   background-color: #fff;
   overflow-x: hidden;
@@ -1736,32 +1738,38 @@ header .sidebar {
   z-index: 1000;
   box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
 }
-header .sidebar.open {
-  width: 300px;
-  right: 0;
+.sidebar.open {
+    width: 300px;
+    height: 100vh;
+    position: fixed;
+   top: 0;
+    right: 0;
+    z-index: 1000;
+    background: #fff; /* رنگ پس‌زمینه دلخواه */
 }
-header .sidebar-content {
+
+.sidebar-content {
   padding: 20px;
   direction: rtl; /* برای راست به چپ بودن متن */
 }
-header .close-btn {
+.close-btn {
   background: none;
   border: none;
   cursor: pointer;
 }
-header .sidebar-content h3 {
+.sidebar-content h3 {
   color: var(--dark-blue-text-color);
   font-size: 24px;
 }
-header .sidebar ul {
+.sidebar ul {
   list-style: none;
   padding: 0;
   margin-top: 10px;
 }
-header .sidebar ul li {
+.sidebar ul li {
   margin-bottom: 15px;
 }
-header .sidebar ul li a {
+.sidebar ul li a {
   text-decoration: none;
   color: #333;
   font-size: 18px;
@@ -1780,13 +1788,13 @@ header .overlay {
 header .overlay.active {
   display: block;
 }
-header .sidebar ul li {
+.sidebar ul li {
   padding: 8px 0;
 }
-header .sidebar ul li a {
+.sidebar ul li a {
   transition: all 0.3s ease;
 }
-header .sidebar ul li a:hover {
+.sidebar ul li a:hover {
   color: var(--dark-blue-text-color);
 }
 header .small-responsive {
@@ -1821,6 +1829,7 @@ header .small-responsive {
     margin-right: 10px;
     display: flex;
     width: 130px;
+	height: 100%;
   }
   header .small-responsive .main-wrapper .right-side .logo a {
     width: 100%;
@@ -3701,6 +3710,7 @@ header .small-responsive {
     flex-direction: column-reverse;
     flex-wrap: nowrap;
     height: 505px;
+	  z-index:-1;
   }
   .meetting-text-form-section .meetting-text-form-container {
     flex-direction: column;
@@ -3835,9 +3845,7 @@ header .small-responsive {
   .portfolio-grid-section .portfolio-grid-container .grid-section .button {
     width: 100%;
   }
-  .accordion-fag-section .accordion-item .icon {
-    width: 20%;
-  }
+
   .client-comment-section .client-comment-container .comment-items .item {
     width: 260px;
     flex: 0 0 260px;
@@ -5889,7 +5897,7 @@ form .success-message {
   }
 }
 .belog-title-section {
-  margin-top: 85px;
+  margin-top: 10px;
 }
 .belog-title-section .header-text {
   position: relative;
